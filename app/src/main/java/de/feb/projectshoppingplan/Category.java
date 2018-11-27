@@ -8,4 +8,12 @@ public class Category  implements InterfaceListElement {
     public int getListElementType() {
         return InterfaceListElement.typeCat;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }
