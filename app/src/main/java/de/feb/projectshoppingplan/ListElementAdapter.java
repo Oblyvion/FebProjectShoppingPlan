@@ -49,9 +49,8 @@ public class ListElementAdapter extends RecyclerView.Adapter<ViewHolder> {
         viewHolder.bindType(item);
     }
 
-
     @Override
     public int getItemCount() {
-        return 0;
+        return shoppingList.size();
     }
 }
