@@ -1,10 +1,15 @@
 package de.feb.projectshoppingplan;
 
-public class shopItem {
+public class shopItem implements InterfaceListElement {
 
     String name;
     String description;
 
-    //https://medium.com/@ruut_j/a-recyclerview-with-multiple-item-types-bce7fbd1d30e
+    @Override
+    public int getListElementType() {
+        return InterfaceListElement.typeShopItem;
+    }
+
+    // https://medium.com/@ruut_j/a-recyclerview-with-multiple-item-types-bce7fbd1d30e
 
 }
