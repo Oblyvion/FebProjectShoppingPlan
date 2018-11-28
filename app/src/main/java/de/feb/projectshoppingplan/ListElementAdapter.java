@@ -3,6 +3,7 @@ package de.feb.projectshoppingplan;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,8 @@ import android.view.ViewGroup;
 import java.util.List;
 
 public class ListElementAdapter extends RecyclerView.Adapter<ViewHolder> {
+    private final static String TAG = "MyActivity";
+
     private final Context context;
     private final List<InterfaceListElement> shoppingList;
 
@@ -47,6 +50,7 @@ public class ListElementAdapter extends RecyclerView.Adapter<ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
         InterfaceListElement item = shoppingList.get(position);
         viewHolder.bindType(item);
+        Log.d(TAG, "onBincViewHolder called!");
     }
 
     @Override

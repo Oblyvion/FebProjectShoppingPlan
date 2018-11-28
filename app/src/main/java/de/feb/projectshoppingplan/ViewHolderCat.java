@@ -12,9 +12,9 @@ class ViewHolderCat extends ViewHolder {
     public ViewHolderCat(View view) {
         super(view);
 
-        imageViewCatGrap = view.findViewById(R.id.imageViewShopItem);
-        textViewCat = view.findViewById(R.id.textViewShopItem);
-        imageViewCatAdd = view.findViewById(R.id.editTextShopItem);
+        imageViewCatGrap = view.findViewById(R.id.imageViewCategory);
+        textViewCat = view.findViewById(R.id.textViewCategory);
+        imageViewCatAdd = view.findViewById(R.id.imageViewAddCategory);
     }
 
     @Override
