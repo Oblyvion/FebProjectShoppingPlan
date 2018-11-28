@@ -21,10 +21,9 @@ class ViewHolderShopI extends ViewHolder {
 
     @Override
     public void bindType(InterfaceListElement item) {
-        imageViewShopI.setImageDrawable(itemView.getResources().getDrawable(R.drawable.ic_launcher_background));
+        //imageViewShopI.setImageDrawable(itemView.getResources().getDrawable(R.drawable.ic_launcher_background));
         textViewShopI.setText(((ShopItem) item).getName());
         editTextViewShopI.setText(((ShopItem) item).getDescription());
-//        itemView.getResources().getDrawable(R.drawable.ic_launcher_background);
-//        imageViewShopI.setImageBitmap((ShopItem) item.getIcon());
+        imageViewShopI.setImageBitmap(((ShopItem) item).icon);
     }
 }

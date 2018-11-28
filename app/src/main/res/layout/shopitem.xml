@@ -19,12 +19,17 @@
         android:id="@+id/textViewShopItem"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="60" />
+        android:layout_weight="60"
+        android:layout_gravity="center"
+        android:textAlignment="center"/>
 
     <EditText
         android:id="@+id/editTextShopItem"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="20"/>
+        android:layout_weight="20"
+        android:inputType="number"
+        android:layout_gravity="center"
+        android:gravity="center"/>
 
 </LinearLayout>

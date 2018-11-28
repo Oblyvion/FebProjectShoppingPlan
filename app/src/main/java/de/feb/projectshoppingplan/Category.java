@@ -4,6 +4,10 @@ public class Category  implements InterfaceListElement {
 
     String name;
 
+    Category() {
+        this.name = "standard";
+    }
+
     @Override
     public int getListElementType() {
         return InterfaceListElement.typeCat;
