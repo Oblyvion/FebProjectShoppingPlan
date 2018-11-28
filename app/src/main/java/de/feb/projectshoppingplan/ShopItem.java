@@ -37,9 +37,9 @@ public class ShopItem implements InterfaceListElement {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+//    public void setDescription(String description) {
+//        this.description = description;
+//    }
 
     void setIcon() {
         String firstchars = name.substring(0,1);

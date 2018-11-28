@@ -19,7 +19,7 @@ class ViewHolderCat extends ViewHolder {
 
     @Override
     public void bindType(InterfaceListElement item) {
-        imageViewCatGrap.setImageDrawable(itemView.getResources().getDrawable(R.drawable.ic_list_black_24dp));
+//        imageViewCatGrap.setImageDrawable(itemView.getResources().getDrawable(R.drawable.ic_list_black_24dp));
         textViewCat.setText(((Category)item).getName());
         imageViewCatAdd.setImageDrawable(itemView.getResources().getDrawable(R.drawable.ic_add_circle_24dp));
     }

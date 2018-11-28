@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -35,8 +36,10 @@ public class MainActivity extends AppCompatActivity {
         cat1.setName(STANDARD_CATEGORIES[1]);
 
         shoppingList = new ArrayList<>();
+        final ImageView imageViewCatGrap;
 
         recyclerView = findViewById(R.id.recyclerViewMain);
+        imageViewCatGrap = findViewById(R.id.imageViewCategory);
 
         //Testobjekte erstellen
         final Category testCategory = new Category();
@@ -56,9 +59,13 @@ public class MainActivity extends AppCompatActivity {
         ListElementAdapter adapter = new ListElementAdapter(this, shoppingList, new CategoryElementOnClick() {
             @Override
             public void onItemClick(View v, int position) {
-                Toast.makeText(getApplicationContext(), "hallo hier category click!", Toast.LENGTH_LONG).show();
+//                Toast.makeText(getApplicationContext(), "hallo hier category click!", Toast.LENGTH_LONG).show();
+
                 // Hier müssen wir irgendwie das bild ändern wie weiß ich noch nicht genau
                 // Also zu drawable ressource pfeil nach unten oder dieses Aufklappding eben du weißt ja was ich mein :D
+                // TODO Der Pfeil muss auf das imageViewCatGrap Element gesetzt werden.
+                // Momentan ist er in der Mitte, also genau über dem Schriftzug "standard"
+                v.setBackgroundResource(R.drawable.ic_arrow_drop_up_black_24dp);
             }
         });
 
