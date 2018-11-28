@@ -13,7 +13,7 @@
     </array>
 
     <!-- The default letter tile text size -->
-    <dimen name="tile_letter_font_size">33sp</dimen>
+    <dimen name="tile_letter_font_size">20sp</dimen>
     <!-- The deafult tile size -->
     <dimen name="letter_tile_size">64dp</dimen>
 </resources>

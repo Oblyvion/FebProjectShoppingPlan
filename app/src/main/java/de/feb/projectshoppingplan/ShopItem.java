@@ -12,7 +12,7 @@ public class ShopItem implements InterfaceListElement {
 
     public ShopItem() {
         this.name = "standard";
-        this.description = "25";
+//        this.description = "25";
     }
 
     public ShopItem(String name, String description) {

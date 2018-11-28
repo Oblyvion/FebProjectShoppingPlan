@@ -9,7 +9,7 @@
     <ImageView
         android:id="@+id/imageViewShopItem"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
         android:layout_gravity="center"
         android:layout_weight="20"
         android:src="@mipmap/ic_launcher"
