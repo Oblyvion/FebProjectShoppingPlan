@@ -9,7 +9,7 @@ class ViewHolderCat extends ViewHolder {
     private TextView textViewCat;
     private ImageView imageViewCatAdd;
 
-    public ViewHolderCat(View view) {
+    ViewHolderCat(View view) {
         super(view);
 
         imageViewCatGrap = view.findViewById(R.id.imageViewCategory);

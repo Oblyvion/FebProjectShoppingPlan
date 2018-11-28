@@ -11,7 +11,7 @@ class ViewHolderShopI extends ViewHolder {
     private TextView textViewShopI;
     private EditText editTextViewShopI;
 
-    public ViewHolderShopI(View view) {
+    ViewHolderShopI(View view) {
         super(view);
 
         imageViewShopI = view.findViewById(R.id.imageViewShopItem);

@@ -15,10 +15,12 @@ public class ListElementAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     private final Context context;
     private final List<InterfaceListElement> shoppingList;
+    private CategoryElementOnClick listener;
 
-    public ListElementAdapter(Context context, List<InterfaceListElement> shoppingList) {
+    ListElementAdapter(Context context, List<InterfaceListElement> shoppingList, CategoryElementOnClick listener) {
         this.context = context;
         this.shoppingList = shoppingList;
+        this.listener = listener;
     }
 
     public int getItemViewType(int position) {
@@ -28,14 +30,21 @@ public class ListElementAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int type) {
-        View view = null;
+    public ViewHolder onCreateViewHolder(@NonNull final ViewGroup viewGroup, int type) {
+        View view;
         switch (type) {
             case InterfaceListElement.typeCat:
                 view = LayoutInflater
                         .from(viewGroup.getContext())
                         .inflate(R.layout.category, viewGroup, false);
-                return new ViewHolderCat(view);
+                final ViewHolderCat viewHolderCat = new ViewHolderCat(view);
+                view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        listener.onItemClick(v, viewHolderCat.getPosition());
+                    }
+                });
+                return viewHolderCat;
             case InterfaceListElement.typeShopItem:
                 view = LayoutInflater
                         .from(viewGroup.getContext())
@@ -43,7 +52,6 @@ public class ListElementAdapter extends RecyclerView.Adapter<ViewHolder> {
                 return new ViewHolderShopI(view);
         }
         return null;
-
     }
 
     @Override

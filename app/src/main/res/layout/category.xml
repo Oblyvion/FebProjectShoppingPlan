@@ -9,7 +9,7 @@
     <ImageView
         android:id="@+id/imageViewCategory"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:layout_gravity="center"
         android:layout_weight="20"
         android:src="@mipmap/ic_launcher"
@@ -22,12 +22,12 @@
         android:layout_weight="60"
         android:layout_gravity="center"
         android:textAlignment="center"
-        android:autoSizeMaxTextSize="20sp"/>
+        android:textSize="25sp"/>
 
     <ImageView
         android:id="@+id/imageViewAddCategory"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
         android:layout_gravity="center"
         android:layout_weight="20"
         android:src="@mipmap/ic_launcher"
