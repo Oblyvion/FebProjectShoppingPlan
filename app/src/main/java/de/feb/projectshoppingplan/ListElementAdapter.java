@@ -44,7 +44,7 @@ public class ListElementAdapter extends RecyclerView.Adapter<ViewHolder> {
                         listener.onItemClick(view, viewHolderCat.getPosition());
                     }
                 });
-                view.setOnClickListener(new View.OnClickListener() {
+                viewHolderCat.imageViewCatGrap.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         listener.onImageViewCatClick(view, viewHolderCat.getPosition());
