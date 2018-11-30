@@ -8,17 +8,21 @@ public class ShopItem implements InterfaceListElement {
 
     String name;
     String description;
+    String category;
     Bitmap icon;
     transient Activity activity;
+    boolean visible = true;
 
     ShopItem() {
         this.name = "standard";
+        this.category = "Obst & Gemüse";
 //      this.description = "25";
     }
 
-    public ShopItem(String name, String description) {
+    public ShopItem(String name, String description, String category) {
         this.name = name;
         this.description = description;
+        this.category = category;
     }
 
     @Override
@@ -33,6 +37,21 @@ public class ShopItem implements InterfaceListElement {
 
     @Override
     public void setDrawable(Drawable x) {
+    }
+
+    @Override
+    public String getCategory() {
+        return this.category;
+    }
+
+    @Override
+    public boolean getVisibility() {
+        return this.visible;
+    }
+
+    @Override
+    public void setVisibility(boolean bool) {
+        this.visible = bool;
     }
 
     public String getName() {

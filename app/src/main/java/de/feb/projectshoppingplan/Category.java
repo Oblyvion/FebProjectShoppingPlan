@@ -5,14 +5,13 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 
-import static de.feb.projectshoppingplan.R.drawable.ic_list_black_24dp;
-
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class Category  implements InterfaceListElement {
 
     String name;
     Drawable drawable;
     Activity activity;
+    boolean itemsvisible = true;
 
     Category(Activity activity) {
         this.activity = activity;
@@ -31,6 +30,21 @@ public class Category  implements InterfaceListElement {
 
     public void setDrawable(Drawable x) {
         this.drawable = x;
+    }
+
+    @Override
+    public String getCategory() {
+        return this.name;
+    }
+
+    @Override
+    public boolean getVisibility() {
+        return this.itemsvisible;
+    }
+
+    @Override
+    public void setVisibility(boolean bool) {
+        this.itemsvisible = false;
     }
 
     public String getName() {

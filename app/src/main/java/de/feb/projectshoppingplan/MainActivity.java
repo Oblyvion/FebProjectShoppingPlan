@@ -56,8 +56,9 @@ public class MainActivity extends AppCompatActivity {
 
         //Objekte zur liste hinzufügen
         shoppingList.add(cat0);
-        shoppingList.add(cat1);
         shoppingList.add(testItem);
+        shoppingList.add(testItem);
+        shoppingList.add(cat1);
 
         //Neuen List Adapter erstellen
        adapter  = new ListElementAdapter(this, shoppingList, new CategoryElementOnClick() {
@@ -68,10 +69,31 @@ public class MainActivity extends AppCompatActivity {
 //                    shoppingList.get(position).setDrawable(getDrawable(R.drawable.ic_arrow_drop_up_black_24dp));
 //                else
 //                    shoppingList.get(position).setDrawable(getDrawable(R.drawable.ic_list_black_24dp));
+
+                //Macht nicht die Kategorie unsichtbar, sondern ändert den Wert von itemsvisible in der Category class
+                //soll also bedeuten: sind die itemsvisible? antwort: nach item press nein damit eingeklappt werden kann wenn auf den
+                //image View geklickt wird
+                //shoppingList.get(position).setVisibility(false);
+
                 shoppingList.get(position).setDrawable(getDrawable(R.drawable.ic_arrow_drop_up_black_24dp));
                 datachanged();
             }
-        });
+
+           @Override
+           public void onImageViewCatClick(View v, int position) {
+                if (v.getId() == R.id.imageViewCategory) {
+                    Toast.makeText(getApplicationContext(), "ImageView CLICK!", Toast.LENGTH_LONG).show();
+                    for (int i = 0; i < shoppingList.size(); i++) {
+                        //element der liste muss typ shopping item haben und die gleiche kategorie wie der name der category
+                        if (shoppingList.get(i).getListElementType() == InterfaceListElement.typeShopItem && shoppingList.get(i).getCategory().equals(shoppingList.get(position).getCategory())) {
+                            shoppingList.get(i).setVisibility(false);
+                            Log.d(TAG, "FICKEN DICKEN MICKEN!");
+                        }
+                    }
+                    datachanged();
+                }
+           }
+       });
 
         //Adapter auf den recyclerview setzen
         recyclerView.setAdapter(adapter);
@@ -93,5 +115,4 @@ public class MainActivity extends AppCompatActivity {
     public void datachanged() {
         adapter.notifyDataSetChanged();
     }
-
 }

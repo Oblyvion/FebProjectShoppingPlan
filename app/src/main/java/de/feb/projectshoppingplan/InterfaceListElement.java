@@ -12,4 +12,10 @@ public interface InterfaceListElement {
 
     void setDrawable(Drawable x);
 
+    String getCategory();
+
+    boolean getVisibility();
+
+    void setVisibility(boolean bool);
+
 }

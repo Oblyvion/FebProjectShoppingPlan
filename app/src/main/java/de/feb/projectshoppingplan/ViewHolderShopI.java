@@ -1,6 +1,8 @@
 package de.feb.projectshoppingplan;
 
 import android.database.DataSetObserver;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -13,6 +15,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 class ViewHolderShopI extends ViewHolder {
+
+    private static final String TAG = "MyActivity";
 
     private ImageView imageViewShopI;
     private TextView textViewShopI;
@@ -36,8 +40,13 @@ class ViewHolderShopI extends ViewHolder {
 
     @Override
     public void bindType(InterfaceListElement item) {
+        Log.d(TAG, "Hallo hier bindtype");
         imageViewShopI.setImageBitmap(((ShopItem) item).icon);
         textViewShopI.setText(((ShopItem) item).getName());
         spinnerShopI.setAdapter(adapter);
+        if (!((ShopItem) item).visible) {
+            itemView.setVisibility(View.GONE);
+            itemView.setLayoutParams(new RecyclerView.LayoutParams(0, 0));
+        }
     }
 }
