@@ -2,6 +2,7 @@ package de.feb.projectshoppingplan;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 
 public class ShopItem implements InterfaceListElement {
 
@@ -10,9 +11,9 @@ public class ShopItem implements InterfaceListElement {
     Bitmap icon;
     transient Activity activity;
 
-    public ShopItem() {
+    ShopItem() {
         this.name = "standard";
-//        this.description = "25";
+//      this.description = "25";
     }
 
     public ShopItem(String name, String description) {
@@ -23,6 +24,15 @@ public class ShopItem implements InterfaceListElement {
     @Override
     public int getListElementType() {
         return InterfaceListElement.typeShopItem;
+    }
+
+    @Override
+    public Drawable getDrawable() {
+        return null;
+    }
+
+    @Override
+    public void setDrawable(Drawable x) {
     }
 
     public String getName() {
@@ -45,8 +55,7 @@ public class ShopItem implements InterfaceListElement {
         String firstchars = name.substring(0,1);
         LetterIconProvider letterIconProvider = new LetterIconProvider(activity);
         int tilesize = 64;
-        Bitmap letterIcon = letterIconProvider.getLetterIcon(name, firstchars, tilesize, tilesize, true);
-        this.icon = letterIcon;
+        this.icon = letterIconProvider.getLetterIcon(name, firstchars, tilesize, tilesize, true);
     }
 
     void setActivity(Activity temp) {

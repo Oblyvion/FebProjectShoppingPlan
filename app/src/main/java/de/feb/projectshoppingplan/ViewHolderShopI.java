@@ -31,8 +31,7 @@ class ViewHolderShopI extends ViewHolder {
         for (int i = 0; i < 100; i++) {
             numberShopI[i] = "" + i;
         }
-        adapter = new ArrayAdapter<String>(view.getContext(),
-                android.R.layout.simple_spinner_dropdown_item, numberShopI);
+        adapter = new ArrayAdapter<String>(view.getContext(), R.layout.spinner_item, numberShopI);
     }
 
     @Override

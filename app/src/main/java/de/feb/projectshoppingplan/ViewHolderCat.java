@@ -1,10 +1,15 @@
 package de.feb.projectshoppingplan;
 
+import android.os.Build;
+import android.support.annotation.RequiresApi;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 class ViewHolderCat extends ViewHolder {
+    private final static String TAG = "MyActivity";
+
     private ImageView imageViewCatGrap;
     private TextView textViewCat;
     private ImageView imageViewCatAdd;
@@ -17,9 +22,11 @@ class ViewHolderCat extends ViewHolder {
         imageViewCatAdd = view.findViewById(R.id.imageViewAddCategory);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void bindType(InterfaceListElement item) {
-//        imageViewCatGrap.setImageDrawable(itemView.getResources().getDrawable(R.drawable.ic_list_black_24dp));
+        imageViewCatGrap.setImageDrawable(item.getDrawable());
+        //imageViewCatGrap.setImageDrawable(itemView.getResources().getDrawable(R.drawable.ic_list_black_24dp));
         textViewCat.setText(((Category)item).getName());
         imageViewCatAdd.setImageDrawable(itemView.getResources().getDrawable(R.drawable.ic_add_circle_24dp));
     }

@@ -58,7 +58,7 @@ public class ListElementAdapter extends RecyclerView.Adapter<ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
         InterfaceListElement item = shoppingList.get(position);
         viewHolder.bindType(item);
-        Log.d(TAG, "onBincViewHolder called!");
+        Log.d(TAG, "onBindViewHolder called!");
     }
 
     @Override

@@ -1,5 +1,7 @@
 package de.feb.projectshoppingplan;
 
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
     final static String TAG = "MyActivity";
     List<InterfaceListElement> shoppingList;
     RecyclerView recyclerView;
+    ListElementAdapter adapter;
 
     // Categories
     final static String[] STANDARD_CATEGORIES = {"Obst & Gemüse", "Wurst & Milchprodukte",
@@ -24,25 +27,25 @@ public class MainActivity extends AppCompatActivity {
 
     Category cat0, cat1, cat2, cat3, cat4, cat5;
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Log.d(TAG, "MainActivity: On Create");
 
-        cat0 = new Category();
-        cat1 = new Category();
+        cat0 = new Category(this);
+        cat1 = new Category(this);
         cat0.setName(STANDARD_CATEGORIES[0]);
         cat1.setName(STANDARD_CATEGORIES[1]);
 
         shoppingList = new ArrayList<>();
-        final ImageView imageViewCatGrap;
+        //final ImageView imageViewCatGrap;
 
         recyclerView = findViewById(R.id.recyclerViewMain);
-        imageViewCatGrap = findViewById(R.id.imageViewCategory);
+        //imageViewCatGrap = findViewById(R.id.imageViewCategory);
 
         //Testobjekte erstellen
-        final Category testCategory = new Category();
         ShopItem testItem = new ShopItem();
 
         //Testobjekt testItem braucht Activity
@@ -52,26 +55,28 @@ public class MainActivity extends AppCompatActivity {
         testItem.setIcon();
 
         //Objekte zur liste hinzufügen
-        shoppingList.add(testCategory);
+        shoppingList.add(cat0);
+        shoppingList.add(cat1);
         shoppingList.add(testItem);
 
         //Neuen List Adapter erstellen
-        ListElementAdapter adapter = new ListElementAdapter(this, shoppingList, new CategoryElementOnClick() {
+       adapter  = new ListElementAdapter(this, shoppingList, new CategoryElementOnClick() {
             @Override
             public void onItemClick(View v, int position) {
-//                Toast.makeText(getApplicationContext(), "hallo hier category click!", Toast.LENGTH_LONG).show();
-
-                // Hier müssen wir irgendwie das bild ändern wie weiß ich noch nicht genau
-                // Also zu drawable ressource pfeil nach unten oder dieses Aufklappding eben du weißt ja was ich mein :D
-                // TODO Der Pfeil muss auf das imageViewCatGrap Element gesetzt werden.
-                // Momentan ist er in der Mitte, also genau über dem Schriftzug "standard"
-                v.setBackgroundResource(R.drawable.ic_arrow_drop_up_black_24dp);
+                //Toast.makeText(getApplicationContext(), "hallo hier category click!", Toast.LENGTH_LONG).show();
+//                if(shoppingList.get(position).getDrawable() == getDrawable(R.drawable.ic_list_black_24dp))
+//                    shoppingList.get(position).setDrawable(getDrawable(R.drawable.ic_arrow_drop_up_black_24dp));
+//                else
+//                    shoppingList.get(position).setDrawable(getDrawable(R.drawable.ic_list_black_24dp));
+                shoppingList.get(position).setDrawable(getDrawable(R.drawable.ic_arrow_drop_up_black_24dp));
+                datachanged();
             }
         });
 
         //Adapter auf den recyclerview setzen
         recyclerView.setAdapter(adapter);
 
+        //Soll man machen wenn man weiß das sich die recyclerview elemente nicht ändern
         recyclerView.setHasFixedSize(true);
 
         //Linearlayout dem recycleview mitgeben soll man so machen damits besser angezeigt wird
@@ -79,8 +84,14 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(linearLayoutManager);
 
 
-        Log.d(TAG, "Das hier ist der Name der TestCategory: "+testCategory.getName());
+        Log.d(TAG, "Das hier ist der Name der cat0: "+cat0.getName());
         Log.d(TAG, "Das hier ist der Name des TestItems: "+testItem.getName());
         Log.d(TAG, "Das ist die Größe der Liste: "+shoppingList.size());
+
     }
+
+    public void datachanged() {
+        adapter.notifyDataSetChanged();
+    }
+
 }
