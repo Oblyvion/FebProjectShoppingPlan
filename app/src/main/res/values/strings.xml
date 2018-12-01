@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Shopping Plan</string>
+    <string name="imageView_logo">Logo of the most awesome Shopping Plan App</string>
 </resources>

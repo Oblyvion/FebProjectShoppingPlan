@@ -16,4 +16,7 @@
     <dimen name="tile_letter_font_size">20sp</dimen>
     <!-- The deafult tile size -->
     <dimen name="letter_tile_size">64dp</dimen>
+    //Hier wurde statt dp die Wertebezeichung sp verwendet. sp reagiert auch auf die individuellen
+    //Nutzereinstellungen, deswegen laut der IDE bei Textviews besser.
+    <dimen name="textView_splash_size">50sp</dimen>
 </resources>

@@ -1,6 +1,7 @@
 package de.feb.projectshoppingplan;
 
 import android.os.Build;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
@@ -9,7 +10,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Log.d(TAG, "MainActivity: On Create");
-
+        
         cat0 = new Category(this);
         cat1 = new Category(this);
         cat0.setName(STANDARD_CATEGORIES[0]);
@@ -97,12 +97,20 @@ public class MainActivity extends AppCompatActivity {
 
                 for (int i = 0; i < shoppingList.size(); i++) {
                     //element der liste muss typ shopping item haben und die gleiche kategorie wie der name der category
-                    if (shoppingList.get(i).getListElementType() == InterfaceListElement.typeShopItem && shoppingList.get(i).getCategory().equals(shoppingList.get(position).getCategory())) {
+                    if (shoppingList.get(i).getListElementType() == InterfaceListElement.typeShopItem &&
+                            shoppingList.get(i).getCategory().equals(shoppingList.get(position).getCategory()) &&
+                            !shoppingList.get(i).getVisibility()) {
+                        shoppingList.get(i).setVisibility(true);
+//                        continue;
+                    }
+                    if (shoppingList.get(i).getListElementType() == InterfaceListElement.typeShopItem &&
+                            shoppingList.get(i).getCategory().equals(shoppingList.get(position).getCategory()) &&
+                            shoppingList.get(i).getVisibility()) {
+                        shoppingList.get(position).setDrawable(getDrawable(R.drawable.ic_arrow_drop_up_black_24dp));
                         shoppingList.get(i).setVisibility(false);
                     }
                 }
 
-                shoppingList.get(position).setDrawable(getDrawable(R.drawable.ic_arrow_drop_up_black_24dp));
                 datachanged();
 
 //=======
@@ -140,8 +148,8 @@ public class MainActivity extends AppCompatActivity {
 //>>>>>>> aee158b6258f713f87c357caa1f4a776c09c2bad
             }
 
-           @Override
-           public void onImageViewCatClick(View v, int position) {
+            @Override
+            public void onImageViewCatClick(View v, int position) {
                 if (v.getId() == R.id.imageViewCategory) {
                     Toast.makeText(getApplicationContext(), "ImageView CLICK!", Toast.LENGTH_LONG).show();
                     for (int i = 0; i < shoppingList.size(); i++) {
@@ -152,8 +160,8 @@ public class MainActivity extends AppCompatActivity {
                     }
                     datachanged();
                 }
-           }
-       });
+            }
+        });
 
         //Adapter auf den recyclerview setzen
         recyclerView.setAdapter(adapter);
