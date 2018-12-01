@@ -11,11 +11,12 @@ public class Category  implements InterfaceListElement {
     String name;
     Drawable drawable;
     Activity activity;
-    boolean itemsvisible = true;
+    boolean itemsvisible;
 
     Category(Activity activity) {
         this.activity = activity;
         this.drawable = activity.getDrawable(R.drawable.ic_list_black_24dp);
+        this.itemsvisible = true;
     }
 
     @Override
@@ -44,7 +45,7 @@ public class Category  implements InterfaceListElement {
 
     @Override
     public void setVisibility(boolean bool) {
-        this.itemsvisible = false;
+        this.itemsvisible = bool;
     }
 
     public String getName() {

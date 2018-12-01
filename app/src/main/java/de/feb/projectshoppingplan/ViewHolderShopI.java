@@ -47,6 +47,10 @@ class ViewHolderShopI extends ViewHolder {
         if (!((ShopItem) item).visible) {
             itemView.setVisibility(View.GONE);
             itemView.setLayoutParams(new RecyclerView.LayoutParams(0, 0));
+        } else {
+            itemView.setVisibility(View.VISIBLE);
+            itemView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT));
         }
     }
 }

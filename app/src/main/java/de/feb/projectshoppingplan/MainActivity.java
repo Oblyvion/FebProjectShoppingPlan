@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Log.d(TAG, "MainActivity: On Create");
-        
+
         cat0 = new Category(this);
         cat1 = new Category(this);
         cat0.setName(STANDARD_CATEGORIES[0]);
@@ -72,13 +72,13 @@ public class MainActivity extends AppCompatActivity {
         shoppingList.add(testItem);
         shoppingList.add(cat1);
 
-        // TEST: meine Kommentare sich NICHT sichtbar
-        Log.d(TAG, "HALLO LOOOOGCAAAATT\nWOOOOO BIST DUUUU????");
-
+        Log.d(TAG, "...new ListElementAdapter...");
         //Neuen List Adapter erstellen
         adapter = new ListElementAdapter(this, shoppingList, new CategoryElementOnClick() {
             @Override
             public void onItemClick(View v, final int position) {
+                Log.d(TAG, "...invoke onItemClick...");
+
                 //Toast.makeText(getApplicationContext(), "hallo hier category click!", Toast.LENGTH_LONG).show();
 //                if(shoppingList.get(position).getDrawable() == getDrawable(R.drawable.ic_list_black_24dp))
 //                    shoppingList.get(position).setDrawable(getDrawable(R.drawable.ic_arrow_drop_up_black_24dp));
@@ -97,27 +97,29 @@ public class MainActivity extends AppCompatActivity {
 
                 for (int i = 0; i < shoppingList.size(); i++) {
                     //element der liste muss typ shopping item haben und die gleiche kategorie wie der name der category
+                    Log.d(TAG, "...FOR_i = " + i);
+                    Log.d(TAG, "...OUT_IF_shoppingListVisible = " + shoppingList.get(i).getVisibility());
                     if (shoppingList.get(i).getListElementType() == InterfaceListElement.typeShopItem &&
-                            shoppingList.get(i).getCategory().equals(shoppingList.get(position).getCategory()) &&
-                            !shoppingList.get(i).getVisibility()) {
-                        shoppingList.get(i).setVisibility(true);
-//                        continue;
-                    }
-                    if (shoppingList.get(i).getListElementType() == InterfaceListElement.typeShopItem &&
-                            shoppingList.get(i).getCategory().equals(shoppingList.get(position).getCategory()) &&
-                            shoppingList.get(i).getVisibility()) {
-                        shoppingList.get(position).setDrawable(getDrawable(R.drawable.ic_arrow_drop_up_black_24dp));
-                        shoppingList.get(i).setVisibility(false);
+                            shoppingList.get(i).getCategory().equals(shoppingList.get(position).getCategory())) {
+                        Log.d(TAG, "...IF0_shoppingListVisible = " + shoppingList.get(i).getVisibility());
+                        if (shoppingList.get(i).getVisibility()) {
+                            shoppingList.get(i).setVisibility(false);
+                            Log.d(TAG, "...IF1_shoppingListVisible = " + shoppingList.get(i).getVisibility());
+                        } else if (!shoppingList.get(i).getVisibility()){
+                            shoppingList.get(i).setVisibility(true);
+                            Log.d(TAG, "...IF2_shoppingListVisible = " + shoppingList.get(i).getVisibility());
+                        }
+                        break;
                     }
                 }
-
+                shoppingList.get(position).setDrawable(getDrawable(R.drawable.ic_arrow_drop_up_black_24dp));
                 datachanged();
 
 //=======
 //                // TODO:
 //                //wenn auf eine Kategorie gedrückt wurde, und die entsprechende Kategorie das
 //                //Pfeil-nach-oben Symbol hat, dann sollen alle Elemente dieser Kategorie auf
-//                //enable=false gesetzt werden
+//                //visibility=false gesetzt werden
 
                 // würde das ob sie enabled sind oder nicht beim objekt lassen damit wir uns die globale variable gespart haben
                 // aber das mit dem handler sieht cool aus das können wir aufjeden versuchen einzubauen weiß jedoch auch noch nicht wie das klappt
