@@ -15,6 +15,7 @@ public class SplashScreen extends Activity {
         setContentView(R.layout.activity_splash_screen);
 
         new Handler().postDelayed(new Runnable() {
+            //Das hier wird NACH dem Time_Out ausgeführt
             @Override
             public void run() {
                 Intent i = new Intent(SplashScreen.this, MainActivity.class);

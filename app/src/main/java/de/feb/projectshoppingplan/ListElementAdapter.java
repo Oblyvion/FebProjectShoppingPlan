@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -76,8 +77,13 @@ public class ListElementAdapter extends RecyclerView.Adapter<ViewHolder>
 
     @Override
     public void onItemMove(int fromPosition, int toPosition) {
-        Collections.swap(shoppingList, fromPosition, toPosition);
-        notifyItemMoved(fromPosition, toPosition);
+        int typeFrom = shoppingList.get(fromPosition).getListElementType();
+        int typeTo = shoppingList.get(toPosition).getListElementType();
+        //type: 0 = Category; 1 = Shopitem
+        if (typeFrom == typeTo) {
+            Collections.swap(shoppingList, fromPosition, toPosition);
+            notifyItemMoved(fromPosition, toPosition);
+        }
     }
 
     @Override
