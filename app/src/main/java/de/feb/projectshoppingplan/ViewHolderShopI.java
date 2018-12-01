@@ -45,12 +45,22 @@ class ViewHolderShopI extends ViewHolder {
         textViewShopI.setText(((ShopItem) item).getName());
         spinnerShopI.setAdapter(adapter);
         if (!((ShopItem) item).visible) {
-            itemView.setVisibility(View.GONE);
+            itemView.setVisibility(View.INVISIBLE);
             itemView.setLayoutParams(new RecyclerView.LayoutParams(0, 0));
         } else {
             itemView.setVisibility(View.VISIBLE);
             itemView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT));
         }
+    }
+
+    @Override
+    public void onItemSelected() {
+        itemView.setBackgroundColor(itemView.getResources().getColor(R.color.colorAccent));
+    }
+
+    @Override
+    public void onItemClear() {
+        itemView.setBackgroundColor(0);
     }
 }
