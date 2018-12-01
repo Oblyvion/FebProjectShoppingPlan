@@ -25,16 +25,7 @@ class ViewHolderCat extends ViewHolder {
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void bindType(final InterfaceListElement item) {
-        imageViewCatGrap.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!item.getVisibility()) {
-                    item.setVisibility(false);
-                }
-            }
-        });
         imageViewCatGrap.setImageDrawable(item.getDrawable());
-        //imageViewCatGrap.setImageDrawable(itemView.getResources().getDrawable(R.drawable.ic_list_black_24dp));
         textViewCat.setText(((Category)item).getName());
         imageViewCatAdd.setImageDrawable(itemView.getResources().getDrawable(R.drawable.ic_add_circle_24dp));
     }

@@ -8,9 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.Collections;
 import java.util.List;
 
-public class ListElementAdapter extends RecyclerView.Adapter<ViewHolder> {
+public class ListElementAdapter extends RecyclerView.Adapter<ViewHolder>
+        implements ItemTouchHelperAdapter {
     private final static String TAG = "MyActivity";
 
     private final Context context;
@@ -70,5 +72,17 @@ public class ListElementAdapter extends RecyclerView.Adapter<ViewHolder> {
     @Override
     public int getItemCount() {
         return shoppingList.size();
+    }
+
+    @Override
+    public void onItemMove(int fromPosition, int toPosition) {
+        Collections.swap(shoppingList, fromPosition, toPosition);
+        notifyItemMoved(fromPosition, toPosition);
+    }
+
+    @Override
+    public void onItemDismiss(int position) {
+        shoppingList.remove(position);
+        notifyItemRemoved(position);
     }
 }

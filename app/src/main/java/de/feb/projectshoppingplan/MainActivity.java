@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -23,7 +24,8 @@ public class MainActivity extends AppCompatActivity {
     ListIterator<InterfaceListElement> shoppingListIterator;
     RecyclerView recyclerView;
     ListElementAdapter adapter;
-
+    ItemTouchHelper.Callback itemTouchHelperCallback;
+    ItemTouchHelper itemTouchHelper;
     // Categories
     final static String[] STANDARD_CATEGORIES = {"Obst & Gemüse", "Wurst & Milchprodukte",
             "Getreideprokute", "Fleisch & Fisch", "Convenience & Hygiene", "Fertiggerichte"};
@@ -55,8 +57,6 @@ public class MainActivity extends AppCompatActivity {
         //final ImageView imageViewCatGrap;
 
         recyclerView = findViewById(R.id.recyclerViewMain);
-        //imageViewCatGrap = findViewById(R.id.imageViewCategory);
-
         //Testobjekte erstellen
         ShopItem testItem = new ShopItem();
 
@@ -104,15 +104,16 @@ public class MainActivity extends AppCompatActivity {
                         Log.d(TAG, "...IF0_shoppingListVisible = " + shoppingList.get(i).getVisibility());
                         if (shoppingList.get(i).getVisibility()) {
                             shoppingList.get(i).setVisibility(false);
+                            shoppingList.get(position).setDrawable(getDrawable(R.drawable.ic_arrow_drop_up_black_24dp));
                             Log.d(TAG, "...IF1_shoppingListVisible = " + shoppingList.get(i).getVisibility());
                         } else if (!shoppingList.get(i).getVisibility()){
                             shoppingList.get(i).setVisibility(true);
+                            shoppingList.get(position).setDrawable(getDrawable(R.drawable.ic_list_black_24dp));
                             Log.d(TAG, "...IF2_shoppingListVisible = " + shoppingList.get(i).getVisibility());
                         }
                         break;
                     }
                 }
-                shoppingList.get(position).setDrawable(getDrawable(R.drawable.ic_arrow_drop_up_black_24dp));
                 datachanged();
 
 //=======
@@ -167,6 +168,9 @@ public class MainActivity extends AppCompatActivity {
 
         //Adapter auf den recyclerview setzen
         recyclerView.setAdapter(adapter);
+        itemTouchHelperCallback = new ItemTouchHelperCallback(adapter);
+        itemTouchHelper = new ItemTouchHelper(itemTouchHelperCallback);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
 
         //Soll man machen wenn man weiß das sich die recyclerview elemente nicht ändern
         recyclerView.setHasFixedSize(true);
