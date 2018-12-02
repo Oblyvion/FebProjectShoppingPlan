@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
     Category cat0, cat1, cat2, cat3, cat4, cat5;
 
-    boolean categoryPressed = false;
+    boolean categoryPressedTwice = false;
 
     //Handler für Auf- und Zuklappfunktion der Kategorien
     Handler handler;
@@ -49,8 +49,12 @@ public class MainActivity extends AppCompatActivity {
 
         cat0 = new Category(this);
         cat1 = new Category(this);
+        cat2 = new Category(this);
+        cat3 = new Category(this);
         cat0.setName(STANDARD_CATEGORIES[0]);
         cat1.setName(STANDARD_CATEGORIES[1]);
+        cat2.setName(STANDARD_CATEGORIES[2]);
+        cat3.setName(STANDARD_CATEGORIES[3]);
 
         shoppingList = new ArrayList<>();
         shoppingListIterator = shoppingList.listIterator(0);
@@ -58,19 +62,49 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.recyclerViewMain);
         //Testobjekte erstellen
+//        ArrayList<ShopItem> arrayListShopI = new ArrayList<>();
         ShopItem testItem = new ShopItem();
+        ShopItem testItem1 = new ShopItem();
+        ShopItem cucumber = new ShopItem("Gurke", "", STANDARD_CATEGORIES[0]);
+        ShopItem pork = new ShopItem("Schweinefleisch", "", STANDARD_CATEGORIES[3]);
+        ShopItem milk = new ShopItem("Milch", "", STANDARD_CATEGORIES[1]);
+        ShopItem flour = new ShopItem("Mehl", "", STANDARD_CATEGORIES[2]);
+        ShopItem lemon = new ShopItem("Zitrone", "", STANDARD_CATEGORIES[0]);
+        ShopItem bread = new ShopItem("Brot", "", STANDARD_CATEGORIES[2]);
 
         //Testobjekt testItem braucht Activity
         testItem.setActivity(this);
+        testItem1.setActivity(this);
+        cucumber.setActivity(this);
+        pork.setActivity(this);
+        milk.setActivity(this);
+        flour.setActivity(this);
+        lemon.setActivity(this);
+        bread.setActivity(this);
 
         //Testobjekt tesItem bekommt Icon
         testItem.setIcon();
+        testItem1.setIcon();
+        cucumber.setIcon();
+        pork.setIcon();
+        milk.setIcon();
+        flour.setIcon();
+        lemon.setIcon();
+        bread.setIcon();
 
         //Objekte zur liste hinzufügen
         shoppingList.add(cat0);
         shoppingList.add(testItem);
-        shoppingList.add(testItem);
+        shoppingList.add(testItem1);
+        shoppingList.add(cucumber);
+        shoppingList.add(lemon);
         shoppingList.add(cat1);
+        shoppingList.add(milk);
+        shoppingList.add(cat2);
+        shoppingList.add(flour);
+        shoppingList.add(bread);
+        shoppingList.add(cat3);
+        shoppingList.add(pork);
 
         Log.d(TAG, "...new ListElementAdapter...");
         //Neuen List Adapter erstellen
@@ -79,51 +113,44 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(View v, final int position) {
                 Log.d(TAG, "...invoke onItemClick...");
 
-                //Toast.makeText(getApplicationContext(), "hallo hier category click!", Toast.LENGTH_LONG).show();
-//                if(shoppingList.get(position).getDrawable() == getDrawable(R.drawable.ic_list_black_24dp))
-//                    shoppingList.get(position).setDrawable(getDrawable(R.drawable.ic_arrow_drop_up_black_24dp));
-//                else
-//                    shoppingList.get(position).setDrawable(getDrawable(R.drawable.ic_list_black_24dp));
-
-
-                //Das hier macht das was du praktisch unten im TODO
-                //beschrieben hast. Zumindest haben die ShopItems ihre eigene visible variable die dann false gesetzt wird wenn ihre Kategorie
-                // gedrückt wurde. Jedoch hab ich es leider noch nicht hinbekommen, dass
-                //das ImageView clickable ist und somit erst dann die einträge visible=false gesetzt werden
                 //Kannst dir ja mal unten die onImageViewCatClick anschauen funktioniert aber leider nicht
                 //wird trotz klick auf das imageview nicht ausgeführt
                 //aber ich bau auch gerne mit dir an deinem handlerteil weiter wollte nur mal pushen weil ich soviel in den classen geändert hab
                 //und in den viewholdern und wo auch immer
 
-                for (int i = 0; i < shoppingList.size(); i++) {
-                    //element der liste muss typ shopping item haben und die gleiche kategorie wie der name der category
-                    Log.d(TAG, "...FOR_i = " + i);
-                    Log.d(TAG, "...OUT_IF_shoppingListVisible = " + shoppingList.get(i).getVisibility());
-                    if (shoppingList.get(i).getListElementType() == InterfaceListElement.typeShopItem &&
-                            shoppingList.get(i).getCategory().equals(shoppingList.get(position).getCategory())) {
-                        Log.d(TAG, "...IF0_shoppingListVisible = " + shoppingList.get(i).getVisibility());
-                        if (shoppingList.get(i).getVisibility()) {
-                            shoppingList.get(i).setVisibility(false);
-                            shoppingList.get(position).setDrawable(getDrawable(R.drawable.ic_arrow_drop_up_black_24dp));
-                            Log.d(TAG, "...IF1_shoppingListVisible = " + shoppingList.get(i).getVisibility());
-                        } else if (!shoppingList.get(i).getVisibility()){
-                            shoppingList.get(i).setVisibility(true);
-                            shoppingList.get(position).setDrawable(getDrawable(R.drawable.ic_list_black_24dp));
-                            Log.d(TAG, "...IF2_shoppingListVisible = " + shoppingList.get(i).getVisibility());
+                if (!categoryPressedTwice) {
+//                    if (shoppingList.get(position).getDrawable() == getDrawable(R.drawable.ic_arrow_drop_up_black_24dp)) {
+//                        shoppingList.get(position).setDrawable(getDrawable(R.drawable.ic_arrow_drop_down_black_24dp));
+//                    } else {
+                    shoppingList.get(position).setDrawable(getDrawable(R.drawable.ic_arrow_drop_up_black_24dp));
+                    categoryPressedTwice = true;
+                } else {
+                    for (int i = 0; i < shoppingList.size(); i++) {
+                        //element der liste muss typ shopping item haben und die gleiche kategorie wie der name der category
+                        Log.d(TAG, "...FOR_i = " + i);
+                        Log.d(TAG, "...OUT_IF_shoppingListVisible = " + shoppingList.get(i).getVisibility());
+                        if (shoppingList.get(i).getListElementType() == InterfaceListElement.typeShopItem &&
+                                shoppingList.get(i).getCategory().equals(shoppingList.get(position).getCategory())) {
+                            Log.d(TAG, "...IF0_shoppingListVisible = " + shoppingList.get(i).getVisibility());
+                            //elemente einklappen
+                            if (shoppingList.get(i).getVisibility()) {
+                                shoppingList.get(i).setVisibility(false);
+                                shoppingList.get(position).setDrawable(getDrawable(R.drawable.ic_list_black_24dp));
+                                Log.d(TAG, "...IF1_shoppingListVisible = " + shoppingList.get(i).getVisibility());
+                                //elemente aufklappen
+                            } else if (!shoppingList.get(i).getVisibility()) {
+                                shoppingList.get(i).setVisibility(true);
+                                shoppingList.get(position).setDrawable(getDrawable(R.drawable.ic_list_black_24dp));
+                                Log.d(TAG, "...IF2_shoppingListVisible = " + shoppingList.get(i).getVisibility());
+                            }
+                            categoryPressedTwice = false;
+//                        break;
                         }
-                        break;
                     }
                 }
+
                 datachanged();
 
-//=======
-//                // TODO:
-//                //wenn auf eine Kategorie gedrückt wurde, und die entsprechende Kategorie das
-//                //Pfeil-nach-oben Symbol hat, dann sollen alle Elemente dieser Kategorie auf
-//                //visibility=false gesetzt werden
-
-                // würde das ob sie enabled sind oder nicht beim objekt lassen damit wir uns die globale variable gespart haben
-                // aber das mit dem handler sieht cool aus das können wir aufjeden versuchen einzubauen weiß jedoch auch noch nicht wie das klappt
                 // und nach dem einklappen und dem delay soll dann wieder das list symbol kommen das ist auch geil hab ich jedoch oben auch noch nicht drinn
 
 
@@ -155,6 +182,9 @@ public class MainActivity extends AppCompatActivity {
             public void onImageViewCatClick(View v, int position) {
                 if (v.getId() == R.id.imageViewCategory) {
                     Toast.makeText(getApplicationContext(), "ImageView CLICK!", Toast.LENGTH_LONG).show();
+
+                    //TODO hier muss das listElement gedragt werden
+
                     for (int i = 0; i < shoppingList.size(); i++) {
                         //element der liste muss typ shopping item haben und die gleiche kategorie wie der name der category
                         if (shoppingList.get(i).getListElementType() == InterfaceListElement.typeShopItem && shoppingList.get(i).getCategory().equals(shoppingList.get(position).getCategory())) {
@@ -168,8 +198,13 @@ public class MainActivity extends AppCompatActivity {
 
         //Adapter auf den recyclerview setzen
         recyclerView.setAdapter(adapter);
-        itemTouchHelperCallback = new ItemTouchHelperCallback(adapter);
-        itemTouchHelper = new ItemTouchHelper(itemTouchHelperCallback);
+        itemTouchHelperCallback = new
+
+                ItemTouchHelperCallback(adapter);
+
+        itemTouchHelper = new
+
+                ItemTouchHelper(itemTouchHelperCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
 
         //Soll man machen wenn man weiß das sich die recyclerview elemente nicht ändern

@@ -76,7 +76,7 @@ public class ListElementAdapter extends RecyclerView.Adapter<ViewHolder>
     }
 
     //TODO funktioniert nicht ganz!
-    //TODO auch die einzelnen shopItems müssen mitgemoved werden
+    //TODO auch die einzelnen shopItems sollen mit der category hier mitgemoved werden
     @Override
     public void onItemMove(int fromPosition, int toPosition) {
         int typeFrom = shoppingList.get(fromPosition).getListElementType();
@@ -84,32 +84,33 @@ public class ListElementAdapter extends RecyclerView.Adapter<ViewHolder>
         String catFrom = shoppingList.get(fromPosition).getCategory();
         String catTo = shoppingList.get(toPosition).getCategory();
 
-        //type: 0 = Category; 1 = Shopitem
         //nur unter dem genau gleichen Type darf getauscht werden
         if (typeFrom == typeTo) {
             //sobald der Type eine Category ist, müssen alle ShopItems mit der gleichen Category
             //mitgemoved werden
-            if (typeFrom == 0 && toPosition > fromPosition) {
-//                Collections.swap(shoppingList, fromPosition, toPosition);
+            if (typeFrom == InterfaceListElement.typeCat && toPosition > fromPosition) {
                 for (int i = fromPosition; i < shoppingList.size(); i++) {
                     if (catFrom.equals(shoppingList.get(i).getCategory())) {
                         Log.d(TAG, "i = fromPosition = " + i + " |  toPosition = " + toPosition);
                         Collections.swap(shoppingList, i, toPosition);
                     }
                 }
-            } else if (typeFrom == 1 && toPosition < fromPosition) {
-                Collections.swap(shoppingList, fromPosition, toPosition);
-                for (int i = fromPosition + 1; i < shoppingList.size(); i++) {
-                    int j = 1;  //füge alle shopitems der category genau hinter die neue toPosition ein
-                    if (catFrom.equals(shoppingList.get(i).getCategory())) {
-                        Log.d(TAG, "i = fromPosition = " + i + " |  toPosition = " + toPosition);
-                        Collections.swap(shoppingList, i, toPosition+j);
-                    }
-                }
+                // dachte, man könnte die shopItems unterhalb der category mitswapen
+//            } else if (typeFrom == InterfaceListElement.typeCat && toPosition < fromPosition) {
+////                Collections.swap(shoppingList, fromPosition, toPosition);
+//                int j = 1;  //füge alle shopitems der category genau hinter die neue toPosition ein
+//                for (int i = 0; i < shoppingList.size(); i++) {
+//                    if (catFrom.equals(shoppingList.get(i).getCategory())) {
+//                        Log.d(TAG, "i = fromPosition = " + i + " |  toPosition = " + toPosition);
+//                        Collections.swap(shoppingList, i, toPosition + j);
+//                        j++;
+//                    }
+//                }
             }
 
             notifyItemMoved(fromPosition, toPosition);
         }
+
     }
 
     @Override
