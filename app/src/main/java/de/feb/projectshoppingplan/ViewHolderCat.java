@@ -16,7 +16,7 @@ class ViewHolderCat extends ViewHolder {
 
     ImageView imageViewCatGrap;
     private TextView textViewCat;
-    private ImageView imageViewCatAdd;
+    ImageView imageViewCatAdd;
 
     ViewHolderCat(View view) {
         super(view);

@@ -44,13 +44,19 @@ public class ListElementAdapter extends RecyclerView.Adapter<ViewHolder>
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        listener.onItemClick(view, viewHolderCat.getPosition());
+                        listener.onItemClick(view, viewHolderCat.getLayoutPosition());
                     }
                 });
                 viewHolderCat.imageViewCatGrap.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        listener.onImageViewCatClick(view, viewHolderCat.getPosition());
+                        listener.onImageViewCatClick(view, viewHolderCat.getLayoutPosition());
+                    }
+                });
+                viewHolderCat.imageViewCatAdd.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        listener.onImageViewCatAddClick(view, viewHolderCat.getLayoutPosition());
                     }
                 });
                 return viewHolderCat;

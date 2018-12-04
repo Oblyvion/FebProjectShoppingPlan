@@ -8,4 +8,6 @@ public interface CategoryElementOnClick {
 
     void onImageViewCatClick(View v, int position);
 
+    void onImageViewCatAddClick(View v, int position);
+
 }

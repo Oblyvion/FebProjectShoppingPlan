@@ -77,6 +77,10 @@ public class ShopItem implements InterfaceListElement {
         this.icon = letterIconProvider.getLetterIcon(name, firstchars, tilesize, tilesize, true);
     }
 
+    public Bitmap getIcon() {
+        return this.icon;
+    }
+
     void setActivity(Activity temp) {
         this.activity = temp;
     }

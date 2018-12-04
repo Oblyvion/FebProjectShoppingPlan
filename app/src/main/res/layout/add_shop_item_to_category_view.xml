@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="100">
+
+
+    <ImageView
+        android:id="@+id/imageViewProduct"
+        android:layout_width="300dp"
+        android:layout_height="60dp"
+        android:layout_weight="37.5"
+        android:contentDescription="IconWithCapitalLetter"
+        android:gravity="center"
+        android:src="@mipmap/ic_launcher"
+        android:textAlignment="center" />
+
+    <TextView
+        android:id="@+id/textViewProductName"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_weight="20"
+        android:gravity="center"
+        android:text="NameProdukt"
+        android:textAlignment="center" />
+
+    <ImageView
+        android:id="@+id/imageViewProductCheck"
+        android:layout_width="300dp"
+        android:layout_height="60dp"
+        android:layout_weight="42.5"
+        android:contentDescription="CheckMark"
+        android:gravity="center"
+        android:src="@mipmap/ic_launcher"
+        android:textAlignment="center" />
+
+
+
+</LinearLayout>

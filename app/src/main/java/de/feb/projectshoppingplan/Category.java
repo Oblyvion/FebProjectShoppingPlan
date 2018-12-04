@@ -1,9 +1,12 @@
 package de.feb.projectshoppingplan;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+
+import java.util.List;
 
 @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class Category  implements InterfaceListElement {
@@ -49,7 +52,12 @@ public class Category  implements InterfaceListElement {
     }
 
     public String getName() {
-        return name;
+        return this.name;
+    }
+
+    @Override
+    public Bitmap getIcon() {
+        return null;
     }
 
     public void setName(String name) {

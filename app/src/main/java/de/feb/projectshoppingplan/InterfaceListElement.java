@@ -1,5 +1,6 @@
 package de.feb.projectshoppingplan;
 
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 
 public interface InterfaceListElement {
@@ -17,5 +18,9 @@ public interface InterfaceListElement {
     boolean getVisibility();
 
     void setVisibility(boolean bool);
+
+    String getName();
+
+    Bitmap getIcon();
 
 }

@@ -1,5 +1,7 @@
 package de.feb.projectshoppingplan;
 
+import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -16,6 +18,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,16 +29,12 @@ public class MainActivity extends AppCompatActivity {
     ListElementAdapter adapter;
     ItemTouchHelper.Callback itemTouchHelperCallback;
     ItemTouchHelper itemTouchHelper;
-    // Categories
+    //Categories
     final static String[] STANDARD_CATEGORIES = {"Obst & Gemüse", "Wurst & Milchprodukte",
             "Getreideprokute", "Fleisch & Fisch", "Convenience & Hygiene", "Fertiggerichte"};
 
     Category cat0, cat1, cat2, cat3, cat4, cat5;
 
-    boolean categoryPressedTwice = false;
-
-    //Handler für Auf- und Zuklappfunktion der Kategorien
-    Handler handler;
     //möglich innerhalb von 3 Sekunden
     int delay = 3000; //millisekunden
 
@@ -62,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.recyclerViewMain);
         //Testobjekte erstellen
-//        ArrayList<ShopItem> arrayListShopI = new ArrayList<>();
+        //ArrayList<ShopItem> arrayListShopI = new ArrayList<>();
         ShopItem testItem = new ShopItem();
         ShopItem testItem1 = new ShopItem();
         ShopItem cucumber = new ShopItem("Gurke", "", STANDARD_CATEGORIES[0]);
@@ -112,86 +111,62 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(View v, final int position) {
                 Log.d(TAG, "...invoke onItemClick...");
+                Drawable.ConstantState constantState = shoppingList.get(position).getDrawable().getConstantState();
 
-                //Kannst dir ja mal unten die onImageViewCatClick anschauen funktioniert aber leider nicht
-                //wird trotz klick auf das imageview nicht ausgeführt
-                //aber ich bau auch gerne mit dir an deinem handlerteil weiter wollte nur mal pushen weil ich soviel in den classen geändert hab
-                //und in den viewholdern und wo auch immer
-
-                if (!categoryPressedTwice) {
-//                    if (shoppingList.get(position).getDrawable() == getDrawable(R.drawable.ic_arrow_drop_up_black_24dp)) {
-//                        shoppingList.get(position).setDrawable(getDrawable(R.drawable.ic_arrow_drop_down_black_24dp));
-//                    } else {
+                if (shoppingList.get(position).getListElementType() == InterfaceListElement.typeCat
+                        && constantState.equals(getDrawable(R.drawable.ic_list_black_24dp).getConstantState())
+                        && shoppingList.get(position).getVisibility()) {
                     shoppingList.get(position).setDrawable(getDrawable(R.drawable.ic_arrow_drop_up_black_24dp));
-                    categoryPressedTwice = true;
-                } else {
-                    for (int i = 0; i < shoppingList.size(); i++) {
-                        //element der liste muss typ shopping item haben und die gleiche kategorie wie der name der category
-                        Log.d(TAG, "...FOR_i = " + i);
-                        Log.d(TAG, "...OUT_IF_shoppingListVisible = " + shoppingList.get(i).getVisibility());
-                        if (shoppingList.get(i).getListElementType() == InterfaceListElement.typeShopItem &&
-                                shoppingList.get(i).getCategory().equals(shoppingList.get(position).getCategory())) {
-                            Log.d(TAG, "...IF0_shoppingListVisible = " + shoppingList.get(i).getVisibility());
-                            //elemente einklappen
-                            if (shoppingList.get(i).getVisibility()) {
-                                shoppingList.get(i).setVisibility(false);
-                                shoppingList.get(position).setDrawable(getDrawable(R.drawable.ic_list_black_24dp));
-                                Log.d(TAG, "...IF1_shoppingListVisible = " + shoppingList.get(i).getVisibility());
-                                //elemente aufklappen
-                            } else if (!shoppingList.get(i).getVisibility()) {
-                                shoppingList.get(i).setVisibility(true);
-                                shoppingList.get(position).setDrawable(getDrawable(R.drawable.ic_list_black_24dp));
-                                Log.d(TAG, "...IF2_shoppingListVisible = " + shoppingList.get(i).getVisibility());
-                            }
-                            categoryPressedTwice = false;
-//                        break;
-                        }
-                    }
+                } else if (shoppingList.get(position).getListElementType() == InterfaceListElement.typeCat
+                        && constantState.equals(Objects.requireNonNull(getDrawable(R.drawable.ic_arrow_drop_up_black_24dp)).getConstantState())) {
+                    shoppingList.get(position).setDrawable(getDrawable(R.drawable.ic_list_black_24dp));
+                } else if (shoppingList.get(position).getListElementType() == InterfaceListElement.typeCat
+                        && constantState.equals(Objects.requireNonNull(getDrawable(R.drawable.ic_list_black_24dp)).getConstantState())
+                        && !shoppingList.get(position).getVisibility()) {
+                    shoppingList.get(position).setDrawable(getDrawable(R.drawable.ic_arrow_drop_down_black_24dp));
+                } else if (shoppingList.get(position).getListElementType() == InterfaceListElement.typeCat
+                        && constantState.equals(getDrawable(R.drawable.ic_arrow_drop_down_black_24dp).getConstantState())) {
+                    shoppingList.get(position).setDrawable(getDrawable(R.drawable.ic_list_black_24dp));
                 }
 
                 datachanged();
 
-                // und nach dem einklappen und dem delay soll dann wieder das list symbol kommen das ist auch geil hab ich jedoch oben auch noch nicht drinn
-
-
-//              if (!categoryPressed) {
-//                    // zeige Pfeil nach oben
-//                    shoppingList.get(position).setDrawable(getDrawable(R.drawable.ic_arrow_drop_up_black_24dp));
-//                    categoryPressed = true;
-//                    // CRASH: die nächsten auskommentierten Zeilen mit dem handler
-//                    // schließen die App nach drücken auf eine Kategorie
-////                    handler.postDelayed(new Runnable(){
-////                        public void run(){
-////                            //do something
-////                            shoppingList.get(position).setDrawable(getDrawable(R.drawable.ic_list_black_24dp));
-////                            handler.postDelayed(this, delay);
-////                        }
-////                    }, delay);
-//                } else {
-//                    // PROBLEM: die nächsten auskommentierten Zeilen funktionieren garnicht
-////                    do {
-////                        Log.d(TAG, "shopItem = " + shoppingListIterator.next());
-////                    } while (shoppingListIterator.hasNext());
-//                    shoppingList.get(position).setDrawable(getDrawable(R.drawable.ic_list_black_24dp));
-//                    categoryPressed = false;
-//                }
-//>>>>>>> aee158b6258f713f87c357caa1f4a776c09c2bad
             }
 
             @Override
             public void onImageViewCatClick(View v, int position) {
                 if (v.getId() == R.id.imageViewCategory) {
-                    Toast.makeText(getApplicationContext(), "ImageView CLICK!", Toast.LENGTH_LONG).show();
+                    Drawable.ConstantState constantState = shoppingList.get(position).getDrawable().getConstantState();
 
-                    //TODO hier muss das listElement gedragt werden
+                    if (!(constantState.equals(getDrawable(R.drawable.ic_list_black_24dp).getConstantState()))) {
+                        Toast.makeText(getApplicationContext(), "ImageView CLICK!", Toast.LENGTH_LONG).show();
 
-                    for (int i = 0; i < shoppingList.size(); i++) {
-                        //element der liste muss typ shopping item haben und die gleiche kategorie wie der name der category
-                        if (shoppingList.get(i).getListElementType() == InterfaceListElement.typeShopItem && shoppingList.get(i).getCategory().equals(shoppingList.get(position).getCategory())) {
-                            shoppingList.get(i).setVisibility(false);
+                        shoppingList.get(position).setDrawable(getDrawable(R.drawable.ic_list_black_24dp));
+
+                        for (int i = 0; i < shoppingList.size(); i++) {
+                            if (shoppingList.get(i).getVisibility()) {
+                                //element der liste muss typ shopping item haben und die gleiche kategorie wie der name der category
+                                if (shoppingList.get(i).getListElementType() == InterfaceListElement.typeShopItem && shoppingList.get(i).getCategory().equals(shoppingList.get(position).getCategory())) {
+                                    shoppingList.get(i).setVisibility(false);
+                                }
+                            } else {
+                                if (shoppingList.get(i).getListElementType() == InterfaceListElement.typeShopItem && shoppingList.get(i).getCategory().equals(shoppingList.get(position).getCategory())) {
+                                    shoppingList.get(i).setVisibility(true);
+                                }
+                            }
                         }
+                        shoppingList.get(position).setVisibility(!shoppingList.get(position).getVisibility());
+                        datachanged();
                     }
-                    datachanged();
+                }
+            }
+
+            @Override
+            public void onImageViewCatAddClick(View v, int position) {
+                if (v.getId() == R.id.imageViewAddCategory) {
+                    //Toast.makeText(getApplicationContext(), "Hallo hier plus klick!", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(getApplicationContext(), AddShopItemToCategory.class);
+                    startActivity(intent);
                 }
             }
         });
@@ -223,5 +198,23 @@ public class MainActivity extends AppCompatActivity {
 
     public void datachanged() {
         adapter.notifyDataSetChanged();
+    }
+
+    public void timer() {
+        new CountDownTimer(3000, 1000) {
+            @Override
+            public void onTick(long l) {
+
+            }
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+            public void onFinish() {
+                for (int i = 0; i < shoppingList.size(); i++) {
+                    if (shoppingList.get(i).getListElementType() == InterfaceListElement.typeCat) {
+                        shoppingList.get(i).setDrawable(getDrawable(R.drawable.ic_list_black_24dp));
+                    }
+                }
+            }
+        }.start();
+        datachanged();
     }
 }
