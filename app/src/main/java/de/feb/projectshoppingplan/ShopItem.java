@@ -13,11 +13,11 @@ public class ShopItem implements InterfaceListElement {
     transient Activity activity;
     boolean visible = true;
 
-    ShopItem() {
-        this.name = "standard";
-        this.category = "Obst & Gemüse";
-//      this.description = "25";
-    }
+//    ShopItem() {
+//        this.name = "standard";
+//        this.category = "standard_cat";
+//        this.description = "1";
+//    }
 
     public ShopItem(String name, String description, String category) {
         this.name = name;

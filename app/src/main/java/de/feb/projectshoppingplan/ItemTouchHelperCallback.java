@@ -34,11 +34,14 @@ public class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
     }
 
     @Override
-    public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder,
+    public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder source,
                           @NonNull RecyclerView.ViewHolder target) {
-        Log.d(TAG, "source adapterPosition = " + viewHolder.getAdapterPosition());
-        Log.d(TAG, "target adapterPosition = " + target.getAdapterPosition());
-        adapter.onItemMove(viewHolder.getAdapterPosition(), target.getAdapterPosition());
+        int source_pos = source.getAdapterPosition();
+        int target_pos = target.getAdapterPosition();
+
+        Log.d(TAG, "source adapterPosition = " + source_pos);
+        Log.d(TAG, "target adapterPosition = " + target_pos);
+        adapter.onItemMove(source_pos, target_pos);
         return true;
     }
 

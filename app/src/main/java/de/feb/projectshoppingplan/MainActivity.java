@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.CountDownTimer;
-import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Objects;
@@ -62,8 +63,6 @@ public class MainActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerViewMain);
         //Testobjekte erstellen
         //ArrayList<ShopItem> arrayListShopI = new ArrayList<>();
-        ShopItem testItem = new ShopItem();
-        ShopItem testItem1 = new ShopItem();
         ShopItem cucumber = new ShopItem("Gurke", "", STANDARD_CATEGORIES[0]);
         ShopItem pork = new ShopItem("Schweinefleisch", "", STANDARD_CATEGORIES[3]);
         ShopItem milk = new ShopItem("Milch", "", STANDARD_CATEGORIES[1]);
@@ -72,8 +71,6 @@ public class MainActivity extends AppCompatActivity {
         ShopItem bread = new ShopItem("Brot", "", STANDARD_CATEGORIES[2]);
 
         //Testobjekt testItem braucht Activity
-        testItem.setActivity(this);
-        testItem1.setActivity(this);
         cucumber.setActivity(this);
         pork.setActivity(this);
         milk.setActivity(this);
@@ -82,8 +79,6 @@ public class MainActivity extends AppCompatActivity {
         bread.setActivity(this);
 
         //Testobjekt tesItem bekommt Icon
-        testItem.setIcon();
-        testItem1.setIcon();
         cucumber.setIcon();
         pork.setIcon();
         milk.setIcon();
@@ -93,8 +88,6 @@ public class MainActivity extends AppCompatActivity {
 
         //Objekte zur liste hinzufügen
         shoppingList.add(cat0);
-        shoppingList.add(testItem);
-        shoppingList.add(testItem1);
         shoppingList.add(cucumber);
         shoppingList.add(lemon);
         shoppingList.add(cat1);
@@ -112,25 +105,33 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(View v, final int position) {
                 Log.d(TAG, "...invoke onItemClick...");
                 Drawable.ConstantState constantState = shoppingList.get(position).getDrawable().getConstantState();
+                int counter = 0;
 
-                if (shoppingList.get(position).getListElementType() == InterfaceListElement.typeCat
-                        && constantState.equals(getDrawable(R.drawable.ic_list_black_24dp).getConstantState())
-                        && shoppingList.get(position).getVisibility()) {
-                    shoppingList.get(position).setDrawable(getDrawable(R.drawable.ic_arrow_drop_up_black_24dp));
-                } else if (shoppingList.get(position).getListElementType() == InterfaceListElement.typeCat
-                        && constantState.equals(Objects.requireNonNull(getDrawable(R.drawable.ic_arrow_drop_up_black_24dp)).getConstantState())) {
-                    shoppingList.get(position).setDrawable(getDrawable(R.drawable.ic_list_black_24dp));
-                } else if (shoppingList.get(position).getListElementType() == InterfaceListElement.typeCat
-                        && constantState.equals(Objects.requireNonNull(getDrawable(R.drawable.ic_list_black_24dp)).getConstantState())
-                        && !shoppingList.get(position).getVisibility()) {
-                    shoppingList.get(position).setDrawable(getDrawable(R.drawable.ic_arrow_drop_down_black_24dp));
-                } else if (shoppingList.get(position).getListElementType() == InterfaceListElement.typeCat
-                        && constantState.equals(getDrawable(R.drawable.ic_arrow_drop_down_black_24dp).getConstantState())) {
-                    shoppingList.get(position).setDrawable(getDrawable(R.drawable.ic_list_black_24dp));
+                if (constantState != null) {
+                    if (shoppingList.get(position).getListElementType() == InterfaceListElement.typeCat
+                            && constantState.equals(Objects.requireNonNull(getDrawable(R.drawable.ic_list_black_24dp)).getConstantState())
+                            && shoppingList.get(position).getVisibility()) {
+                        shoppingList.get(position).setDrawable(getDrawable(R.drawable.ic_arrow_drop_up_black_24dp));
+                        counter++;
+                    } else if (shoppingList.get(position).getListElementType() == InterfaceListElement.typeCat
+                            && constantState.equals(Objects.requireNonNull(getDrawable(R.drawable.ic_arrow_drop_up_black_24dp)).getConstantState())) {
+                        shoppingList.get(position).setDrawable(getDrawable(R.drawable.ic_list_black_24dp));
+                    } else if (shoppingList.get(position).getListElementType() == InterfaceListElement.typeCat
+                            && constantState.equals(Objects.requireNonNull(getDrawable(R.drawable.ic_list_black_24dp)).getConstantState())
+                            && !shoppingList.get(position).getVisibility()) {
+                        shoppingList.get(position).setDrawable(getDrawable(R.drawable.ic_arrow_drop_down_black_24dp));
+                        counter++;
+                    } else if (shoppingList.get(position).getListElementType() == InterfaceListElement.typeCat
+                            && constantState.equals(Objects.requireNonNull(getDrawable(R.drawable.ic_arrow_drop_down_black_24dp)).getConstantState())) {
+                        shoppingList.get(position).setDrawable(getDrawable(R.drawable.ic_list_black_24dp));
+                    }
+                }
+
+                if (counter != 0) {
+                    timer();
                 }
 
                 datachanged();
-
             }
 
             @Override
@@ -138,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
                 if (v.getId() == R.id.imageViewCategory) {
                     Drawable.ConstantState constantState = shoppingList.get(position).getDrawable().getConstantState();
 
-                    if (!(constantState.equals(getDrawable(R.drawable.ic_list_black_24dp).getConstantState()))) {
+                    if (constantState != null && !(constantState.equals(Objects.requireNonNull(getDrawable(R.drawable.ic_list_black_24dp)).getConstantState()))) {
                         Toast.makeText(getApplicationContext(), "ImageView CLICK!", Toast.LENGTH_LONG).show();
 
                         shoppingList.get(position).setDrawable(getDrawable(R.drawable.ic_list_black_24dp));
@@ -173,14 +174,6 @@ public class MainActivity extends AppCompatActivity {
 
         //Adapter auf den recyclerview setzen
         recyclerView.setAdapter(adapter);
-        itemTouchHelperCallback = new
-
-                ItemTouchHelperCallback(adapter);
-
-        itemTouchHelper = new
-
-                ItemTouchHelper(itemTouchHelperCallback);
-        itemTouchHelper.attachToRecyclerView(recyclerView);
 
         //Soll man machen wenn man weiß das sich die recyclerview elemente nicht ändern
         recyclerView.setHasFixedSize(true);
@@ -190,8 +183,59 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(linearLayoutManager);
 
 
-        Log.d(TAG, "Das hier ist der Name der cat0: " + cat0.getName());
-        Log.d(TAG, "Das hier ist der Name des TestItems: " + testItem.getName());
+        itemTouchHelperCallback = new ItemTouchHelperCallback(adapter);
+        itemTouchHelper = new ItemTouchHelper(itemTouchHelperCallback);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
+
+
+//        ItemTouchHelperAdapter itemTouchHelperAdapter = new ItemTouchHelperAdapter() {
+//            @Override
+//            public void onItemMove(int fromPosition, int toPosition) {
+//                if (shoppingList.get(fromPosition).getListElementType() == InterfaceListElement.typeCat
+//                        && shoppingList.get(toPosition).getListElementType() == InterfaceListElement.typeCat) {
+//                    InterfaceListElement temp;
+//                    temp = shoppingList.get(fromPosition);
+//                    shoppingList.set(fromPosition, shoppingList.get(toPosition));
+//                    shoppingList.set(toPosition, temp);
+//                }
+//            }
+//
+//            @Override
+//            public void onItemDismiss(int position) {
+//
+//            }
+//        };
+//
+//        ItemTouchHelper helper = new ItemTouchHelper(new ItemTouchHelperCallback(itemTouchHelperAdapter) {
+//
+//            @Override
+//            public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
+//                return 0;
+//            }
+//
+//            @Override
+//            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder source, @NonNull RecyclerView.ViewHolder target) {
+//                int position_source = source.getAdapterPosition();
+//                int position_target = target.getAdapterPosition();
+//
+//                if (shoppingList.get(position_source).getListElementType() == InterfaceListElement.typeCat
+//                        && shoppingList.get(position_target).getListElementType() == InterfaceListElement.typeCat) {
+//                    Collections.swap(shoppingList, position_source, position_target);
+//                }
+//
+//                adapter.notifyItemMoved(position_source, position_target);
+//                return false;
+//            }
+//
+//            @Override
+//            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+//
+//            }
+//        });
+//
+//        helper.attachToRecyclerView(recyclerView);
+
+
         Log.d(TAG, "Das ist die Größe der Liste: " + shoppingList.size());
 
     }
@@ -201,7 +245,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void timer() {
-        new CountDownTimer(3000, 1000) {
+        new CountDownTimer(delay, 1000) {
             @Override
             public void onTick(long l) {
 
@@ -211,10 +255,10 @@ public class MainActivity extends AppCompatActivity {
                 for (int i = 0; i < shoppingList.size(); i++) {
                     if (shoppingList.get(i).getListElementType() == InterfaceListElement.typeCat) {
                         shoppingList.get(i).setDrawable(getDrawable(R.drawable.ic_list_black_24dp));
+                        datachanged();
                     }
                 }
             }
         }.start();
-        datachanged();
     }
 }
