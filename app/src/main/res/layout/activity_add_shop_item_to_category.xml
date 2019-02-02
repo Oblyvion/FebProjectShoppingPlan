@@ -24,11 +24,22 @@
         android:id="@+id/editText_newShopItem"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
         android:ems="10"
+        android:hint="@string/hint_editText_AddNewShopItemToCategory"
         android:imeOptions="actionDone"
         android:inputType="textCapSentences"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:drawableStart="@drawable/ic_arrow_back_black_24dp"
         android:drawableLeft="@drawable/ic_arrow_back_black_24dp"
-        android:hint=""/>
+        android:drawableRight="@drawable/ic_keyboard_voice_black_24dp"
+        android:drawableEnd="@drawable/ic_keyboard_voice_black_24dp" />
 
 
 </android.support.constraint.ConstraintLayout>

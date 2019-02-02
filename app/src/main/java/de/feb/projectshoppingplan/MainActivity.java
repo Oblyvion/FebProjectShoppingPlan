@@ -167,6 +167,10 @@ public class MainActivity extends AppCompatActivity {
                 if (v.getId() == R.id.imageViewAddCategory) {
                     //Toast.makeText(getApplicationContext(), "Hallo hier plus klick!", Toast.LENGTH_LONG).show();
                     Intent intent = new Intent(getApplicationContext(), AddShopItemToCategory.class);
+                    //position funktioniert hier noch nicht, weil auch die shopItems in der liste eine position haben
+                    //brauche hier aber den namen der Category um ihn in die neue activity mitzugeben
+                    Log.d(TAG, "MainActivity, onImageViewCatAddClick position: "+ position);
+                    intent.putExtra("ShoppingCategory", STANDARD_CATEGORIES[position]);
                     startActivity(intent);
                 }
             }
@@ -183,9 +187,59 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(linearLayoutManager);
 
 
-        itemTouchHelperCallback = new ItemTouchHelperCallback(adapter);
-        itemTouchHelper = new ItemTouchHelper(itemTouchHelperCallback);
-        itemTouchHelper.attachToRecyclerView(recyclerView);
+//        itemTouchHelperCallback = new ItemTouchHelperCallback(adapter);
+//        itemTouchHelper = new ItemTouchHelper(itemTouchHelperCallback);
+//        itemTouchHelper.attachToRecyclerView(recyclerView);
+
+
+        final ItemTouchHelper helper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN, 0) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder source, RecyclerView.ViewHolder target) {
+                int position_source = source.getAdapterPosition();
+                int position_target = target.getAdapterPosition();
+
+                if (shoppingList.get(position_source).getListElementType() == InterfaceListElement.typeCat
+                        && shoppingList.get(position_target).getListElementType() == InterfaceListElement.typeCat) {
+
+                    Collections.swap(shoppingList, position_source, position_target );
+
+                    int product_count_category_from = count_shopitems_category(position_source);
+                    int product_count_category_to = count_shopitems_category(position_target);
+
+                    Log.d(TAG, "das hier ist product_count_category_to: " + product_count_category_to);
+                    Log.d(TAG, "das hier ist product_count_category_from: " + product_count_category_from);
+
+                    List<InterfaceListElement> tempList = shoppingList;
+
+                    Log.d(TAG, "Das hier ist die Größe von shoppingList: "+shoppingList.size());
+                    for (int i = 0; i < shoppingList.size(); i++) {
+                        if (shoppingList.get(i).getListElementType() == InterfaceListElement.typeCat) {
+                            tempList.add(shoppingList.get(i));
+                            for (int j = 0; j < shoppingList.size(); j++) {
+                                if (shoppingList.get(j).getListElementType() == InterfaceListElement.typeShopItem
+                                        && shoppingList.get(j).getCategory().equals(shoppingList.get(i).getCategory())) {
+                                    tempList.add(shoppingList.get(j));
+                                }
+                            }
+                        }
+                    }
+                    Log.d(TAG, "Das ist die size von Temp LIST: "+tempList.size());
+                    shoppingList.clear();
+                    shoppingList.addAll(tempList);
+                    adapter.notifyItemMoved(position_source, position_target);
+                }
+
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+
+            }
+        });
+
+        helper.attachToRecyclerView(recyclerView);
+
 
 
 //        ItemTouchHelperAdapter itemTouchHelperAdapter = new ItemTouchHelperAdapter() {
@@ -261,4 +315,18 @@ public class MainActivity extends AppCompatActivity {
             }
         }.start();
     }
+
+    public int count_shopitems_category(int position) {
+        String name_Category = shoppingList.get(position).getName();
+        int product_count_category = 0;
+
+        for (int i = 0; i<shoppingList.size(); i++) {
+            if (shoppingList.get(i).getListElementType() == InterfaceListElement.typeShopItem
+                    && name_Category.equals(shoppingList.get(i).getCategory())) {
+                product_count_category++;
+            }
+        }
+        return product_count_category;
+    }
+
 }

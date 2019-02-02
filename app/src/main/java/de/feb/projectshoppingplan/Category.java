@@ -15,6 +15,7 @@ public class Category  implements InterfaceListElement {
     Drawable drawable;
     Activity activity;
     boolean itemsvisible;
+    List<ShopItem> listofCat;
 
     Category(Activity activity) {
         this.activity = activity;
