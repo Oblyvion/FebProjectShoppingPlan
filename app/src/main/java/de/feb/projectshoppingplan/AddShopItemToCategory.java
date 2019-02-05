@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
@@ -32,6 +33,9 @@ public class AddShopItemToCategory extends AppCompatActivity {
         editText = findViewById(R.id.editText_newShopItem);
         EditText editor = new EditText(this);
         editor.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+
+        Log.d(TAG, "onCreate: editor = " + editor.getText());
+
         recyclerView = findViewById(R.id.recyclerView);
         itemList_temp = new ArrayList<>();
         adapter = new ListElementAdapterAddShopItemToCategory(itemList_temp);
