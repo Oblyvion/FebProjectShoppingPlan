@@ -1,14 +1,27 @@
 package de.feb.projectshoppingplan;
 
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.EditText;
+
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
-
+import java.util.HashSet;
+import java.util.Set;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -23,6 +36,10 @@ public class MainActivity extends AppCompatActivity {
     final static String[] STANDARD_CATEGORIES = {"Obst & Gemüse", "Wurst & Milchprodukte",
             "Getreideprodukte", "Fleisch & Fisch", "Hygiene", "Fertiggerichte"};
 
+    ExpandableRecyclerViewAdapter Adapter;
+
+    public ArrayList<Category> categories = new ArrayList<>();
+
 
 
     @Override
@@ -33,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
         //initialisiere categories mit arraylist
         //Deklaration Array List categories
-        ArrayList<Category> categories = new ArrayList<>();
+        categories = new ArrayList<>();
 
         //recycler view finden
         recyclerView = findViewById(R.id.recyclerViewMain);
@@ -79,13 +96,16 @@ public class MainActivity extends AppCompatActivity {
 
         categories.add(hygienics);
 
+        //erster wichtiger save der liste
+        saveArrayList(categories, "categories_arraylist");
+
 //        itemTouchHelperCallback = new ItemTouchHelperCallback(adapter);
 //        itemTouchHelper = new ItemTouchHelper(itemTouchHelperCallback);
 //        itemTouchHelper.attachToRecyclerView(recyclerView);
 
         //Adapter wird deklariert und initialisiert
         //Kann erst hier gemacht werden, da in categories was drin sein muss
-        ExpandableRecyclerViewAdapter Adapter = new ExpandableRecyclerViewAdapter(categories);
+        Adapter = new ExpandableRecyclerViewAdapter(categories);
 
         //Adapter auf den recyclerview setzen
         recyclerView.setAdapter(Adapter);
@@ -159,9 +179,64 @@ public class MainActivity extends AppCompatActivity {
 
         Log.d(TAG, "Das ist die Größe der Category Liste: " + categories.size());
 
+        //Floating button und Alert Dialog für Category Adding
+        FloatingActionButton floatingBttn_add  = findViewById(R.id.floatingBttn_add);
+        floatingBttn_add.setSize(50);
+        floatingBttn_add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.this);
+                builder.setTitle("Add new category");
+                View viewInflated = LayoutInflater.from(MainActivity.this).inflate(R.layout.alert_dialog, (ViewGroup) findViewById(android.R.id.content), false);
+                // input setup
+                final EditText input = viewInflated.findViewById(R.id.input);
+                builder.setView(viewInflated);
+
+                // button setup
+                builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        //item liste für neue cat erstellen
+                        ArrayList<ShopItem> list = new ArrayList<>();
+                        //newCat erstellen mit Name und Liste
+                        Category newCat = new Category(input.getText().toString(), list);
+                        //Zur Liste der categories hinzufügen
+                        categories.add(newCat);
+                        //dafür sorgen das der adapter die neue category auch anzeigt
+                        Adapter.addNewGroup();
+
+                        //Save der Liste nachdem eine neue Cat hinzugefügt wurde
+                        saveArrayList(categories, "categories_arraylist");
+
+
+                    }
+                });
+                builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+                builder.show();
+            }
+        });
+    }
+
+    public void saveArrayList(ArrayList<Category> list, String key){
+        SharedPreferences prefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(list);
+        Log.d(TAG, "Json: "+json);
+        editor.putString(key, json);
+        editor.apply();     // This line is IMPORTANT !!!
     }
 
     public void datachanged() {
-        //notifyDataSetChanged();
+        recyclerView.getRecycledViewPool().clear();
+        Adapter.notifyDataSetChanged();
     }
 }

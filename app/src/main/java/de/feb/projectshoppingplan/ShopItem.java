@@ -4,8 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.RequiresApi;
+import android.widget.ImageView;
 
 public class ShopItem implements Parcelable {
 
@@ -13,14 +16,9 @@ public class ShopItem implements Parcelable {
     String description;
     String category;
     Bitmap icon;
+    Boolean checked = false;
     transient Activity activity;
-//    boolean visible = true;
-
-//    ShopItem() {
-//        this.name = "standard";
-//        this.category = "standard_cat";
-//        this.description = "1";
-//    }
+    transient Drawable checkmark;
 
     public ShopItem(String name, String description, String category) {
         this.name = name;
@@ -75,11 +73,11 @@ public class ShopItem implements Parcelable {
         int tilesize = 64;
         this.icon = letterIconProvider.getLetterIcon(name, firstchars, tilesize, tilesize, true);
     }
-//
-//    public Bitmap getIcon() {
-//        return this.icon;
-//    }
-//
+
+    public Bitmap getIcon() {
+        return this.icon;
+    }
+
     void setActivity(Activity temp) {
         this.activity = temp;
     }
@@ -94,4 +92,14 @@ public class ShopItem implements Parcelable {
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(name);
     }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    public void setCheckmark() {
+        if (this.checked) {
+            this.checkmark = activity.getDrawable(R.drawable.ic_check_box_black_24dp);
+        }
+        else this.checkmark = activity.getDrawable(R.drawable.leer);
+    }
+
+    public void setChecked(boolean check) { this.checked = check; }
 }

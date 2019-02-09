@@ -43,8 +43,9 @@ public class ListElementAdapterAddShopItemToCategory extends RecyclerView.Adapte
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         ShopItem shopItem = itemList.get(position);
-        //holder.name.setText(shopItem.getName());
-        //holder.imageViewIcon.setImageBitmap(shopItem.getIcon());
+        holder.name.setText(shopItem.name);
+        holder.imageViewIcon.setImageBitmap(shopItem.getIcon());
+        holder.imageViewCheckMark.setImageDrawable(shopItem.checkmark);
     }
 
     @Override

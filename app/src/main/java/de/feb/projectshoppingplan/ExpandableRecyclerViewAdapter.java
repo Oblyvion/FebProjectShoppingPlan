@@ -1,10 +1,14 @@
 package de.feb.projectshoppingplan;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.thoughtbot.expandablerecyclerview.ExpandCollapseController;
+import com.thoughtbot.expandablerecyclerview.ExpandableListUtils;
 import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup;
+import com.thoughtbot.expandablerecyclerview.models.ExpandableList;
 
 import java.util.List;
 
@@ -36,5 +40,14 @@ public class ExpandableRecyclerViewAdapter extends com.thoughtbot.expandablerecy
     public void onBindGroupViewHolder(ViewHolderCat holder, int flatPosition, ExpandableGroup group) {
         final Category category = (Category) group;
         holder.bind(category);
+    }
+
+    public void addNewGroup() {
+        ExpandableListUtils.notifyGroupDataChanged(this);
+        notifyDataSetChanged();
+    }
+
+    public void remove() {
+        getGroups().clear();
     }
 }

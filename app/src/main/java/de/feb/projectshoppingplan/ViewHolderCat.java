@@ -2,7 +2,9 @@ package de.feb.projectshoppingplan;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.view.View;
@@ -10,7 +12,12 @@ import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.thoughtbot.expandablerecyclerview.viewholders.GroupViewHolder;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 
 import static android.view.animation.Animation.RELATIVE_TO_SELF;
 
@@ -40,6 +47,7 @@ class ViewHolderCat extends GroupViewHolder implements View.OnClickListener {
 
                 Log.d(TAG, "hallo click click clock");
                 Intent intent = new Intent(context,AddShopItemToCategory.class);
+                Log.d(TAG, "hallo     " + textViewCat.getText());
                 intent.putExtra("category_name", textViewCat.getText());
                 context.startActivity(intent);
 
