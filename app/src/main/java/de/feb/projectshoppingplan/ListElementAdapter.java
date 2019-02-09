@@ -12,7 +12,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-public class ListElementAdapter extends RecyclerView.Adapter<ViewHolder>
+public class ListElementAdapter extends RecyclerView.Adapter<ViewHolderCat>
         implements ItemTouchHelperAdapter {
     private final static String TAG = "MyActivity";
 
@@ -33,7 +33,7 @@ public class ListElementAdapter extends RecyclerView.Adapter<ViewHolder>
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull final ViewGroup viewGroup, int type) {
+    public ViewHolderCat onCreateViewHolder(@NonNull final ViewGroup viewGroup, int type) {
         View view;
         switch (type) {
             case InterfaceListElement.typeCat:
@@ -64,15 +64,15 @@ public class ListElementAdapter extends RecyclerView.Adapter<ViewHolder>
                 view = LayoutInflater
                         .from(viewGroup.getContext())
                         .inflate(R.layout.shopitem, viewGroup, false);
-                return new ViewHolderShopI(view);
+                return new ViewHolderCat(view);
         }
         return null;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolderCat viewHolder, int position) {
         InterfaceListElement item = shoppingList.get(position);
-        viewHolder.bindType(item);
+        //viewHolder.bindType(item);
         Log.d(TAG, "onBindViewHolder called!");
     }
 

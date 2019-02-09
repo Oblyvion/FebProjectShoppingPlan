@@ -31,8 +31,8 @@ public class AddShopItemToCategory extends AppCompatActivity {
     String temp_user_input;
     EditText editText;
     RecyclerView recyclerView;
-    List<InterfaceListElement> itemList_text;
-    List<InterfaceListElement> itemList_voice;
+    List<ShopItem> itemList_text;
+    List<ShopItem> itemList_voice;
     ListElementAdapterAddShopItemToCategory adapter;
     Activity addShopItemToCategory = this;
 
@@ -156,7 +156,7 @@ public class AddShopItemToCategory extends AppCompatActivity {
 
         for (int i = 0; i < separated.length; i++) {
             Intent intent = getIntent();
-            categoryName = intent.getStringExtra("ShoppingCategory");
+            categoryName = intent.getStringExtra("category_name");
             Log.d(TAG, "seperateSpokenWords[i]: " + separated[i]);
             ShopItem item = new ShopItem(separated[i], "", categoryName);
             Log.d(TAG, "Item: "+item);

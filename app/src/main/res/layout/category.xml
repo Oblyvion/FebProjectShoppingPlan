@@ -14,8 +14,8 @@
         android:layout_height="40dp"
         android:layout_gravity="center"
         android:layout_weight="20"
-        android:src="@mipmap/ic_launcher"
-        android:contentDescription="list symbol" />
+        android:src="@drawable/ic_keyboard_arrow_down_black_24dp"
+        android:contentDescription="list symbol"/>
 
     <TextView
         android:id="@+id/textViewCategory"
@@ -24,7 +24,8 @@
         android:layout_gravity="center"
         android:layout_weight="60"
         android:textAlignment="center"
-        android:textSize="20sp"/>
+        android:textSize="20sp"
+        android:text="Category"/>
 
     <ImageView
         android:id="@+id/imageViewAddCategory"
@@ -32,7 +33,7 @@
         android:layout_height="30dp"
         android:layout_gravity="center"
         android:layout_weight="20"
-        android:src="@mipmap/ic_launcher"
+        android:src="@drawable/ic_add_circle_24dp"
         android:contentDescription="add symbol" />
 
 </LinearLayout>

@@ -23,7 +23,8 @@
         android:layout_height="wrap_content"
         android:layout_weight="60"
         android:layout_gravity="center"
-        android:textAlignment="center"/>
+        android:textAlignment="center"
+        android:text="ShopItem"/>
 
     <Spinner
         android:id="@+id/spinnerShopItem"

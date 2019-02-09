@@ -14,7 +14,7 @@ import java.util.List;
 
 public class ListElementAdapterAddShopItemToCategory extends RecyclerView.Adapter<ListElementAdapterAddShopItemToCategory.MyViewHolder> {
 
-    private List<InterfaceListElement> itemList;
+    private List<ShopItem> itemList;
 
     class MyViewHolder extends RecyclerView.ViewHolder {
         TextView name, category;
@@ -29,7 +29,7 @@ public class ListElementAdapterAddShopItemToCategory extends RecyclerView.Adapte
     }
 
 
-    ListElementAdapterAddShopItemToCategory(List<InterfaceListElement> itemList) {
+    ListElementAdapterAddShopItemToCategory(List<ShopItem> itemList) {
         this.itemList = itemList;
     }
 
@@ -43,9 +43,9 @@ public class ListElementAdapterAddShopItemToCategory extends RecyclerView.Adapte
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        InterfaceListElement ShopItem = itemList.get(position);
-        holder.name.setText(ShopItem.getName());
-        holder.imageViewIcon.setImageBitmap(ShopItem.getIcon());
+        ShopItem shopItem = itemList.get(position);
+        //holder.name.setText(shopItem.getName());
+        //holder.imageViewIcon.setImageBitmap(shopItem.getIcon());
     }
 
     @Override
