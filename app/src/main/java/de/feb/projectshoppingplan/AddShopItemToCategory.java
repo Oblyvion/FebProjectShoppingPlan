@@ -46,6 +46,9 @@ public class AddShopItemToCategory extends AppCompatActivity {
         editText = findViewById(R.id.editText_newShopItem);
         EditText editor = new EditText(this);
         editor.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+
+        Log.d(TAG, "onCreate: editor = " + editor.getText());
+
         recyclerView = findViewById(R.id.recyclerView);
 
         itemList_text = new ArrayList<>();

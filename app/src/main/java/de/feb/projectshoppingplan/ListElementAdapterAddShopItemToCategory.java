@@ -28,7 +28,6 @@ public class ListElementAdapterAddShopItemToCategory extends RecyclerView.Adapte
         }
     }
 
-
     ListElementAdapterAddShopItemToCategory(List<ShopItem> itemList) {
         this.itemList = itemList;
     }
