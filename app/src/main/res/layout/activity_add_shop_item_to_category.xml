@@ -39,7 +39,9 @@
         android:drawableStart="@drawable/ic_arrow_back_black_24dp"
         android:drawableLeft="@drawable/ic_arrow_back_black_24dp"
         android:drawableRight="@drawable/ic_keyboard_voice_black_24dp"
-        android:drawableEnd="@drawable/ic_keyboard_voice_black_24dp" />
+        android:drawableEnd="@drawable/ic_keyboard_voice_black_24dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"/>
 
 
 </android.support.constraint.ConstraintLayout>

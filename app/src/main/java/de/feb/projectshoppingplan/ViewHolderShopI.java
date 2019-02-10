@@ -1,23 +1,17 @@
 package de.feb.projectshoppingplan;
 
-import android.database.DataSetObserver;
-import android.graphics.PixelFormat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.PixelCopy;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
+import com.thoughtbot.expandablerecyclerview.viewholders.ChildViewHolder;
 
-import java.util.ArrayList;
 
-class ViewHolderShopI extends ViewHolder {
+class ViewHolderShopI extends ChildViewHolder {
 
     private static final String TAG = "MyActivity";
 
@@ -38,32 +32,39 @@ class ViewHolderShopI extends ViewHolder {
         for (int i = 0; i < 100; i++) {
             numberShopI[i] = "" + i;
         }
-        adapter = new ArrayAdapter<String>(view.getContext(), R.layout.spinner_item, numberShopI);
+        adapter = new ArrayAdapter<>(view.getContext(), R.layout.spinner_item, numberShopI);
     }
 
-    @Override
-    public void bindType(InterfaceListElement item) {
-        Log.d(TAG, "Hallo hier bindtype");
-        imageViewShopI.setImageBitmap(((ShopItem) item).icon);
-        textViewShopI.setText(((ShopItem) item).getName());
+    public void bind(ShopItem shopItem) {
+        textViewShopI.setText(shopItem.name);
+        imageViewShopI.setImageBitmap(shopItem.icon);
         spinnerShopI.setAdapter(adapter);
-        if (!((ShopItem) item).visible) {
-            itemView.setVisibility(View.INVISIBLE);
-            itemView.setLayoutParams(new RecyclerView.LayoutParams(0, 0));
-        } else {
-            itemView.setVisibility(View.VISIBLE);
-            itemView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT));
-        }
     }
 
-    @Override
-    public void onItemSelected() {
-        itemView.setBackgroundColor(itemView.getResources().getColor(R.color.colorAccent));
-    }
+//    @Override
+//    public void bindType(InterfaceListElement item) {
+//        Log.d(TAG, "Hallo hier bindtype");
+//        imageViewShopI.setImageBitmap(((ShopItem) item).icon);
+//        textViewShopI.setText(((ShopItem) item).getName());
+//        spinnerShopI.setAdapter(adapter);
+//        if (!((ShopItem) item).visible) {
+//            itemView.setVisibility(View.INVISIBLE);
+//            itemView.setLayoutParams(new RecyclerView.LayoutParams(0, 0));
+//        } else {
+//            itemView.setVisibility(View.VISIBLE);
+//            itemView.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+//                    ViewGroup.LayoutParams.WRAP_CONTENT));
+//        }
+//    }
 
-    @Override
-    public void onItemClear() {
-        itemView.setBackgroundColor(0);
-    }
+//    @Override
+//    public void onItemSelected() {
+//        itemView.setBackgroundColor(itemView.getResources().getColor(R.color.colorAccent));
+//    }
+//
+//    @Override
+//    public void onItemClear() {
+//        itemView.setBackgroundColor(0);
+//    }
+
 }

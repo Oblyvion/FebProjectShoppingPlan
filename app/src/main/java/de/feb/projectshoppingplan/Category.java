@@ -1,68 +1,40 @@
 package de.feb.projectshoppingplan;
 
-import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
+import com.thoughtbot.expandablecheckrecyclerview.models.CheckedExpandableGroup;
 
 import java.util.List;
 
-@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-public class Category  implements InterfaceListElement {
+public class Category extends CheckedExpandableGroup {
+    public Category(String title, List items) {
 
-    String name;
-    Drawable drawable;
-    Activity activity;
-    boolean itemsvisible;
-    List<ShopItem> listofCat;
-
-    Category(Activity activity) {
-        this.activity = activity;
-        this.drawable = activity.getDrawable(R.drawable.ic_list_black_24dp);
-        this.itemsvisible = true;
+        super(title, items);
     }
 
     @Override
-    public int getListElementType() {
-        return InterfaceListElement.typeCat;
+    public void onChildClicked(int childIndex, boolean checked) {
+
     }
 
-    @Override
-    public Drawable getDrawable() {
-        return this.drawable;
-    }
-
-    public void setDrawable(Drawable x) {
-        this.drawable = x;
-    }
-
-    @Override
-    public String getCategory() {
-        return this.name;
-    }
-
-    @Override
-    public boolean getVisibility() {
-        return this.itemsvisible;
-    }
-
-    @Override
-    public void setVisibility(boolean bool) {
-        this.itemsvisible = bool;
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    @Override
-    public Bitmap getIcon() {
-        return null;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
+//    String name;
+//    Drawable drawable;
+//    Activity activity;
+//    boolean itemsvisible;
+//    List<ShopItem> listofCat;
+//
+//    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+//    Category(Activity activity) {
+//        this.activity = activity;
+//        this.drawable = activity.getDrawable(R.drawable.ic_list_black_24dp);
+//        this.itemsvisible = true;
+//    }
+//
+//    public void setName(String name) {
+//        this.name = name;
+//    }
+//
+//    @Override
+//    public void onChildClicked(int childIndex, boolean checked) {
+//
+//    }
 
 }
