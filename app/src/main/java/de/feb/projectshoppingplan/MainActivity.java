@@ -3,7 +3,6 @@ package de.feb.projectshoppingplan;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -18,10 +17,10 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -50,7 +49,17 @@ public class MainActivity extends AppCompatActivity {
 
         //initialisiere categories mit arraylist
         //Deklaration Array List categories
-        categories = new ArrayList<>();
+
+        delete();
+        SharedPreferences prefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
+        if (prefs.getString("categories_arraylist", null) != null) {
+            categories = loadArrayList("categories_arraylist");
+            Log.d(TAG, "HALLO HIER DIE CATEGORY LIST IN MAIN NACH LOAD: "+categories+"\n");
+            for (int i = 0; i < categories.size(); i++) {
+                categories.get(i).getItems().addAll(getListFromJson(categories.get(i).getItems().toString()));
+            }
+        }
+
 
         //recycler view finden
         recyclerView = findViewById(R.id.recyclerViewMain);
@@ -62,39 +71,9 @@ public class MainActivity extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
 
-
-        ArrayList<ShopItem> veggie_list = new ArrayList<>();
-        Category veggie = new Category(STANDARD_CATEGORIES[0], veggie_list);
-
-        veggie_list.add(new ShopItem("banana", "", veggie.getTitle()));
-        veggie_list.add(new ShopItem("apple", "", veggie.getTitle()));
-        veggie_list.add(new ShopItem("cucumber", "", veggie.getTitle()));
-        veggie_list.add(new ShopItem("apricots", "", veggie.getTitle()));
-        veggie_list.add(new ShopItem("salad", "", veggie.getTitle()));
-
-        for (int i = 0; i < veggie_list.size(); i++) {
-            veggie_list.get(i).setActivity(this);
-            veggie_list.get(i).setIcon();
+        if(categories.isEmpty()) {
+            addStandardCats();
         }
-
-        categories.add(veggie);
-
-
-        ArrayList<ShopItem> hygienics_list = new ArrayList<>();
-        Category hygienics = new Category(STANDARD_CATEGORIES[4], hygienics_list);
-
-        hygienics_list.add(new ShopItem("deo", "", hygienics.getTitle()));
-        hygienics_list.add(new ShopItem("toothbrush", "", hygienics.getTitle()));
-        hygienics_list.add(new ShopItem("shampoo", "", hygienics.getTitle()));
-        hygienics_list.add(new ShopItem("perfume", "", hygienics.getTitle()));
-        hygienics_list.add(new ShopItem("soap", "", hygienics.getTitle()));
-
-        for (int i = 0; i < hygienics_list.size(); i++) {
-            hygienics_list.get(i).setActivity(this);
-            hygienics_list.get(i).setIcon();
-        }
-
-        categories.add(hygienics);
 
         //erster wichtiger save der liste
         saveArrayList(categories, "categories_arraylist");
@@ -225,14 +204,69 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void addStandardCats() {
+        ArrayList<ShopItem> veggie_list = new ArrayList<>();
+        Category veggie = new Category(STANDARD_CATEGORIES[0], veggie_list);
+
+        veggie_list.add(new ShopItem("banana"));
+        veggie_list.add(new ShopItem("apple"));
+        veggie_list.add(new ShopItem("cucumber"));
+        veggie_list.add(new ShopItem("apricots"));
+        veggie_list.add(new ShopItem("salad"));
+
+        for (int i = 0; i < veggie_list.size(); i++) {
+            veggie_list.get(i).setActivity(this);
+            veggie_list.get(i).setIcon();
+        }
+
+        categories.add(veggie);
+
+
+        ArrayList<ShopItem> hygienics_list = new ArrayList<>();
+        Category hygienics = new Category(STANDARD_CATEGORIES[4], hygienics_list);
+
+        hygienics_list.add(new ShopItem("deo"));
+        hygienics_list.add(new ShopItem("toothbrush"));
+        hygienics_list.add(new ShopItem("shampoo"));
+        hygienics_list.add(new ShopItem("perfume"));
+        hygienics_list.add(new ShopItem("soap"));
+
+        for (int i = 0; i < hygienics_list.size(); i++) {
+            hygienics_list.get(i).setActivity(this);
+            hygienics_list.get(i).setIcon();
+        }
+
+        categories.add(hygienics);
+    }
+
+    //aus Json string wird wieder eine Arraylist<ShopItem>
+    public ArrayList<ShopItem> getListFromJson(String json){
+        Gson gson = new Gson();
+        Type type = new TypeToken<ArrayList<ShopItem>>() {}.getType();
+        return gson.fromJson(json, type);
+    }
+
     public void saveArrayList(ArrayList<Category> list, String key){
         SharedPreferences prefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         Gson gson = new Gson();
         String json = gson.toJson(list);
-        Log.d(TAG, "Json: "+json);
         editor.putString(key, json);
         editor.apply();     // This line is IMPORTANT !!!
+    }
+
+    public ArrayList<Category> loadArrayList(String key) {
+        Log.d(TAG, "Categories vor .clear(): "+categories+"\n");
+        categories.clear();
+        SharedPreferences prefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = prefs.getString(key, null);
+        Type type = new TypeToken<ArrayList<Category>>() {}.getType();
+        return gson.fromJson(json, type);
+    }
+
+    public void delete() {
+        this.getSharedPreferences("myPrefs", 0).edit().clear().apply();
     }
 
     public void datachanged() {

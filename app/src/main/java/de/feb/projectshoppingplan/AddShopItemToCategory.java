@@ -9,9 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 
 import android.os.Build;
-import android.preference.PreferenceManager;
 import android.speech.RecognizerIntent;
-import android.support.annotation.LongDef;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -47,11 +45,9 @@ public class AddShopItemToCategory extends AppCompatActivity {
     List<ShopItem> itemList_voice;
     ListElementAdapterAddShopItemToCategory adapter;
     String categoryName;
-    Activity addShopItemToCategory = this;
     ArrayList<Category> categories;
-    List<ShopItem> itemList_forMain;
+    ArrayList<ShopItem> itemList_forMain;
     Category category;
-
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -62,7 +58,7 @@ public class AddShopItemToCategory extends AppCompatActivity {
         Intent intent = getIntent();
         categoryName = intent.getStringExtra("category_name");
 
-        categories = getArrayList("categories_arraylist");
+        categories = getCategoryList("categories_arraylist");
 
         Log.d(TAG, "Categories hier!!: "+categories);
 
@@ -77,21 +73,21 @@ public class AddShopItemToCategory extends AppCompatActivity {
 
         itemList_text = new ArrayList<>();
         itemList_voice = new ArrayList<>();
-        itemList_forMain = new ArrayList<ShopItem>();
+        itemList_forMain = new ArrayList<>();
         for (int i = 0; i < categories.size(); i++) {
             if (categories.get(i).getTitle().equals(categoryName)) {
                 category = categories.get(i);
-                category.getItems().addAll(itemList_forMain);
+                Log.d(TAG, "Category name: "+categoryName);
+                Log.d(TAG, "list of Category: "+category.getItems());
+                itemList_forMain = getListFromJson(category.getItems().toString());
+                Log.d(TAG, "Hallo hier itemListForMain      "+ itemList_forMain);
                 //TODO alle items die in der liste der category sind der itemList_forMain hinzufüge
                 //TODO dann kann man überprüfen ob das jeweils eingegebene produkt schon in der liste ist
-//                for (int j = 0; j < categories.get(i).getItems().size(); j++) {
-//                    itemList_forMain.add((ShopItem) category.getItems().get(j));
-//                }
+                for (int j = 0; j < itemList_forMain.size(); j++) {
+                    Log.d("MyActivity", "Hier einzelnes item *_*: "+itemList_forMain.get(j).name);
+                }
             }
         }
-        Log.d(TAG, "Category name: "+categoryName);
-        Log.d(TAG, "Category: "+category);
-        Log.d(TAG, "Hallo hier itemListForMain      "+ itemList_forMain);
         adapter = new ListElementAdapterAddShopItemToCategory(itemList_text);
 
         recyclerView.setAdapter(adapter);
@@ -108,8 +104,15 @@ public class AddShopItemToCategory extends AppCompatActivity {
                     itemList_text.get(position).setChecked(!itemList_text.get(position).checked);
                         if(!findDuplicates(itemList_text.get(position))) {
                             itemList_text.get(position).setCheckmark();
-                            itemList_forMain.add(new ShopItem(itemList_text.get(position).name, "", itemList_text.get(position).category));
-                            saveArrayList((ArrayList<ShopItem>)itemList_forMain, "MainList");
+                            itemList_forMain.add(new ShopItem(itemList_text.get(position).name));
+                            for (int i = 0; i < categories.size(); i++) {
+                                if (categories.get(i).getTitle() == categoryName) {
+                                    categories.get(i).getItems().clear();
+                                    categories.get(i).getItems().addAll(itemList_forMain);
+                                    saveArrayList(categories, "categories_arraylist");
+                                }
+                            }
+                            saveArrayList(categories, "MainList");
                         }
                         else {
                             itemList_text.get(position).setCheckmark();
@@ -151,7 +154,7 @@ public class AddShopItemToCategory extends AppCompatActivity {
                             SharedPreferences.Editor sharedPrefEditor;
                             String sharedPrefsKey = "Grocery";
 
-                            Log.d(TAG, "afterTextChanged: jojooojojjo charAT = " + s.charAt(s.length() - 1));
+                            //Log.d(TAG, "afterTextChanged: jojooojojjo charAT = " + s.charAt(s.length() - 1));
                             if (s.toString().length() > 1) {
 
                                 addtoListandgiveIcon(s.toString());
@@ -207,17 +210,17 @@ public class AddShopItemToCategory extends AppCompatActivity {
                 SharedPreferences.Editor sharedPrefEditor;
                 String sharedPrefsKey = "Grocery";
 
-                Log.d(TAG, "afterTextChanged: jojooojojjo charAT = " + s.charAt(s.length() - 1));
+//                Log.d(TAG, "afterTextChanged: jojooojojjo charAT = " + s.charAt(s.length() - 1));
                 if (s.toString().length() > 1) {
                     addtoListandgiveIcon(s.toString());
-                    Log.d(TAG, "afterTextChanged: HLALLJSADFOJODSA");
+//                    Log.d(TAG, "afterTextChanged: HLALLJSADFOJODSA");
                     temp_user_input = s.toString();
-                    Log.d(TAG, "afterTextChanged: temp_user_input = " + temp_user_input);
+//                    Log.d(TAG, "afterTextChanged: temp_user_input = " + temp_user_input);
 //                    if (s.charAt(s.length() - 1) == '\n') {
                     sharedPrefEditor = sharedPreferences.edit();
                     sharedPrefEditor.putString(sharedPrefsKey + temp_user_input.toString(), temp_user_input);
                     sharedPrefEditor.apply();
-                    Log.d(TAG, "afterTextChanged: if sharedPrefs = " + sharedPreferences.getString(sharedPrefsKey + "Hgzuuh", "no gro"));
+//                    Log.d(TAG, "afterTextChanged: if sharedPrefs = " + sharedPreferences.getString(sharedPrefsKey + "Hgzuuh", "no gro"));
 //                    }
                 } else {
                     if (!itemList_text.isEmpty()) {
@@ -323,7 +326,7 @@ public class AddShopItemToCategory extends AppCompatActivity {
 
         for (int i = 0; i < separated.length; i++) {
             Log.d(TAG, "seperateSpokenWords[i]: " + separated[i]);
-            ShopItem item = new ShopItem(separated[i], "", categoryName);
+            ShopItem item = new ShopItem(separated[i]);
             Log.d(TAG, "Item: " + item);
             item.setActivity(this);
             this.itemList_voice.add(item);
@@ -339,7 +342,8 @@ public class AddShopItemToCategory extends AppCompatActivity {
 
     }
 
-    public ArrayList<Category> getArrayList(String key){
+    //Die Komplette Liste mit Categories aus der Main Activity
+    public ArrayList<Category> getCategoryList(String key){
         SharedPreferences prefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
         Gson gson = new Gson();
         String json = prefs.getString(key, null);
@@ -347,12 +351,19 @@ public class AddShopItemToCategory extends AppCompatActivity {
         return gson.fromJson(json, type);
     }
 
-    public void saveArrayList(ArrayList<ShopItem> list, String key){
+    //Aus einzelner Unterliste im JSON format wird wieder eine Arraylist<ShopItem>
+    public ArrayList<ShopItem> getListFromJson(String json){
+        Gson gson = new Gson();
+        Type type = new TypeToken<ArrayList<ShopItem>>() {}.getType();
+        return gson.fromJson(json, type);
+    }
+
+    public void saveArrayList(ArrayList<Category> list, String key){
         SharedPreferences prefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         Gson gson = new Gson();
         String json = gson.toJson(list);
-        Log.d(TAG, "Json: "+json);
+//        Log.d(TAG, "Json: "+json);
         editor.putString(key, json);
         editor.apply();     //Wichtige Zeile
     }
@@ -363,7 +374,7 @@ public class AddShopItemToCategory extends AppCompatActivity {
         Intent intent = getIntent();
         String categoryName = intent.getStringExtra("ShoppingCategory");
 
-        ShopItem item = new ShopItem(temp_user_input, "", categoryName);
+        ShopItem item = new ShopItem(temp_user_input);
         item.setActivity(this);
         item.setIcon();
 
