@@ -97,7 +97,7 @@ class LetterIconProvider {
      *         false otherwise
      */
     private static boolean isEnglishLetterOrDigit(char c) {
-        Log.d("MyActivity", "Das ist char c: "+c);
+        //Log.d("MyActivity", "Das ist char c: "+c);
         return 'A' <= c && c <= 'Z' || 'a' <= c && c <= 'z' || '0' <= c && c <= '9';
     }
 
