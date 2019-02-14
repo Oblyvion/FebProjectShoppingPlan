@@ -45,9 +45,9 @@ class ViewHolderCat extends GroupViewHolder implements View.OnClickListener {
             @Override
             public void onClick(View v) {
 
-                Log.d(TAG, "hallo click click clock");
+                Log.d(TAG, "ViewHolderCat Click Add Button");
                 Intent intent = new Intent(context,AddShopItemToCategory.class);
-                Log.d(TAG, "hallo     " + textViewCat.getText());
+                Log.d(TAG, "ViewHolderCat CategoryName: " + textViewCat.getText());
                 intent.putExtra("category_name", textViewCat.getText());
                 context.startActivity(intent);
 

@@ -1,11 +1,10 @@
 package de.feb.projectshoppingplan;
 
-import com.thoughtbot.expandablecheckrecyclerview.models.CheckedExpandableGroup;
-
+import java.util.ArrayList;
 import java.util.List;
 
 public class Category extends CheckedExpandableGroup {
-    public Category(String title, List items) {
+    public Category(String title, ArrayList<ShopItem> items) {
 
         super(title, items);
     }

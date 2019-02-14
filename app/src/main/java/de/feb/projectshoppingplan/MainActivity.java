@@ -19,6 +19,7 @@ import android.widget.EditText;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
@@ -47,33 +48,45 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Log.d(TAG, "MainActivity: On Create");
 
-        //initialisiere categories mit arraylist
-        //Deklaration Array List categories
 
-        delete();
+//        delete();
         SharedPreferences prefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
         if (prefs.getString("categories_arraylist", null) != null) {
-            categories = loadArrayList("categories_arraylist");
-            Log.d(TAG, "HALLO HIER DIE CATEGORY LIST IN MAIN NACH LOAD: "+categories+"\n");
+            loadArrayList("categories_arraylist");
+            Log.d(TAG, "SharedPreferences load categories");
             for (int i = 0; i < categories.size(); i++) {
-                categories.get(i).getItems().addAll(getListFromJson(categories.get(i).getItems().toString()));
+                    ArrayList<ShopItem> shopItems;
+                    //Log.d(TAG, "LOAD shop item lists: "+categories.get(i).getItems());
+                    //shopItems = (ArrayList<ShopItem>) categories.get(i).getItems();
+                    shopItems = getListFromJson(categories.get(i).getItems().toString());
+                    categories.get(i).getItems().clear();
+                    categories.get(i).getItems().addAll(shopItems);
+                    for (int j = 0; j < shopItems.size(); j++) {
+                        //Log.d(TAG, "SharedPreferences einzelne items nach load shop item list: "+shopItems.get(j).name);
+                        shopItems.get(j).setActivity(this);
+                        shopItems.get(j).setIcon();
+                    }
             }
         }
+
+        if(categories.isEmpty()) {
+            addStandardCats();
+        }
+
+        //Adapter wird deklariert und initialisiert
+        //Kann erst hier gemacht werden, da in categories was drin sein muss
+        Adapter = new ExpandableRecyclerViewAdapter(categories);
 
 
         //recycler view finden
         recyclerView = findViewById(R.id.recyclerViewMain);
 
-        //Soll man machen wenn man weiß das sich die recyclerview elemente nicht ändern
+        //Soll man machen wenn man weiß das sich die recyclerview elemente nicht ändern (also bezogen auf größe immer gleich bleibend)
         recyclerView.setHasFixedSize(true);
 
         //Linearlayout dem recycleview mitgeben soll man so machen damits besser angezeigt wird
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
-
-        if(categories.isEmpty()) {
-            addStandardCats();
-        }
 
         //erster wichtiger save der liste
         saveArrayList(categories, "categories_arraylist");
@@ -82,12 +95,10 @@ public class MainActivity extends AppCompatActivity {
 //        itemTouchHelper = new ItemTouchHelper(itemTouchHelperCallback);
 //        itemTouchHelper.attachToRecyclerView(recyclerView);
 
-        //Adapter wird deklariert und initialisiert
-        //Kann erst hier gemacht werden, da in categories was drin sein muss
-        Adapter = new ExpandableRecyclerViewAdapter(categories);
-
         //Adapter auf den recyclerview setzen
         recyclerView.setAdapter(Adapter);
+
+        datachanged();
 
 
         final ItemTouchHelper helper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN, 0) {
@@ -164,6 +175,9 @@ public class MainActivity extends AppCompatActivity {
         floatingBttn_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                Log.d(TAG, "Das ist die Liste bei click auf floating button: "+categories.toString());
+
 
                 AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.this);
                 builder.setTitle("Add new category");
@@ -243,7 +257,12 @@ public class MainActivity extends AppCompatActivity {
     public ArrayList<ShopItem> getListFromJson(String json){
         Gson gson = new Gson();
         Type type = new TypeToken<ArrayList<ShopItem>>() {}.getType();
-        return gson.fromJson(json, type);
+        Log.d(TAG, "HALLO HIER DIE SHOPITEM LIST IN GETLISTFROMJSON: "+gson.fromJson(json, type).toString());
+        ArrayList<ShopItem> shopis = gson.fromJson(json, type);
+        for (int i = 0; i < shopis.size(); i++) {
+            Log.d(TAG, "die einzelnen namen der shop items: "+shopis.get(i).name);
+        }
+        return shopis;
     }
 
     public void saveArrayList(ArrayList<Category> list, String key){
@@ -255,14 +274,15 @@ public class MainActivity extends AppCompatActivity {
         editor.apply();     // This line is IMPORTANT !!!
     }
 
-    public ArrayList<Category> loadArrayList(String key) {
-        Log.d(TAG, "Categories vor .clear(): "+categories+"\n");
+    public void loadArrayList(String key) {
+        //Log.d(TAG, "Categories vor .clear(): "+categories+"\n");
         categories.clear();
         SharedPreferences prefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
         Gson gson = new Gson();
         String json = prefs.getString(key, null);
         Type type = new TypeToken<ArrayList<Category>>() {}.getType();
-        return gson.fromJson(json, type);
+        categories = gson.fromJson(json, type);
+        //Log.d(TAG, "HALLO HIER DIE CATEGORY LIST IN LOAD: "+categories);
     }
 
     public void delete() {

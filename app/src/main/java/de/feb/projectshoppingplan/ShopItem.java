@@ -20,6 +20,7 @@ public class ShopItem implements Parcelable {
     transient Activity activity;
     transient Drawable checkmark;
 
+
     public ShopItem(String name) {
         this.name = name;
 //        this.description = description;
