@@ -75,6 +75,7 @@ public class AddShopItemToCategory extends AppCompatActivity {
         itemList_text = new ArrayList<>();
         itemList_voice = new ArrayList<>();
 
+        // search for category and get item list
         for (int i = 0; i < categories.size(); i++) {
             if (categories.get(i).getTitle().equals(categoryName)) {
                 category = categories.get(i);
