@@ -2,32 +2,23 @@ package de.feb.projectshoppingplan;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.Build;
-import android.preference.PreferenceManager;
-import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.thoughtbot.expandablerecyclerview.viewholders.GroupViewHolder;
-
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 
 import static android.view.animation.Animation.RELATIVE_TO_SELF;
 
 class ViewHolderCat extends GroupViewHolder implements View.OnClickListener {
     private final static String TAG = "MyActivity";
 
-    ImageView imageViewCatGrap;
-    TextView textViewCat;
-    ImageView imageViewCatAdd;
-    Context context;
+    private ImageView imageViewCatGrap;
+    private TextView textViewCat;
+    private ImageView imageViewCatAdd;
+    private Context context;
 
     ViewHolderCat(View view) {
         super(view);
@@ -39,7 +30,7 @@ class ViewHolderCat extends GroupViewHolder implements View.OnClickListener {
 
     }
 
-    public void bind(Category category) {
+    void bind(Category category) {
         textViewCat.setText(category.getTitle());
         imageViewCatAdd.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,7 +41,6 @@ class ViewHolderCat extends GroupViewHolder implements View.OnClickListener {
                 Log.d(TAG, "ViewHolderCat CategoryName: " + textViewCat.getText());
                 intent.putExtra("category_name", textViewCat.getText());
                 context.startActivity(intent);
-
             }
         });
     }

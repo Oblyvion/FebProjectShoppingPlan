@@ -26,6 +26,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
@@ -81,10 +82,10 @@ public class AddShopItemToCategory extends AppCompatActivity {
                 category = categories.get(i);
                 Log.d(TAG, "Category name: "+categoryName);
                 Log.d(TAG, "list of Category: "+category.getItems());
-                itemList_forMain = getListFromJson(category.getItems().toString());
+                Gson gson = new Gson();
+                String json = gson.toJson(category.getItems());
+                itemList_forMain = getListFromJson(json);
                 Log.d(TAG, "Hallo hier itemListForMain      "+ itemList_forMain.toString());
-                //TODO alle items die in der liste der category sind der itemList_forMain hinzufüge
-                //TODO dann kann man überprüfen ob das jeweils eingegebene produkt schon in der liste ist
                 for (int j = 0; j < itemList_forMain.size(); j++) {
                     Log.d("MyActivity", "Hier einzelnes item *_*: "+itemList_forMain.get(j));
                 }
@@ -116,6 +117,8 @@ public class AddShopItemToCategory extends AppCompatActivity {
                             for (int i = 0; i < categories.size(); i++) {
                                 if (categories.get(i).getTitle().equals(categoryName)) {
                                     categories.get(i).getItems().clear();
+                                    //categories.get(i).setItems(itemList_forMain);
+                                    //TODO Lösung für Warnung
                                     categories.get(i).getItems().addAll(itemList_forMain);
                                     Log.d(TAG, "Das ist die liste nachdem was geadded wurde: "+categories);
                                     saveArrayList(categories, "categories_arraylist");
@@ -139,67 +142,69 @@ public class AddShopItemToCategory extends AppCompatActivity {
         //make editText respond directly when the activity starts
         editText.requestFocus();
 
-        editText.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View view, int key, KeyEvent keyEvent) {
-                SharedPreferences.Editor sharedPrefEditor;
-
-                if (!(key == KeyEvent.KEYCODE_ENTER)) {
-                    editText.addTextChangedListener(new TextWatcher() {
-                        @Override
-                        public void onTextChanged(CharSequence s, int start, int before, int count) {
-                            //Log.d(TAG, "onCreate: CharSequence TextWatcher = " + s);
-
-                        }
-
-                        @Override
-                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                        }
-
-                        //@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-                        @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-                        @Override
-                        public void afterTextChanged(Editable s) {
-                            SharedPreferences.Editor sharedPrefEditor;
-                            String sharedPrefsKey = "Grocery";
-
-                            //Log.d(TAG, "afterTextChanged: jojooojojjo charAT = " + s.charAt(s.length() - 1));
-                            if (s.toString().length() > 1) {
-
-                                addtoListandgiveIcon(s.toString());
-                                //Log.d(TAG, "afterTextChanged: HLALLJSADFOJODSA");
-                                temp_user_input = s.toString();
-                                //Log.d(TAG, "afterTextChanged: temp_user_input = " + temp_user_input);
-//                    if (s.charAt(s.length() - 1) == '\n') {
-                                sharedPrefEditor = sharedPreferences.edit();
-                                sharedPrefEditor.putString(sharedPrefsKey + temp_user_input.toString(), temp_user_input);
-                                sharedPrefEditor.apply();
-//                                Log.d(TAG, "afterTextChanged: if sharedPrefs = " + sharedPreferences.getString(sharedPrefsKey + "Hgzuuh", "no gro"));
+//        editText.setOnKeyListener(new View.OnKeyListener() {
+//            @Override
+//            public boolean onKey(View view, int key, KeyEvent keyEvent) {
+//                SharedPreferences.Editor sharedPrefEditor;
+//
+//                if (!(key == KeyEvent.KEYCODE_ENTER)) {
+//                    editText.addTextChangedListener(new TextWatcher() {
+//                        @Override
+//                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                            //Log.d(TAG, "onCreate: CharSequence TextWatcher = " + s);
+//
+//                        }
+//
+//                        @Override
+//                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//                        }
+//
+//                        //@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+//                        @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+//                        @Override
+//                        public void afterTextChanged(Editable s) {
+//                            SharedPreferences.Editor sharedPrefEditor;
+//                            String sharedPrefsKey = "Grocery";
+//
+//                            //Log.d(TAG, "afterTextChanged: jojooojojjo charAT = " + s.charAt(s.length() - 1));
+//                            if (s.toString().length() > 1) {
+//
+//                                temp_user_input = "\""+s.toString()+"\"";
+//                                Log.d(TAG, "TEMP USER INPUT 1: "+temp_user_input);
+//
+//                                addtoListandgiveIcon("\""+s.toString()+"\"");
+//                                //Log.d(TAG, "afterTextChanged: HLALLJSADFOJODSA");
+//                                //Log.d(TAG, "afterTextChanged: temp_user_input = " + temp_user_input);
+////                    if (s.charAt(s.length() - 1) == '\n') {
+//                                sharedPrefEditor = sharedPreferences.edit();
+//                                sharedPrefEditor.putString(sharedPrefsKey + temp_user_input.toString(), temp_user_input);
+//                                sharedPrefEditor.apply();
+////                                Log.d(TAG, "afterTextChanged: if sharedPrefs = " + sharedPreferences.getString(sharedPrefsKey + "Hgzuuh", "no gro"));
+////                    }
+//                            } else {
+//                                if (!itemList_text.isEmpty()) {
+//                                    itemList_text.remove(0);
+//                                }
+//                                adapter.notifyDataSetChanged();
+//                            }
+//                        }
+//                    });
+//
+//                }
+//
+////                Log.d(TAG, "onKey: sharedPrefs Juhuuu");
+//                if (keyEvent.getAction() == KeyEvent.ACTION_DOWN) {
+//                    if (key == KeyEvent.KEYCODE_ENTER) {
+//                        sharedPrefEditor = sharedPreferences.edit();
+//                        sharedPrefEditor.putString(getString(R.string.groceries), temp_user_input);
+//                        sharedPrefEditor.apply();
+////                        Log.d(TAG, "onKey: sharedPrefs = " + getString(R.string.groceries));
+//                        return true;
 //                    }
-                            } else {
-                                if (!itemList_text.isEmpty()) {
-                                    itemList_text.remove(0);
-                                }
-                                adapter.notifyDataSetChanged();
-                            }
-                        }
-                    });
-
-                }
-
-//                Log.d(TAG, "onKey: sharedPrefs Juhuuu");
-                if (keyEvent.getAction() == KeyEvent.ACTION_DOWN) {
-                    if (key == KeyEvent.KEYCODE_ENTER) {
-                        sharedPrefEditor = sharedPreferences.edit();
-                        sharedPrefEditor.putString(getString(R.string.groceries), temp_user_input);
-                        sharedPrefEditor.apply();
-//                        Log.d(TAG, "onKey: sharedPrefs = " + getString(R.string.groceries));
-                        return true;
-                    }
-                }
-                return false;
-            }
-        });
+//                }
+//                return false;
+//            }
+//        });
 
         editText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -221,10 +226,9 @@ public class AddShopItemToCategory extends AppCompatActivity {
 
 //                Log.d(TAG, "afterTextChanged: jojooojojjo charAT = " + s.charAt(s.length() - 1));
                 if (s.toString().length() > 1) {
-                    addtoListandgiveIcon(s.toString());
-//                    Log.d(TAG, "afterTextChanged: HLALLJSADFOJODSA");
                     temp_user_input = s.toString();
-//                    Log.d(TAG, "afterTextChanged: temp_user_input = " + temp_user_input);
+                    Log.d(TAG, "TEMP USER INPUT 1: "+temp_user_input);
+                    addtoListandgiveIcon(s.toString());
 //                    if (s.charAt(s.length() - 1) == '\n') {
                     sharedPrefEditor = sharedPreferences.edit();
                     sharedPrefEditor.putString(sharedPrefsKey + temp_user_input.toString(), temp_user_input);
@@ -267,6 +271,7 @@ public class AddShopItemToCategory extends AppCompatActivity {
                 final int DRAWABLE_TOP = 1;
                 final int DRAWABLE_RIGHT = 2;
                 final int DRAWABLE_BOTTOM = 3;
+//                performClick();
 
                 if(event.getAction() == MotionEvent.ACTION_UP) {
                     if(event.getRawX() >= (editText.getLeft() - editText.getCompoundDrawables()[DRAWABLE_LEFT].getBounds().width())) {
@@ -285,6 +290,12 @@ public class AddShopItemToCategory extends AppCompatActivity {
                 }
                 return false;
             }
+
+//            @Override
+//            public void performClick() {
+//
+//            }
+
 
         });
     }
@@ -349,7 +360,7 @@ public class AddShopItemToCategory extends AppCompatActivity {
             Log.d(TAG, "seperateSpokenWords[i]: " + separated[i]);
             ShopItem item = new ShopItem(separated[i]);
             Log.d(TAG, "Item: " + item);
-            item.setActivity(this);
+//            item.setActivity(this);
             this.itemList_voice.add(item);
             if (i == 0) {
                 added = added.concat(separated[i]);
@@ -366,7 +377,9 @@ public class AddShopItemToCategory extends AppCompatActivity {
     //Die Komplette Liste mit Categories aus der Main Activity
     public ArrayList<Category> getCategoryList(String key){
         SharedPreferences prefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
-        Gson gson = new Gson();
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.setLenient();
+        Gson gson = gsonBuilder.create();
         String json = prefs.getString(key, null);
         Type type = new TypeToken<ArrayList<Category>>() {}.getType();
         return gson.fromJson(json, type);
@@ -374,9 +387,10 @@ public class AddShopItemToCategory extends AppCompatActivity {
 
     //Aus einzelner Unterliste im JSON format wird wieder eine Arraylist<ShopItem>
     public ArrayList<ShopItem> getListFromJson(String json){
-        Gson gson = new Gson();
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.setLenient();
+        Gson gson = gsonBuilder.create();
         Type type = new TypeToken<ArrayList<ShopItem>>() {}.getType();
-        Log.d(TAG, "DEM FEHLER AUF DER SCHLICCCHE!: "+gson.fromJson(json,type));
         return gson.fromJson(json, type);
     }
 
@@ -393,8 +407,10 @@ public class AddShopItemToCategory extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void addtoListandgiveIcon(String text) {
         temp_user_input = text;
-        Intent intent = getIntent();
-        String categoryName = intent.getStringExtra("ShoppingCategory");
+        Log.d(TAG, "TEMP USER INPUT 2: "+temp_user_input);
+
+//        Intent intent = getIntent();
+//        String categoryName = intent.getStringExtra("ShoppingCategory");
 
         ShopItem item = new ShopItem(temp_user_input);
         item.setActivity(this);

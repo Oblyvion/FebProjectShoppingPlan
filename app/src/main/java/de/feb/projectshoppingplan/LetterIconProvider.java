@@ -65,7 +65,7 @@ class LetterIconProvider {
      */
     Bitmap getLetterIcon (String displayName, String key, int width, int height, boolean round) {
         final Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        final char firstChar = displayName.charAt(0);
+        final char firstChar = displayName.charAt(1);
 
         final Canvas c = mCanvas;
         c.setBitmap(bitmap);
@@ -96,6 +96,8 @@ class LetterIconProvider {
      * @return True if <code>c</code> is in the English alphabet or is a digit,
      *         false otherwise
      */
+
+    //TODO Sonderzeichen gehen nicht LÖSUNG FINDEN
     private static boolean isEnglishLetterOrDigit(char c) {
         //Log.d("MyActivity", "Das ist char c: "+c);
         return 'A' <= c && c <= 'Z' || 'a' <= c && c <= 'z' || '0' <= c && c <= '9';
