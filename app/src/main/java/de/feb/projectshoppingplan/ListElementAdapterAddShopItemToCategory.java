@@ -1,7 +1,5 @@
 package de.feb.projectshoppingplan;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,7 +15,7 @@ public class ListElementAdapterAddShopItemToCategory extends RecyclerView.Adapte
     private List<ShopItem> itemList;
 
     class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView name, category;
+        TextView name;
         ImageView imageViewIcon, imageViewCheckMark;
 
         MyViewHolder(View view) {
@@ -31,6 +29,7 @@ public class ListElementAdapterAddShopItemToCategory extends RecyclerView.Adapte
     ListElementAdapterAddShopItemToCategory(List<ShopItem> itemList) {
         this.itemList = itemList;
     }
+
 
     @NonNull
     @Override

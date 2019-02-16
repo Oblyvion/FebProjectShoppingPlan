@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.JsonReader;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,8 +18,10 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.StringReader;
 import java.lang.reflect.Array;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -53,12 +56,14 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences prefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
         if (prefs.getString("categories_arraylist", null) != null) {
             loadArrayList("categories_arraylist");
-            Log.d(TAG, "SharedPreferences load categories");
+            Log.d(TAG, "SharedPreferences JSON categories: "+prefs.getString("categories_arraylist", null));
             for (int i = 0; i < categories.size(); i++) {
                     ArrayList<ShopItem> shopItems;
                     //Log.d(TAG, "LOAD shop item lists: "+categories.get(i).getItems());
                     //shopItems = (ArrayList<ShopItem>) categories.get(i).getItems();
-                    shopItems = getListFromJson(categories.get(i).getItems().toString());
+                    Gson gson = new Gson();
+                    String json = gson.toJson(categories.get(i).getItems());
+                    shopItems = getListFromJson(json);
                     categories.get(i).getItems().clear();
                     categories.get(i).getItems().addAll(shopItems);
                     for (int j = 0; j < shopItems.size(); j++) {
@@ -117,55 +122,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         helper.attachToRecyclerView(recyclerView);
-
-
-//        ItemTouchHelperAdapter itemTouchHelperAdapter = new ItemTouchHelperAdapter() {
-//            @Override
-//            public void onItemMove(int fromPosition, int toPosition) {
-//                if (shoppingList.get(fromPosition).getListElementType() == InterfaceListElement.typeCat
-//                        && shoppingList.get(toPosition).getListElementType() == InterfaceListElement.typeCat) {
-//                    InterfaceListElement temp;
-//                    temp = shoppingList.get(fromPosition);
-//                    shoppingList.set(fromPosition, shoppingList.get(toPosition));
-//                    shoppingList.set(toPosition, temp);
-//                }
-//            }
-//
-//            @Override
-//            public void onItemDismiss(int position) {
-//
-//            }
-//        };
-//
-//        ItemTouchHelper helper = new ItemTouchHelper(new ItemTouchHelperCallback(itemTouchHelperAdapter) {
-//
-//            @Override
-//            public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
-//                return 0;
-//            }
-//
-//            @Override
-//            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder source, @NonNull RecyclerView.ViewHolder target) {
-//                int position_source = source.getAdapterPosition();
-//                int position_target = target.getAdapterPosition();
-//
-//                if (shoppingList.get(position_source).getListElementType() == InterfaceListElement.typeCat
-//                        && shoppingList.get(position_target).getListElementType() == InterfaceListElement.typeCat) {
-//                    Collections.swap(shoppingList, position_source, position_target);
-//                }
-//
-//                adapter.notifyItemMoved(position_source, position_target);
-//                return false;
-//            }
-//
-//            @Override
-//            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-//
-//            }
-//        });
-//
-//        helper.attachToRecyclerView(recyclerView);
-
 
         Log.d(TAG, "Das ist die Größe der Category Liste: " + categories.size());
 
@@ -239,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<ShopItem> hygienics_list = new ArrayList<>();
         Category hygienics = new Category(STANDARD_CATEGORIES[4], hygienics_list);
 
-        hygienics_list.add(new ShopItem("deo"));
+        hygienics_list.add(new ShopItem("deonummer1"));
         hygienics_list.add(new ShopItem("toothbrush"));
         hygienics_list.add(new ShopItem("shampoo"));
         hygienics_list.add(new ShopItem("perfume"));
@@ -255,10 +211,19 @@ public class MainActivity extends AppCompatActivity {
 
     //aus Json string wird wieder eine Arraylist<ShopItem>
     public ArrayList<ShopItem> getListFromJson(String json){
-        Gson gson = new Gson();
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.setLenient();
+        Gson gson = gsonBuilder.create();
+        //TODO MalFormedJsonException lösen wegen leerzeichen
+//        JsonReader reader = new JsonReader(new StringReader(json));
+//        reader.setLenient(true);
         Type type = new TypeToken<ArrayList<ShopItem>>() {}.getType();
-        Log.d(TAG, "HALLO HIER DIE SHOPITEM LIST IN GETLISTFROMJSON: "+gson.fromJson(json, type).toString());
+        Log.d(TAG, "getListFromJson: JSON HIER: "+json);
+
         ArrayList<ShopItem> shopis = gson.fromJson(json, type);
+
+        //Log.d(TAG, "HALLO HIER DIE SHOPITEM LIST IN GETLISTFROMJSON: "+gson.fromJson(json, type));
+        //ArrayList<ShopItem> shopis = gson.fromJson(json, type);
         for (int i = 0; i < shopis.size(); i++) {
             Log.d(TAG, "die einzelnen namen der shop items: "+shopis.get(i).name);
         }
@@ -278,7 +243,12 @@ public class MainActivity extends AppCompatActivity {
         //Log.d(TAG, "Categories vor .clear(): "+categories+"\n");
         categories.clear();
         SharedPreferences prefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
-        Gson gson = new Gson();
+
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.setLenient();
+        Gson gson = gsonBuilder.create();
+
+        //Gson gson = new Gson();
         String json = prefs.getString(key, null);
         Type type = new TypeToken<ArrayList<Category>>() {}.getType();
         categories = gson.fromJson(json, type);
