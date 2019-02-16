@@ -1,15 +1,20 @@
 package de.feb.projectshoppingplan;
 
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.thoughtbot.expandablerecyclerview.ExpandableListUtils;
 import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup;
 
+import java.util.Collections;
 import java.util.List;
 
 public class ExpandableRecyclerViewAdapter extends com.thoughtbot.expandablerecyclerview.ExpandableRecyclerViewAdapter<ViewHolderCat, ViewHolderShopI> {
+
+    private static final String TAG = "MyActivity";
 
     ExpandableRecyclerViewAdapter(List<? extends ExpandableGroup> groups) {
         super(groups);
@@ -28,7 +33,7 @@ public class ExpandableRecyclerViewAdapter extends com.thoughtbot.expandablerecy
     }
 
     @Override
-    public void onBindChildViewHolder(ViewHolderShopI holder, int flatPosition, ExpandableGroup group, int childIndex) {
+    public void onBindChildViewHolder(final ViewHolderShopI holder, int flatPosition, ExpandableGroup group, int childIndex) {
         ShopItem shopItem = (ShopItem) group.getItems().get(childIndex);
         holder.bind(shopItem);
     }

@@ -1,5 +1,7 @@
 package de.feb.projectshoppingplan;
 
+import android.widget.Toast;
+
 import com.thoughtbot.expandablecheckrecyclerview.models.CheckedExpandableGroup;
 
 import java.util.ArrayList;
@@ -12,6 +14,6 @@ public class Category extends CheckedExpandableGroup {
 
     @Override
     public void onChildClicked(int childIndex, boolean checked) {
-
+        
     }
 }
