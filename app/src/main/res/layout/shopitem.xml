@@ -21,15 +21,24 @@
         android:id="@+id/textViewShopItem"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="60"
+        android:layout_weight="50"
         android:layout_gravity="center"
         android:textAlignment="center"
         android:text="ShopItem"/>
 
     <Spinner
         android:id="@+id/spinnerShopItem"
-        android:layout_width="20dp"
+        android:layout_width="15dp"
         android:layout_height="wrap_content"
         android:layout_weight="20"/>
+
+    <ImageView
+        android:id="@+id/imageViewShopItemDelete"
+        android:layout_width="0dp"
+        android:layout_height="30dp"
+        android:layout_weight="15"
+        android:layout_gravity="center"
+        android:src="@mipmap/ic_launcher"
+        android:contentDescription="list symbol" />
 
 </LinearLayout>

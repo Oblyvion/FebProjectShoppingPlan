@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.JsonReader;
 import android.util.Log;
@@ -41,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
     ExpandableRecyclerViewAdapter Adapter;
 
+    //Main Liste der Categories (enthält alle Categories und die dazu gehörigen ShopItem Listen)
     public ArrayList<Category> categories = new ArrayList<>();
 
 
@@ -48,6 +50,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         setContentView(R.layout.activity_main);
         Log.d(TAG, "MainActivity: On Create");
 
@@ -60,14 +64,13 @@ public class MainActivity extends AppCompatActivity {
             for (int i = 0; i < categories.size(); i++) {
                     ArrayList<ShopItem> shopItems;
                     //Log.d(TAG, "LOAD shop item lists: "+categories.get(i).getItems());
-                    //shopItems = (ArrayList<ShopItem>) categories.get(i).getItems();
                     Gson gson = new Gson();
                     String json = gson.toJson(categories.get(i).getItems());
                     shopItems = getListFromJson(json);
                     categories.get(i).getItems().clear();
                     categories.get(i).getItems().addAll(shopItems);
                     for (int j = 0; j < shopItems.size(); j++) {
-                        //Log.d(TAG, "SharedPreferences einzelne items nach load shop item list: "+shopItems.get(j).name);
+                        Log.d(TAG, "SharedPreferences einzelne items nach load shop item list: "+shopItems.get(j).name);
                         shopItems.get(j).setActivity(this);
                         shopItems.get(j).setIcon();
                     }
@@ -102,6 +105,10 @@ public class MainActivity extends AppCompatActivity {
 
         //Adapter auf den recyclerview setzen
         recyclerView.setAdapter(Adapter);
+
+        SwipeController swipeController = new SwipeController();
+        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeController);
+        itemTouchhelper.attachToRecyclerView(recyclerView);
 
         datachanged();
 
@@ -211,9 +218,7 @@ public class MainActivity extends AppCompatActivity {
 
     //aus Json string wird wieder eine Arraylist<ShopItem>
     public ArrayList<ShopItem> getListFromJson(String json){
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.setLenient();
-        Gson gson = gsonBuilder.create();
+        Gson gson = new Gson();
         //TODO MalFormedJsonException lösen wegen leerzeichen
 //        JsonReader reader = new JsonReader(new StringReader(json));
 //        reader.setLenient(true);
@@ -241,16 +246,17 @@ public class MainActivity extends AppCompatActivity {
 
     public void loadArrayList(String key) {
         //Log.d(TAG, "Categories vor .clear(): "+categories+"\n");
+        //Categories löschen bevor alles aus den Shared Preferences hinzugefügt wird
         categories.clear();
+        //Shared Preferences abrufen
         SharedPreferences prefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
-
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.setLenient();
-        Gson gson = gsonBuilder.create();
-
-        //Gson gson = new Gson();
+        //Neues gson Objekt erzeugen
+        Gson gson = new Gson();
+        //Json string aus Shared Preferences abrufen
         String json = prefs.getString(key, null);
+        //Type angeben damit Gson weiß in welchen Typ Json konvertiert werden soll
         Type type = new TypeToken<ArrayList<Category>>() {}.getType();
+        //der categories Liste den zu einer ArrayList<Category> konvertierten Json String hinzufügen
         categories = gson.fromJson(json, type);
         //Log.d(TAG, "HALLO HIER DIE CATEGORY LIST IN LOAD: "+categories);
     }

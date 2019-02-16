@@ -120,11 +120,9 @@ public class AddShopItemToCategory extends AppCompatActivity {
                                     //TODO Lösung für Warnung
                                     categories.get(i).getItems().addAll(itemList_forMain);
                                     Log.d(TAG, "Das ist die liste nachdem was geadded wurde: "+categories);
-                                    saveArrayList(categories, "categories_arraylist");
                                 }
                             }
-//                            saveArrayList(categories, "MainList");
-                        }
+                            saveArrayList(categories, "categories_arraylist");                        }
                         else {
                             itemList_text.get(position).setCheckmark();
                         }
@@ -275,9 +273,9 @@ public class AddShopItemToCategory extends AppCompatActivity {
                 if(event.getAction() == MotionEvent.ACTION_UP) {
                     if(event.getRawX() >= (editText.getLeft() - editText.getCompoundDrawables()[DRAWABLE_LEFT].getBounds().width())) {
                         // your action here
-                        Log.d(TAG, "Hallo hier click on back button!");
-                        close();
-                        return true;
+//                        Log.d(TAG, "Hallo hier click on back button!");
+//                        close();
+//                        return true;
                     }
 
                     if (event.getRawX() >= (editText.getRight() - editText.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
@@ -351,34 +349,56 @@ public class AddShopItemToCategory extends AppCompatActivity {
     }
 
     private void seperateSpokenWords(String input) {
-        String[] separated = input.split("( and)");
+        String[] separated = input.split("( and )");
         String added = "";
-        categoryName = "";
 
         for (int i = 0; i < separated.length; i++) {
             Log.d(TAG, "seperateSpokenWords[i]: " + separated[i]);
             ShopItem item = new ShopItem(separated[i]);
             Log.d(TAG, "Item: " + item);
-//            item.setActivity(this);
-            this.itemList_voice.add(item);
-            if (i == 0) {
-                added = added.concat(separated[i]);
-            } else if (i == separated.length - 1) {
-                added = added.concat(" and " + separated[i]);
-            } else added = added.concat(", " + separated[i]);
+            added = addVoiceItemsToList(item);
+        }
+
+        itemList_forMain.addAll(itemList_voice);
+        Log.d("HalloHier", "Wassn los mit de lischd: "+itemList_forMain);
+
+        for (int i = 0; i < categories.size(); i++) {
+            if (categories.get(i).getTitle().equals(categoryName)) {
+                categories.get(i).getItems().clear();
+                //categories.get(i).setItems(itemList_forMain);
+                //TODO Lösung für Warnung
+                categories.get(i).getItems().addAll(itemList_forMain);
+                Log.d(TAG, "Das ist die liste nachdem was geadded wurde: "+categories);
+                saveArrayList(categories, "categories_arraylist");
+            }
         }
 
         Toast.makeText(this, "You added: " + added + " to the category " + categoryName + "!", Toast.LENGTH_LONG).show();
         Log.d(TAG, "Das ist die liste: " + this.itemList_voice);
+    }
 
+    private String addVoiceItemsToList(ShopItem item) {
+        String result = "";
+
+        if(!findDuplicates(item)) {
+            this.itemList_voice.add(item);
+        }
+
+        for (int i = 0; i < itemList_voice.size(); i++) {
+            if (i == 0) {
+                result = result.concat(itemList_voice.get(i).name);
+            }
+            else if (i == itemList_voice.size() - 1) {
+                result = result.concat(" and " + itemList_voice.get(i).name);
+            } else result = result.concat(", " + itemList_voice.get(i).name);
+        }
+        return result;
     }
 
     //Die Komplette Liste mit Categories aus der Main Activity
     public ArrayList<Category> getCategoryList(String key){
         SharedPreferences prefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.setLenient();
-        Gson gson = gsonBuilder.create();
+        Gson gson = new Gson();
         String json = prefs.getString(key, null);
         Type type = new TypeToken<ArrayList<Category>>() {}.getType();
         return gson.fromJson(json, type);
@@ -386,9 +406,7 @@ public class AddShopItemToCategory extends AppCompatActivity {
 
     //Aus einzelner Unterliste im JSON format wird wieder eine Arraylist<ShopItem>
     public ArrayList<ShopItem> getListFromJson(String json){
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.setLenient();
-        Gson gson = gsonBuilder.create();
+        Gson gson = new Gson();
         Type type = new TypeToken<ArrayList<ShopItem>>() {}.getType();
         return gson.fromJson(json, type);
     }
@@ -407,9 +425,6 @@ public class AddShopItemToCategory extends AppCompatActivity {
     public void addtoListandgiveIcon(String text) {
         temp_user_input = text;
         Log.d(TAG, "TEMP USER INPUT 2: "+temp_user_input);
-
-//        Intent intent = getIntent();
-//        String categoryName = intent.getStringExtra("ShoppingCategory");
 
         ShopItem item = new ShopItem(temp_user_input);
         item.setActivity(this);

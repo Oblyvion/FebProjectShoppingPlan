@@ -65,7 +65,7 @@ class LetterIconProvider {
      */
     Bitmap getLetterIcon (String displayName, String key, int width, int height, boolean round) {
         final Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        final char firstChar = displayName.charAt(1);
+        final char firstChar = displayName.charAt(0);
 
         final Canvas c = mCanvas;
         c.setBitmap(bitmap);
