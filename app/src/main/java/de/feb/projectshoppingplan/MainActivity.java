@@ -23,11 +23,13 @@ import android.widget.ImageView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.thoughtbot.expandablerecyclerview.ExpandableListUtils;
 
 import java.io.StringReader;
 import java.lang.reflect.Array;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 
@@ -37,8 +39,6 @@ public class MainActivity extends AppCompatActivity {
     final static String TAG = "MyActivity";
     //Deklaration Recyclerview
     RecyclerView recyclerView;
-//    ItemTouchHelper.Callback itemTouchHelperCallback;
-//    ItemTouchHelper itemTouchHelper;
 
     // TODO  dummy_items anlegen: ZUGRIFF = categories.addAll(Arrays.asList(context.getResources().getStringArray(R.array.dummy_items)));
     //Categories
@@ -107,11 +107,17 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder fromViewHolder, @NonNull RecyclerView.ViewHolder toViewHolder) {
-                // TODO CRASHED WHILE DRAG AND DROP BETWEEN SHOPITEMS AND CATEGORIES: INDEX_OUT_OF_BOUNDS_EXCEPTION
-                Collections.swap(categories, fromViewHolder.getAdapterPosition(), toViewHolder.getAdapterPosition());
 
-                // notify adapter
-                adapter.notifyItemMoved(fromViewHolder.getAdapterPosition(), toViewHolder.getAdapterPosition());
+                //do not swap when item types are unequal
+                if (!(fromViewHolder.getItemViewType() == toViewHolder.getItemViewType())) {
+                    return false;
+                }
+
+                //TODO SPEICHER NEUE LISTE NACH DRAG & DROP
+//                ArrayList arrayList = new ArrayList();
+//                arrayList.add(recyclerView.get)
+
+                adapter.moveItem(fromViewHolder.getAdapterPosition(), toViewHolder.getAdapterPosition());
 
                 return true;
             }
@@ -163,10 +169,8 @@ public class MainActivity extends AppCompatActivity {
                         //newCat erstellen mit Name und Liste
                         Category newCat = new Category(input.getText().toString(), list);
 
-                        // TODO Pfeil zum aufklappen nicht anzeigen, wenn Category < 1
-                        Log.d(TAG, "onClick: newCat = " + newCat.getTitle());
+                        //lässt Kategorie-Erweiterungspfeile verschwinden
                         showCategoryNotExpandable();
-
 
                         //Zur Liste der categories hinzufügen
                         categories.add(newCat);
@@ -192,6 +196,20 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    //TODO WO MÜSSEN DIE METHODEN AUFGERUFEN WERDEN?
+    //speichere den status vom expandable recyclerview
+//    @Override
+//    protected void onSaveInstanceState(Bundle saveState) {
+//        super.onSaveInstanceState(saveState);
+//        adapter.onSaveInstanceState(saveState);
+//    }
+//    @Override
+//    protected void onRestoreInstanceState(Bundle restoreState) {
+//        super.onRestoreInstanceState(restoreState);
+//        adapter.onRestoreInstanceState(restoreState);
+//    }
+
 
     private void addStandardCats() {
         ArrayList<ShopItem> veggie_list = new ArrayList<>();
@@ -286,6 +304,7 @@ public class MainActivity extends AppCompatActivity {
         adapter.notifyDataSetChanged();
     }
 
+    //wenn category Grösse < 1, dann blende Kategorie-Erweiterungspfeile aus
     private void showCategoryNotExpandable() {
         for (Category cat : categories) {
             ImageView imageViewCatArrow = findViewById(R.id.imageViewCategory);

@@ -26,11 +26,11 @@
         android:id="@+id/floatingBttn_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
         android:clickable="true"
         android:focusable="true"
-        app:srcCompat="@drawable/add_category_black"
-        android:layout_centerHorizontal="true"
-        android:paddingTop="10dp"/>
+        android:paddingTop="10dp"
+        app:srcCompat="@drawable/add_category_black" />
 
 
 </RelativeLayout>

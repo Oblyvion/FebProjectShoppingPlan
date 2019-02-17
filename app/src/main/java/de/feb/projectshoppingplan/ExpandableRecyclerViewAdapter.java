@@ -2,19 +2,18 @@ package de.feb.projectshoppingplan;
 
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.thoughtbot.expandablerecyclerview.ExpandableListUtils;
 import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ExpandableRecyclerViewAdapter extends com.thoughtbot.expandablerecyclerview.ExpandableRecyclerViewAdapter<ViewHolderCat, ViewHolderShopI> {
 
-    private static final String TAG = "MyActivity";
+    private static final String TAG = "RecyclerViewAdapter";
 
     ExpandableRecyclerViewAdapter(List<? extends ExpandableGroup> groups) {
         super(groups);
@@ -33,15 +32,21 @@ public class ExpandableRecyclerViewAdapter extends com.thoughtbot.expandablerecy
     }
 
     @Override
+    public void onBindGroupViewHolder(ViewHolderCat holder, int flatPosition, ExpandableGroup group) {
+        final Category category = (Category) group;
+        holder.bind(category);
+    }
+
+    @Override
     public void onBindChildViewHolder(final ViewHolderShopI holder, int flatPosition, ExpandableGroup group, int childIndex) {
         ShopItem shopItem = (ShopItem) group.getItems().get(childIndex);
         holder.bind(shopItem);
     }
 
-    @Override
-    public void onBindGroupViewHolder(ViewHolderCat holder, int flatPosition, ExpandableGroup group) {
-        final Category category = (Category) group;
-        holder.bind(category);
+    public void moveItem(int flatPosFrom, int flatPostTo) {
+        Log.d(TAG, "moveItem: HELLOOOOOOOOO");
+        ExpandableListUtils.notifyItemMoved(this, flatPosFrom, flatPostTo);
+        notifyItemMoved(flatPosFrom, flatPostTo);
     }
 
     public void addNewGroup() {

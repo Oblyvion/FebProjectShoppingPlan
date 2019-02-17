@@ -13,7 +13,7 @@ import com.thoughtbot.expandablerecyclerview.viewholders.GroupViewHolder;
 
 import static android.view.animation.Animation.RELATIVE_TO_SELF;
 
-class ViewHolderCat extends GroupViewHolder implements View.OnClickListener /*, ItemTouchHelperViewHolder*/ {
+class ViewHolderCat extends GroupViewHolder implements View.OnClickListener {
     private final static String TAG = "MyActivity";
 
     private ImageView imageViewCatArrow;
@@ -33,14 +33,15 @@ class ViewHolderCat extends GroupViewHolder implements View.OnClickListener /*, 
 
     /**
      * build category item
+     *
      * @param category
      */
     void bind(final Category category) {
         textViewCat.setText(category.getTitle());
 
-        if (category.getItems().size() < 1) {
+        if (category.getItems().size() < 1)
             imageViewCatArrow.setVisibility(View.INVISIBLE);
-        } else imageViewCatArrow.setVisibility(View.VISIBLE);
+        else imageViewCatArrow.setVisibility(View.VISIBLE);
 
         imageViewCatAdd.setOnClickListener(new View.OnClickListener() {
             @Override
