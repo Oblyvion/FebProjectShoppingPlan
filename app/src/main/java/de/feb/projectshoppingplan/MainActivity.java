@@ -14,6 +14,8 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.JsonReader;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -26,6 +28,7 @@ import java.io.StringReader;
 import java.lang.reflect.Array;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -36,6 +39,11 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     ItemTouchHelper.Callback itemTouchHelperCallback;
     ItemTouchHelper itemTouchHelper;
+
+    private boolean isMultiSelect = false;
+    //i created List of int type to store id of data, you can create custom class type data according to your need.
+    private ArrayList<Integer> selectedIds = new ArrayList<>();
+
     //Categories
     final static String[] STANDARD_CATEGORIES = {"Obst & Gemüse", "Wurst & Milchprodukte",
             "Getreideprodukte", "Fleisch & Fisch", "Hygiene", "Fertiggerichte"};
@@ -45,14 +53,20 @@ public class MainActivity extends AppCompatActivity {
     //Main Liste der Categories (enthält alle Categories und die dazu gehörigen ShopItem Listen)
     public ArrayList<Category> categories = new ArrayList<>();
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        setContentView(R.layout.activity_main);
         Log.d(TAG, "MainActivity: On Create");
 
 
@@ -111,6 +125,21 @@ public class MainActivity extends AppCompatActivity {
         itemTouchhelper.attachToRecyclerView(recyclerView);
 
         datachanged();
+
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                Log.d(TAG, "das ist das menu item: "+menuItem);
+
+                if (!isMultiSelect){
+                    selectedIds = new ArrayList<>();
+                    isMultiSelect = true;
+
+                }
+
+                return false;
+            }
+        });
 
 
         final ItemTouchHelper helper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN, 0) {
@@ -215,6 +244,28 @@ public class MainActivity extends AppCompatActivity {
 
         categories.add(hygienics);
     }
+
+    //TODO TODO
+//    private void multiSelect(int position) {
+//        ShopItem item = categories.get(position);
+//        if (item != null){
+//            if (actionMode != null) {
+//                if (selectedIds.contains(item.))
+//                    selectedIds.remove(Integer.valueOf(item.getId()));
+//                else
+//                    selectedIds.add(item.getId());
+//
+//                if (selectedIds.size() > 0)
+//                    actionMode.setTitle(String.valueOf(selectedIds.size())); //show selected item count on action mode.
+//                else{
+//                    actionMode.setTitle(""); //remove item count from action mode.
+//                    actionMode.finish(); //hide action mode.
+//                }
+//                adapter.setSelectedIds(selectedIds);
+//
+//            }
+//        }
+//    }
 
     //aus Json string wird wieder eine Arraylist<ShopItem>
     public ArrayList<ShopItem> getListFromJson(String json){
