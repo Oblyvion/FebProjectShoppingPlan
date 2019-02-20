@@ -11,26 +11,29 @@
         android:id="@+id/recyclerViewMain"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/floatingBttn_add"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="5dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:scrollbars="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:scrollbars="vertical" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/floatingBttn_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
         android:clickable="true"
         android:focusable="true"
-        android:paddingTop="10dp"
+        app:backgroundTint="@color/colorAccent"
         app:srcCompat="@drawable/add_category_black" />
 
+    <include
+        layout="@layout/toolbar"
+        android:id="@+id/toolbar">
+    </include>
 
 </RelativeLayout>

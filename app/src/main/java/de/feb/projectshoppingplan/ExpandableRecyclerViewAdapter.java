@@ -58,6 +58,10 @@ public class ExpandableRecyclerViewAdapter extends com.thoughtbot.expandablerecy
         notifyDataSetChanged();
     }
 
+    public Category getCategory(int position) {
+        return (Category) getGroups().get(position);
+    }
+
     public void remove() {
         getGroups().clear();
     }

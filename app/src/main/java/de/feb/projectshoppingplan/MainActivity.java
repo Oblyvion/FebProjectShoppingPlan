@@ -1,6 +1,7 @@
 package de.feb.projectshoppingplan;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -11,14 +12,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.JsonReader;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -29,6 +34,7 @@ import java.io.StringReader;
 import java.lang.reflect.Array;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
@@ -42,6 +48,12 @@ public class MainActivity extends AppCompatActivity {
     //Deklaration Recyclerview
     RecyclerView recyclerView;
 
+
+    private boolean isMultiSelect = false;
+    //i created List of int type to store id of data, you can create custom class type data according to your need.
+    private ArrayList<Integer> selectedIds = new ArrayList<>();
+
+
     // TODO  dummy_items anlegen: ZUGRIFF = categories.addAll(Arrays.asList(context.getResources().getStringArray(R.array.dummy_items)));
     //Categories
     final static String[] STANDARD_CATEGORIES = {"Obst & Gemüse", "Wurst & Milchprodukte",
@@ -49,12 +61,23 @@ public class MainActivity extends AppCompatActivity {
 
     ExpandableRecyclerViewAdapter adapter;
 
+    //Main Liste der Categories (enthält alle Categories und die dazu gehörigen ShopItem Listen)
     public ArrayList<Category> categories = new ArrayList<>();
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         Log.d(TAG, "MainActivity: On Create");
 
 //        delete();
@@ -116,6 +139,7 @@ public class MainActivity extends AppCompatActivity {
 
                 Log.d(TAG, "onMove: itemViewFROM TYPE = " + fromViewHolder.getItemViewType());
                 Log.d(TAG, "onMove: itemViewTO TYPE = " + toViewHolder.getItemViewType());
+                
                 //do not swap when item types are unequal
                 if (fromViewHolder.getItemViewType() != toViewHolder.getItemViewType()) {
                     return false;
@@ -133,9 +157,62 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
-                // TODO HIER KÖNNTEN SWIPE FUNKTIONEN IMPLEMENTIERT WERDEN
+                Log.d(TAG, "HALLO HIER SWIPEY SWUPP SWIPE");
             }
         };
+
+        SwipeController swipeController = new SwipeController();
+        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeController);
+        itemTouchhelper.attachToRecyclerView(recyclerView);
+
+        datachanged();
+
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                Log.d(TAG, "das ist das menu item: "+menuItem);
+
+                if (!isMultiSelect){
+                    selectedIds = new ArrayList<>();
+                    isMultiSelect = true;
+                }
+
+
+                AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.this);
+                builder.setTitle("Remove all items from each category?");
+                View viewInflated = LayoutInflater.from(MainActivity.this).inflate(R.layout.alert_dialog, (ViewGroup) findViewById(android.R.id.content), false);
+
+                // button setup
+                builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+
+                        //lässt Kategorie-Erweiterungspfeile verschwinden
+                        showCategoryNotExpandable();
+
+                        clearAllCategories();
+
+                        //Save der Liste nachdem alle categories gecleared wurden
+                        saveArrayList(categories, "categories_arraylist");
+
+
+                    }
+                });
+                builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+                builder.show();
+
+
+                return false;
+            }
+        });
+
 
         // recyclerView wird itemTouchHelper hinzugefügt
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemTouchHelperCallback);
@@ -161,7 +238,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "Das ist die Liste bei click auf floating button: " + categories.toString());
 
                 AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.this);
-                builder.setTitle("Add new category");
+                builder.setTitle("Add a new category");
                 View viewInflated = LayoutInflater.from(MainActivity.this).inflate(R.layout.alert_dialog, (ViewGroup) findViewById(android.R.id.content), false);
                 // input setup
                 final EditText input = viewInflated.findViewById(R.id.input);
@@ -174,8 +251,20 @@ public class MainActivity extends AppCompatActivity {
                         dialog.dismiss();
                         //item liste für neue cat erstellen
                         ArrayList<ShopItem> list = new ArrayList<>();
+
                         //newCat erstellen mit Name und Liste
-                        Category newCat = new Category(input.getText().toString(), list);
+                        Category newCat = null;
+
+                        for (int i = 0; i < categories.size(); i++) {
+                            if (categories.get(i).getTitle().contentEquals(input.getText())) {
+                                String temp = input.getText().toString();
+                                while (categories.get(i).getTitle().contentEquals(temp)) {
+                                    temp+="*";
+                                }
+                                newCat = new Category(temp, list);
+                            }
+
+                        }
 
                         //lässt Kategorie-Erweiterungspfeile verschwinden
                         showCategoryNotExpandable();
@@ -201,6 +290,13 @@ public class MainActivity extends AppCompatActivity {
                 builder.show();
             }
         });
+    }
+
+    private void clearAllCategories() {
+        for (int i = 0; i < categories.size(); i++) {
+            categories.get(i).getItems().clear();
+        }
+        adapter.notifyDataSetChanged();
     }
 
     //TODO WO MÜSSEN DIE METHODEN AUFGERUFEN WERDEN?
@@ -247,14 +343,31 @@ public class MainActivity extends AppCompatActivity {
         categories.add(hygienics);
     }
 
+    //TODO TODO
+//    private void multiSelect(int position) {
+//        ShopItem item = categories.get(position);
+//        if (item != null){
+//            if (actionMode != null) {
+//                if (selectedIds.contains(item.))
+//                    selectedIds.remove(Integer.valueOf(item.getId()));
+//                else
+//                    selectedIds.add(item.getId());
+//
+//                if (selectedIds.size() > 0)
+//                    actionMode.setTitle(String.valueOf(selectedIds.size())); //show selected item count on action mode.
+//                else{
+//                    actionMode.setTitle(""); //remove item count from action mode.
+//                    actionMode.finish(); //hide action mode.
+//                }
+//                adapter.setSelectedIds(selectedIds);
+//
+//            }
+//        }
+//    }
+
     //aus Json string wird wieder eine Arraylist<ShopItem>
-    public ArrayList<ShopItem> getListFromJson(String json) {
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.setLenient();
-        Gson gson = gsonBuilder.create();
-        //TODO MalFormedJsonException lösen wegen leerzeichen
-//        JsonReader reader = new JsonReader(new StringReader(json));
-//        reader.setLenient(true);
+    public ArrayList<ShopItem> getListFromJson(String json){
+        Gson gson = new Gson();
         Type type = new TypeToken<ArrayList<ShopItem>>() {
         }.getType();
         Log.d(TAG, "getListFromJson: JSON HIER: " + json);
@@ -280,17 +393,17 @@ public class MainActivity extends AppCompatActivity {
 
     public void loadArrayList(String key) {
         //Log.d(TAG, "Categories vor .clear(): "+categories+"\n");
+        //Categories löschen bevor alles aus den Shared Preferences hinzugefügt wird
         categories.clear();
+        //Shared Preferences abrufen
         SharedPreferences prefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
-
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.setLenient();
-        Gson gson = gsonBuilder.create();
-
-        //Gson gson = new Gson();
+        //Neues gson Objekt erzeugen
+        Gson gson = new Gson();
+        //Json string aus Shared Preferences abrufen
         String json = prefs.getString(key, null);
-        Type type = new TypeToken<ArrayList<Category>>() {
-        }.getType();
+        //Type angeben damit Gson weiß in welchen Typ Json konvertiert werden soll
+        Type type = new TypeToken<ArrayList<Category>>() {}.getType();
+        //der categories Liste den zu einer ArrayList<Category> konvertierten Json String hinzufügen
         categories = gson.fromJson(json, type);
         //Log.d(TAG, "HALLO HIER DIE CATEGORY LIST IN LOAD: "+categories);
     }
