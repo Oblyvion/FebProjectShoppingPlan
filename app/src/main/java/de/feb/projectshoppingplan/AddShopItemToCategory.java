@@ -105,25 +105,9 @@ public class AddShopItemToCategory extends AppCompatActivity {
                     public void onItemClick(View view, int position) {
                         //Toast.makeText(getApplicationContext(), "Hallo hier Item Click", Toast.LENGTH_LONG).show();
                         itemList_text.get(position).setChecked(!itemList_text.get(position).checked);
-                        if(!findDuplicates(itemList_text.get(position))) {
-                            itemList_text.get(position).setChecked(true);
+                        if(!findDuplicates(itemList_text.get(position)) && itemList_text.get(position).checked) {
                             itemList_text.get(position).setCheckmark();
-                            itemList_forMain.add(new ShopItem(itemList_text.get(position).name));
-                            for (int i = 0; i < itemList_forMain.size(); i++) {
-                                itemList_forMain.get(i).setActivity(AddShopItemToCategoryActivity);
-                                itemList_forMain.get(i).setIcon();
-                            }
-                            Log.d(TAG, "Hallo hier itemList Main: "+itemList_forMain);
-                            for (int i = 0; i < categories.size(); i++) {
-                                if (categories.get(i).getTitle().equals(categoryName)) {
-                                    categories.get(i).getItems().clear();
-                                    //categories.get(i).setItems(itemList_forMain);
-                                    //TODO Lösung für Warnung
-                                    categories.get(i).getItems().addAll(itemList_forMain);
-                                    Log.d(TAG, "Das ist die liste nachdem was geadded wurde: "+categories);
-                                }
-                            }
-                            saveArrayList(categories, "categories_arraylist");                        }
+                        }
                         else {
                             itemList_text.get(position).setCheckmark();
                         }
@@ -299,6 +283,7 @@ public class AddShopItemToCategory extends AppCompatActivity {
     }
 
     void close() {
+        addToMainList();
         finish();
         Intent intent = new Intent(this, MainActivity.class);
         this.startActivity(intent);
@@ -361,7 +346,6 @@ public class AddShopItemToCategory extends AppCompatActivity {
         }
 
         itemList_forMain.addAll(itemList_voice);
-        Log.d("HalloHier", "Wassn los mit de lischd: "+itemList_forMain);
 
         for (int i = 0; i < categories.size(); i++) {
             if (categories.get(i).getTitle().equals(categoryName)) {
@@ -444,6 +428,31 @@ public class AddShopItemToCategory extends AppCompatActivity {
 
         adapter.notifyDataSetChanged();
 
+    }
+
+    public void addToMainList() {
+        for (int i = 0; i < itemList_text.size(); i++) {
+            if(itemList_text.get(i).checked) {
+                itemList_forMain.add(new ShopItem(itemList_text.get(i).name));
+            }
+        }
+
+        for (int i = 0; i < itemList_forMain.size(); i++) {
+            itemList_forMain.get(i).setActivity(AddShopItemToCategoryActivity);
+            itemList_forMain.get(i).setIcon();
+        }
+        Log.d(TAG, "Hallo hier itemList Main: "+itemList_forMain);
+
+        for (int i = 0; i < categories.size(); i++) {
+            if (categories.get(i).getTitle().equals(categoryName)) {
+                categories.get(i).getItems().clear();
+                //categories.get(i).setItems(itemList_forMain);
+                //TODO Lösung für Warnung
+                categories.get(i).getItems().addAll(itemList_forMain);
+                Log.d(TAG, "Das ist die liste nachdem was geadded wurde: "+categories);
+            }
+        }
+        saveArrayList(categories, "categories_arraylist");
     }
 
     //true heißt duplikat gefunden

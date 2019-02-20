@@ -87,7 +87,8 @@ class LetterIconProvider {
             c.drawText(mFirstChar, 0, 1, width / 2, height / 2
                     + (mBounds.bottom - mBounds.top) / 2, mPaint);
         } else {
-            c.drawBitmap(mDefaultBitmap, 0, 0, null);
+            c.drawText("-", 0, 1, width / 2, height / 2
+                    + (mBounds.bottom - mBounds.top) / 2, mPaint);
         }
         return bitmap;
     }
@@ -100,7 +101,8 @@ class LetterIconProvider {
     //TODO Sonderzeichen gehen nicht LÖSUNG FINDEN
     private static boolean isEnglishLetterOrDigit(char c) {
         //Log.d("MyActivity", "Das ist char c: "+c);
-        return 'A' <= c && c <= 'Z' || 'a' <= c && c <= 'z' || '0' <= c && c <= '9';
+        return Character.isLetter(c) || Character.isDigit(c);
+        //return 'A' <= c && c <= 'Z' || 'a' <= c && c <= 'z' || '0' <= c && c <= '9';
     }
 
     /**
