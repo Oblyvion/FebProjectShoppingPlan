@@ -4,7 +4,9 @@ import android.util.Log;
 
 import com.thoughtbot.expandablerecyclerview.models.ExpandableListPosition;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import de.feb.projectshoppingplan.AddShopItemToCategory;
 import de.feb.projectshoppingplan.Category;
@@ -42,7 +44,7 @@ public class ExpandableListUtils {
         Log.d(TAG, "notifyItemMoved: typeTo = " + typeTo);
 
         Category currentGroupFrom = (Category) adapter.getGroups().get(groupIndexFrom);
-//            Category currentCategoryTo = (Category) adapter.getGroups().get(groupIndexTo);
+        Category currentCategoryTo = (Category) adapter.getGroups().get(groupIndexTo);
 
         Log.d(TAG, "notifyItemMoved: currentGroupFrom = " + currentGroupFrom);
 //       if(typeFrom != typeTo) {
@@ -73,18 +75,33 @@ public class ExpandableListUtils {
             Collections.swap(adapter.getGroups(), groupIndexFrom, groupIndexTo);
             adapter.notifyDataSetChanged(); //
         } else
-            //move shopItem
-            if (typeFrom == 1 && typeTo == 1) {
-                Log.d(TAG, "notifyItemMoved: SHOPITEM MOVE");
-                Log.d(TAG, "notifyItemMoved: typeFrom = " + typeFrom);
-                Log.d(TAG, "notifyItemMoved: typeTo = " + typeTo);
+            //move shopItem inside current group
+            Log.d(TAG, "notifyItemMoved: groupIndexFrom = " + groupIndexFrom);
+        Log.d(TAG, "notifyItemMoved: groupIndexTo = " + groupIndexTo);
+        if (typeFrom == 1 && typeTo == 1
+                && groupIndexFrom == groupIndexTo) {
+            Log.d(TAG, "notifyItemMoved: SHOPITEM MOVE");
+            Log.d(TAG, "notifyItemMoved: typeFrom = " + typeFrom);
+            Log.d(TAG, "notifyItemMoved: typeTo = " + typeTo);
 
-                Log.d(TAG, "notifyItemMoved: get Group Title = " + currentGroupFrom.getTitle());
-                Log.d(TAG, "notifyItemMoved: get Group Items = " + currentGroupFrom.getItems());
-                Log.d(TAG, "notifyItemMoved: get Group Item MOVED NOW = " + currentGroupFrom.getItems().get(shopItemIndexFrom));
-                Collections.swap(currentGroupFrom.getItems(), shopItemIndexFrom, shopItemIndexTo);
-                Log.d(TAG, "notifyItemMoved: get Group Items SWAPED! = " + currentGroupFrom.getItems());
-            }
+            Log.d(TAG, "notifyItemMoved: get Group Title = " + currentGroupFrom.getTitle());
+            Log.d(TAG, "notifyItemMoved: get Group Items = " + currentGroupFrom.getItems());
+            Log.d(TAG, "notifyItemMoved: get Group Item MOVED NOW = " + currentGroupFrom.getItems().get(shopItemIndexFrom));
+            Collections.swap(currentGroupFrom.getItems(), shopItemIndexFrom, shopItemIndexTo);
+            Log.d(TAG, "notifyItemMoved: get Group Items SWAPED! = " + currentGroupFrom.getItems());
+        } else if (typeFrom == 1 && typeTo == 1) {
+            Log.d(TAG, "notifyItemMoved: jlfda");
+            //try to add shopItem to another group
+//            List items = ((Category) adapter.getGroups().get(groupIndexTo)).getItems();
+//            items.add(, adapter.getGroups().get(0));
+//            ((Category) adapter.getGroups().get(groupIndexFrom)).getItems().remove(shopItemIndexFrom);
+//            adapter.notifyItemRemoved(flatPosFrom);
+//            adapter.notifyItemInserted(flatPosTo);
+
+            //dont swap shopitems into other other groups
+            adapter.notifyItemMoved(flatPosTo, flatPosFrom);
+            adapter.notifyDataSetChanged();
+        }
 //        else
 //            //if group is EXPANDED, collapse and move it
 //            if (typeFrom == 2 && typeTo == 2 && adapter.isGroupExpanded(groupIndexFrom)) {
