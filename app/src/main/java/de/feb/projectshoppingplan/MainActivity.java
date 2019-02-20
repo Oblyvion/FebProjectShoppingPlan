@@ -37,6 +37,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Map;
+import java.util.Set;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -69,14 +71,14 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         Log.d(TAG, "MainActivity: On Create");
-
 
 //        delete();
         SharedPreferences prefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
@@ -100,13 +102,18 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
+        adapter = new ExpandableRecyclerViewAdapter(categories);
+
         if (categories.isEmpty()) {
             addStandardCats();
         }
 
         //Adapter wird deklariert und initialisiert
         //Kann erst hier gemacht werden, da in categories was drin sein muss
-        adapter = new ExpandableRecyclerViewAdapter(categories);
+//        if (adapter != null) {
+//            adapter.onRestoreInstanceState(savedInstanceState);
+//        } else adapter = new ExpandableRecyclerViewAdapter(categories);
+//        adapter = new ExpandableRecyclerViewAdapter(categories);
 
         //recycler view finden
         recyclerView = findViewById(R.id.recyclerViewMain);
@@ -122,21 +129,27 @@ public class MainActivity extends AppCompatActivity {
         ItemTouchHelper.Callback itemTouchHelperCallback = new ItemTouchHelper.Callback() {
             @Override
             public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
+                Log.d(TAG, "getMovementFlags: GRAP ITEM...");
                 return makeFlag(ItemTouchHelper.ACTION_STATE_DRAG,
                         ItemTouchHelper.DOWN | ItemTouchHelper.UP | ItemTouchHelper.START | ItemTouchHelper.END);
             }
 
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder fromViewHolder, @NonNull RecyclerView.ViewHolder toViewHolder) {
+
+                Log.d(TAG, "onMove: itemViewFROM TYPE = " + fromViewHolder.getItemViewType());
+                Log.d(TAG, "onMove: itemViewTO TYPE = " + toViewHolder.getItemViewType());
+                
                 //do not swap when item types are unequal
-                if (!(fromViewHolder.getItemViewType() == toViewHolder.getItemViewType())) {
+                if (fromViewHolder.getItemViewType() != toViewHolder.getItemViewType()) {
                     return false;
                 }
 
                 //TODO SPEICHER NEUE LISTE NACH DRAG & DROP
-//                ArrayList arrayList = new ArrayList();
-//                arrayList.add(recyclerView.get)
+//                adapter.onSaveInstanceState(savedInstanceState);
 
+                Log.d(TAG, "onMove: adapter POSITION FROM = " + fromViewHolder.getAdapterPosition());
+                Log.d(TAG, "onMove: adapter POSITION TO = " + toViewHolder.getAdapterPosition());
                 adapter.moveItem(fromViewHolder.getAdapterPosition(), toViewHolder.getAdapterPosition());
 
                 return true;
@@ -224,7 +237,6 @@ public class MainActivity extends AppCompatActivity {
 
                 Log.d(TAG, "Das ist die Liste bei click auf floating button: " + categories.toString());
 
-
                 AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.this);
                 builder.setTitle("Add a new category");
                 View viewInflated = LayoutInflater.from(MainActivity.this).inflate(R.layout.alert_dialog, (ViewGroup) findViewById(android.R.id.content), false);
@@ -260,13 +272,11 @@ public class MainActivity extends AppCompatActivity {
                         //Zur Liste der categories hinzufügen
                         categories.add(newCat);
 
-
                         //dafür sorgen das der adapter die neue category auch anzeigt
                         adapter.addNewGroup();
 
                         //Save der Liste nachdem eine neue Cat hinzugefügt wurde
                         saveArrayList(categories, "categories_arraylist");
-
 
                     }
                 });
@@ -291,16 +301,11 @@ public class MainActivity extends AppCompatActivity {
 
     //TODO WO MÜSSEN DIE METHODEN AUFGERUFEN WERDEN?
     //speichere den status vom expandable recyclerview
-//    @Override
-//    protected void onSaveInstanceState(Bundle saveState) {
-//        super.onSaveInstanceState(saveState);
-//        adapter.onSaveInstanceState(saveState);
-//    }
-//    @Override
-//    protected void onRestoreInstanceState(Bundle restoreState) {
-//        super.onRestoreInstanceState(restoreState);
-//        adapter.onRestoreInstanceState(restoreState);
-//    }
+    @Override
+    protected void onRestoreInstanceState(Bundle restoreState) {
+        super.onRestoreInstanceState(restoreState);
+        adapter.onRestoreInstanceState(restoreState);
+    }
 
 
     private void addStandardCats() {

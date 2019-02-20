@@ -49,6 +49,11 @@ public class ExpandableRecyclerViewAdapter extends com.thoughtbot.expandablerecy
         notifyItemMoved(flatPosFrom, flatPostTo);
     }
 
+    public void notifySwapItem() {
+        Log.d(TAG, "notifySwapItem: HUHUUU ");
+
+    }
+
     public void addNewGroup() {
         ExpandableListUtils.notifyGroupDataChanged(this);
         notifyDataSetChanged();
