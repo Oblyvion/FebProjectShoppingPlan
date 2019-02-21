@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import com.thoughtbot.expandablerecyclerview.ExpandableListUtils;
 import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup;
+import com.thoughtbot.expandablerecyclerview.models.ExpandableListPosition;
 
 import java.util.List;
 
@@ -47,6 +48,29 @@ public class ExpandableRecyclerViewAdapter extends com.thoughtbot.expandablerecy
         ExpandableListUtils.notifyItemMoved(this, flatPosFrom, flatPostTo);
         notifyItemMoved(flatPosFrom, flatPostTo);
     }
+
+
+    @Override
+    public boolean onGroupClick(int flatPos) {
+        Log.d(TAG, "onGroupClick: GROUP CLICKED!!!");
+        if (ExpandableListUtils.notifyGroupNotClickable(this, flatPos)) {
+            return super.onGroupClick(flatPos);
+        }
+        this.notifyItemChanged(flatPos);
+        return false;
+    }
+
+//    @Override
+//    public boolean toggleGroup(int flatPos) {
+//        ExpandableListPosition listPos = expandableList.getUnflattenedPosition(flatPos);
+//        boolean expanded = expandableList.expandedGroupIndexes[listPos.groupPos];
+//        if (expanded) {
+//            collapseGroup(listPos);
+//        } else {
+//            expandGroup(listPos);
+//        }
+//        return expanded;
+//    }
 
     public void notifySwapItem() {
         Log.d(TAG, "notifySwapItem: HUHUUU ");
