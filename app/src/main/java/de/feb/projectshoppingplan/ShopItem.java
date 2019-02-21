@@ -70,7 +70,7 @@ public class ShopItem implements Parcelable {
         if (this.checked) {
             this.checkmark = activity.getDrawable(R.drawable.ic_check_box_black_24dp);
         }
-        else this.checkmark = activity.getDrawable(R.drawable.leer);
+        else this.checkmark = activity.getDrawable(R.drawable.ic_check_box_outline_blank_black_24dp);
     }
 
     public void setChecked(boolean check) { this.checked = check; }

@@ -64,6 +64,33 @@ public class MainActivity extends AppCompatActivity {
     //Main Liste der Categories (enthält alle Categories und die dazu gehörigen ShopItem Listen)
     public ArrayList<Category> categories = new ArrayList<>();
 
+//    @Override
+//    protected void onResume() {
+//        SharedPreferences prefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
+//        Log.d(TAG, "MainActivity: On Resume");
+//        super.onResume();
+//        if (prefs.getString("categories_arraylist", null) != null) {
+//            loadArrayList("categories_arraylist");
+//            Log.d(TAG, "SharedPreferences JSON categories: " + prefs.getString("categories_arraylist", null));
+//            for (int i = 0; i < categories.size(); i++) {
+//                ArrayList<ShopItem> shopItems;
+//                //Log.d(TAG, "LOAD shop item lists: "+categories.get(i).getItems());
+//                //shopItems = (ArrayList<ShopItem>) categories.get(i).getItems();
+//                Gson gson = new Gson();
+//                String json = gson.toJson(categories.get(i).getItems());
+//                shopItems = getListFromJson(json);
+//                categories.get(i).getItems().clear();
+//                categories.get(i).getItems().addAll(shopItems);
+//                for (int j = 0; j < shopItems.size(); j++) {
+//                    //Log.d(TAG, "SharedPreferences einzelne items nach load shop item list: "+shopItems.get(j).name);
+//                    shopItems.get(j).setActivity(this);
+//                    shopItems.get(j).setIcon();
+//                }
+//            }
+//        }
+//    }
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -102,14 +129,14 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        adapter = new ExpandableRecyclerViewAdapter(categories);
-
         if (categories.isEmpty()) {
             addStandardCats();
         }
 
         //Adapter wird deklariert und initialisiert
         //Kann erst hier gemacht werden, da in categories was drin sein muss
+        adapter = new ExpandableRecyclerViewAdapter(categories);
+
 //        if (adapter != null) {
 //            adapter.onRestoreInstanceState(savedInstanceState);
 //        } else adapter = new ExpandableRecyclerViewAdapter(categories);
@@ -139,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
 
                 Log.d(TAG, "onMove: itemViewFROM TYPE = " + fromViewHolder.getItemViewType());
                 Log.d(TAG, "onMove: itemViewTO TYPE = " + toViewHolder.getItemViewType());
-                
+
                 //do not swap when item types are unequal
                 if (fromViewHolder.getItemViewType() != toViewHolder.getItemViewType()) {
                     return false;
@@ -253,24 +280,27 @@ public class MainActivity extends AppCompatActivity {
                         ArrayList<ShopItem> list = new ArrayList<>();
 
                         //newCat erstellen mit Name und Liste
-                        Category newCat = null;
+                        //Category newCat = new Category(input.getText().toString() , list);
 
+                        String temp = input.getText().toString();
+                        int help = 0;
                         for (int i = 0; i < categories.size(); i++) {
-                            if (categories.get(i).getTitle().contentEquals(input.getText())) {
-                                String temp = input.getText().toString();
-                                while (categories.get(i).getTitle().contentEquals(temp)) {
-                                    temp+="*";
+                            if (categories.get(i).getTitle().equals(temp)) {
+                                while (categories.get(i).getTitle().equals(temp)) {
+                                    help++;
+                                    temp = input.getText().toString()+"("+help+")";
                                 }
-                                newCat = new Category(temp, list);
                             }
-
                         }
 
-                        //lässt Kategorie-Erweiterungspfeile verschwinden
-                        showCategoryNotExpandable();
+                        //newCat erstellen mit Name und Liste
+                        Category newCat = new Category(temp, list);
 
                         //Zur Liste der categories hinzufügen
                         categories.add(newCat);
+
+                        //lässt Kategorie-Erweiterungspfeile verschwinden
+                        showCategoryNotExpandable();
 
                         //dafür sorgen das der adapter die neue category auch anzeigt
                         adapter.addNewGroup();

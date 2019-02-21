@@ -15,18 +15,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
@@ -51,11 +51,26 @@ public class AddShopItemToCategory extends AppCompatActivity {
     Category category;
     Activity AddShopItemToCategoryActivity = this;
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // handle arrow click here
+        if (item.getItemId() == android.R.id.home) {
+            close();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_shop_item_to_category);
+        Toolbar toolbar = findViewById(R.id.toolbar_add_activity);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+
 
         Intent intent = getIntent();
         categoryName = intent.getStringExtra("category_name");
@@ -124,70 +139,6 @@ public class AddShopItemToCategory extends AppCompatActivity {
         //make editText respond directly when the activity starts
         editText.requestFocus();
 
-//        editText.setOnKeyListener(new View.OnKeyListener() {
-//            @Override
-//            public boolean onKey(View view, int key, KeyEvent keyEvent) {
-//                SharedPreferences.Editor sharedPrefEditor;
-//
-//                if (!(key == KeyEvent.KEYCODE_ENTER)) {
-//                    editText.addTextChangedListener(new TextWatcher() {
-//                        @Override
-//                        public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                            //Log.d(TAG, "onCreate: CharSequence TextWatcher = " + s);
-//
-//                        }
-//
-//                        @Override
-//                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//                        }
-//
-//                        //@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-//                        @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-//                        @Override
-//                        public void afterTextChanged(Editable s) {
-//                            SharedPreferences.Editor sharedPrefEditor;
-//                            String sharedPrefsKey = "Grocery";
-//
-//                            //Log.d(TAG, "afterTextChanged: jojooojojjo charAT = " + s.charAt(s.length() - 1));
-//                            if (s.toString().length() > 1) {
-//
-//                                temp_user_input = "\""+s.toString()+"\"";
-//                                Log.d(TAG, "TEMP USER INPUT 1: "+temp_user_input);
-//
-//                                addtoListandgiveIcon("\""+s.toString()+"\"");
-//                                //Log.d(TAG, "afterTextChanged: HLALLJSADFOJODSA");
-//                                //Log.d(TAG, "afterTextChanged: temp_user_input = " + temp_user_input);
-////                    if (s.charAt(s.length() - 1) == '\n') {
-//                                sharedPrefEditor = sharedPreferences.edit();
-//                                sharedPrefEditor.putString(sharedPrefsKey + temp_user_input.toString(), temp_user_input);
-//                                sharedPrefEditor.apply();
-////                                Log.d(TAG, "afterTextChanged: if sharedPrefs = " + sharedPreferences.getString(sharedPrefsKey + "Hgzuuh", "no gro"));
-////                    }
-//                            } else {
-//                                if (!itemList_text.isEmpty()) {
-//                                    itemList_text.remove(0);
-//                                }
-//                                adapter.notifyDataSetChanged();
-//                            }
-//                        }
-//                    });
-//
-//                }
-//
-////                Log.d(TAG, "onKey: sharedPrefs Juhuuu");
-//                if (keyEvent.getAction() == KeyEvent.ACTION_DOWN) {
-//                    if (key == KeyEvent.KEYCODE_ENTER) {
-//                        sharedPrefEditor = sharedPreferences.edit();
-//                        sharedPrefEditor.putString(getString(R.string.groceries), temp_user_input);
-//                        sharedPrefEditor.apply();
-////                        Log.d(TAG, "onKey: sharedPrefs = " + getString(R.string.groceries));
-//                        return true;
-//                    }
-//                }
-//                return false;
-//            }
-//        });
-
         editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -210,7 +161,7 @@ public class AddShopItemToCategory extends AppCompatActivity {
                 if (s.toString().length() > 1) {
                     temp_user_input = s.toString();
                     Log.d(TAG, "TEMP USER INPUT 1: "+temp_user_input);
-                    addtoListandgiveIcon(s.toString());
+                    addtoRecyclerViewandgiveIcon(s.toString());
 //                    if (s.charAt(s.length() - 1) == '\n') {
                     sharedPrefEditor = sharedPreferences.edit();
                     sharedPrefEditor.putString(sharedPrefsKey + temp_user_input.toString(), temp_user_input);
@@ -226,26 +177,6 @@ public class AddShopItemToCategory extends AppCompatActivity {
             }
         });
 
-//       editText.setOnKeyListener(new View.OnKeyListener() {
-//            //
-//            @Override
-//            public boolean onKey(View view, int key, KeyEvent keyEvent) {
-//                SharedPreferences.Editor sharedPrefEditor;
-//
-//                Log.d(TAG, "onKey: sharedPrefs Juhuuu");
-//                if (keyEvent.getAction() == KeyEvent.ACTION_DOWN) {
-//                    if (key == KeyEvent.KEYCODE_ENTER) {
-//                        sharedPrefEditor = sharedPreferences.edit();
-//                        sharedPrefEditor.putString(getString(R.string.groceries), temp_user_input);
-//                        sharedPrefEditor.apply();
-//                        Log.d(TAG, "onKey: sharedPrefs = " + getString(R.string.groceries));
-//                        return true;
-//                    }
-//                }
-//                return false;
-//            }
-//        });
-
         editText.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -253,18 +184,9 @@ public class AddShopItemToCategory extends AppCompatActivity {
                 final int DRAWABLE_TOP = 1;
                 final int DRAWABLE_RIGHT = 2;
                 final int DRAWABLE_BOTTOM = 3;
-//                performClick();
 
                 if(event.getAction() == MotionEvent.ACTION_UP) {
-                    if(event.getRawX() >= (editText.getLeft() - editText.getCompoundDrawables()[DRAWABLE_LEFT].getBounds().width())) {
-                        // your action here
-//                        Log.d(TAG, "Hallo hier click on back button!");
-//                        close();
-//                        return true;
-                    }
-
-                    if (event.getRawX() >= (editText.getRight() - editText.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
-                        // your action here
+                    if(event.getRawX() >= (editText.getRight() - editText.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())-100) {
                         Log.d(TAG, "Hallo hier click on voice button!");
                         promptSpeechInput();
                         return true;
@@ -272,13 +194,6 @@ public class AddShopItemToCategory extends AppCompatActivity {
                 }
                 return false;
             }
-
-//            @Override
-//            public void performClick() {
-//
-//            }
-
-
         });
     }
 
@@ -407,13 +322,14 @@ public class AddShopItemToCategory extends AppCompatActivity {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public void addtoListandgiveIcon(String text) {
+    public void addtoRecyclerViewandgiveIcon(String text) {
         temp_user_input = text;
         Log.d(TAG, "TEMP USER INPUT 2: "+temp_user_input);
 
         ShopItem item = new ShopItem(temp_user_input);
         item.setActivity(this);
         item.setIcon();
+        item.setCheckmark();
 
         if (findDuplicates(item)) {
             item.setChecked(true);
