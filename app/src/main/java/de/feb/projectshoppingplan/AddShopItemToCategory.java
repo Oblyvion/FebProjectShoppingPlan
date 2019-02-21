@@ -258,9 +258,7 @@ public class AddShopItemToCategory extends AppCompatActivity {
                 if(event.getAction() == MotionEvent.ACTION_UP) {
                     if(event.getRawX() >= (editText.getLeft() - editText.getCompoundDrawables()[DRAWABLE_LEFT].getBounds().width())) {
                         // your action here
-//                        Log.d(TAG, "Hallo hier click on back button!");
-//                        close();
-//                        return true;
+                        finish();
                     }
 
                     if (event.getRawX() >= (editText.getRight() - editText.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {

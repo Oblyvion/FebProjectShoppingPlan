@@ -3,34 +3,36 @@
 
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/border"
     android:orientation="horizontal"
-    android:weightSum="100"
-    android:background="@drawable/border">
+    android:weightSum="100">
 
     <ImageView
         android:id="@+id/imageViewShopItem"
         android:layout_width="0dp"
         android:layout_height="30dp"
-        android:layout_weight="20"
         android:layout_gravity="center"
-        android:src="@mipmap/ic_launcher"
-        android:contentDescription="list symbol" />
+        android:layout_weight="20"
+        android:contentDescription="list symbol"
+        android:src="@mipmap/ic_launcher" />
 
     <TextView
 
         android:id="@+id/textViewShopItem"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="60"
         android:layout_gravity="center"
-        android:textAlignment="center"
-        android:text="ShopItem"/>
+        android:layout_weight="60"
+        android:text="ShopItem"
+        android:textAlignment="center" />
 
     <Spinner
         android:id="@+id/spinnerShopItem"
         android:layout_width="20dp"
         android:layout_height="wrap_content"
-        android:layout_weight="20"/>
+        android:layout_gravity="center"
+        android:layout_weight="20"
+        android:dropDownWidth="match_parent" />
 
 
 </LinearLayout>
