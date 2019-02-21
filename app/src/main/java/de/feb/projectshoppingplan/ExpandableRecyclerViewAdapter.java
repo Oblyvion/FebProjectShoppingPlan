@@ -56,7 +56,8 @@ public class ExpandableRecyclerViewAdapter extends com.thoughtbot.expandablerecy
         if (ExpandableListUtils.notifyGroupNotClickable(this, flatPos)) {
             return super.onGroupClick(flatPos);
         }
-        return this.toggleGroup(flatPos);
+        this.notifyItemChanged(flatPos);
+        return false;
     }
 
 //    @Override
