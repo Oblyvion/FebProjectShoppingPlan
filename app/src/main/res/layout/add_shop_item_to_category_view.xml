@@ -10,31 +10,32 @@
 
     <ImageView
         android:id="@+id/imageViewProduct"
-        android:layout_width="300dp"
+        android:layout_width="wrap_content"
         android:layout_height="60dp"
-        android:layout_weight="37.5"
-        android:contentDescription="IconWithCapitalLetter"
+        android:layout_weight="20"
+        android:contentDescription="@string/imageViewProductDescription"
         android:gravity="center"
         android:src="@mipmap/ic_launcher"
         android:textAlignment="center" />
 
     <TextView
         android:id="@+id/textViewProductName"
-        android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_weight="20"
+        android:layout_weight="60"
         android:gravity="center"
-        android:text="NameProdukt"
-        android:textAlignment="center" />
+        android:text="@string/textViewProductName"
+        android:textAlignment="center"
+        android:layout_width="wrap_content"
+        android:textSize="18sp"/>
 
     <ImageView
         android:id="@+id/imageViewProductCheck"
-        android:layout_width="300dp"
+        android:layout_width="wrap_content"
         android:layout_height="60dp"
-        android:layout_weight="42.5"
-        android:contentDescription="CheckMark"
+        android:layout_weight="20"
+        android:contentDescription="@string/checkmark_description"
         android:gravity="center"
-        app:srcCompat="@drawable/leer"
+        app:srcCompat="@drawable/ic_check_box_outline_blank_black_24dp"
         android:textAlignment="center" />
 
 

@@ -13,6 +13,7 @@ import android.widget.ImageView;
 public class ShopItem implements Parcelable {
 
     public final String name;
+    String spinner_value;
     Bitmap icon;
     Boolean checked = false;
     transient Activity activity;
@@ -46,6 +47,10 @@ public class ShopItem implements Parcelable {
         this.icon = letterIconProvider.getLetterIcon(name, firstchars, tilesize, tilesize, true);
     }
 
+    void setSpinner_value(String value) {
+        this.spinner_value = value;
+    }
+
     public Bitmap getIcon() {
         return this.icon;
     }
@@ -70,7 +75,7 @@ public class ShopItem implements Parcelable {
         if (this.checked) {
             this.checkmark = activity.getDrawable(R.drawable.ic_check_box_black_24dp);
         }
-        else this.checkmark = activity.getDrawable(R.drawable.leer);
+        else this.checkmark = activity.getDrawable(R.drawable.ic_check_box_outline_blank_black_24dp);
     }
 
     public void setChecked(boolean check) { this.checked = check; }

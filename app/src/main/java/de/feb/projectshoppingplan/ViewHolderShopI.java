@@ -1,25 +1,21 @@
 package de.feb.projectshoppingplan;
 
-import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
-import android.text.Spannable;
-import android.text.Spanned;
-import android.text.style.StrikethroughSpan;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.thoughtbot.expandablerecyclerview.viewholders.ChildViewHolder;
 
-import java.nio.ByteOrder;
+import static android.content.Context.MODE_PRIVATE;
 
 
 class ViewHolderShopI extends ChildViewHolder {
@@ -56,15 +52,13 @@ class ViewHolderShopI extends ChildViewHolder {
                     v.setBackground(view.getContext().getDrawable(R.drawable.border));
                     clicked = false;
                 }
-
             }
-
-
-
         });
 
+        //delete();
         // Dropdown-Listen Inhalt mit dazugehörigem Adapter
-        String[] numberShopI = new String[100];
+        final String[] numberShopI = new String[100];
+
         for (int i = 0; i < 100; i++) {
             numberShopI[i] = "" + i;
         }
@@ -75,5 +69,41 @@ class ViewHolderShopI extends ChildViewHolder {
         textViewShopI.setText(shopItem.name);
         imageViewShopI.setImageBitmap(shopItem.icon);
         spinnerShopI.setAdapter(adapter);
+        if (spinnerShopI.getSelectedItem() == null) {
+            spinnerShopI.setSelection(0, true);
+        } else getSpinnerValue();
+        spinnerShopI.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                saveSpinnerValue();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {}
+
+        });
+    }
+
+    void saveSpinnerValue() {
+        String userChoice = spinnerShopI.getSelectedItem().toString();
+        Log.d("hallo", "save: "+userChoice);
+        SharedPreferences sharedPref = spinnerShopI.getContext().getSharedPreferences(textViewShopI.getText().toString(),MODE_PRIVATE);
+        SharedPreferences.Editor prefEditor = sharedPref.edit();
+        prefEditor.putString("userChoiceSpinner",userChoice);
+        prefEditor.apply();
+    }
+
+    void getSpinnerValue() {
+        SharedPreferences sharedPref = spinnerShopI.getContext().getSharedPreferences(textViewShopI.getText().toString(),MODE_PRIVATE);
+        String spinnerValue = sharedPref.getString("userChoiceSpinner",null);
+        if(spinnerValue != null) {
+            // set the selected value of the spinner
+            Log.d("hallo", "hallo hier spinnerValue: "+spinnerValue);
+            spinnerShopI.setSelection(Integer.parseInt(spinnerValue),true);
+        }
+    }
+
+    void delete() {
+        spinnerShopI.getContext().getSharedPreferences("FileName", MODE_PRIVATE).edit().clear().apply();
     }
 }
