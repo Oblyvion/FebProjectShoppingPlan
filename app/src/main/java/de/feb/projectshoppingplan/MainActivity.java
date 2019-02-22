@@ -2,9 +2,11 @@ package de.feb.projectshoppingplan;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
@@ -32,6 +34,7 @@ import com.thoughtbot.expandablerecyclerview.ExpandableListUtils;
 
 import java.io.StringReader;
 import java.lang.reflect.Array;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,13 +59,17 @@ public class MainActivity extends AppCompatActivity {
 
     // TODO  dummy_items anlegen: ZUGRIFF = categories.addAll(Arrays.asList(context.getResources().getStringArray(R.array.dummy_items)));
     //Categories
-    final static String[] STANDARD_CATEGORIES = {"Obst & Gemüse", "Wurst & Milchprodukte",
+    final static String[] STANDARD_CATEGORIES = {"Veggetables", "Saucage & ",
             "Getreideprodukte", "Fleisch & Fisch", "Hygiene", "Fertiggerichte"};
 
     ExpandableRecyclerViewAdapter adapter;
 
     //Main Liste der Categories (enthält alle Categories und die dazu gehörigen ShopItem Listen)
     public ArrayList<Category> categories = new ArrayList<>();
+
+    SharedPreferences prefs;
+    private Parcelable viewState = null;
+    private static final String VIEW_STATE = "view-state";
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -74,14 +81,15 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
+//        onRestoreInstanceState(savedInstanceState);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         Log.d(TAG, "MainActivity: On Create");
 
-//        delete();
-        SharedPreferences prefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
+        delete();
+        prefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
         if (prefs.getString("categories_arraylist", null) != null) {
             loadArrayList("categories_arraylist");
             Log.d(TAG, "SharedPreferences JSON categories: " + prefs.getString("categories_arraylist", null));
@@ -129,9 +137,14 @@ public class MainActivity extends AppCompatActivity {
         ItemTouchHelper.Callback itemTouchHelperCallback = new ItemTouchHelper.Callback() {
             @Override
             public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
-                Log.d(TAG, "getMovementFlags: GRAP ITEM...");
+//                Log.d(TAG, "getMovementFlags: GRAP ITEM...");
+//                int dragAction = ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.START | ItemTouchHelper.END;
+//                Log.d(TAG, "getMovementFlags: dragAction = " + dragAction);
+//                int swipeAction = ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
+//                Log.d(TAG, "getMovementFlags: swipeAction = " + swipeAction);
+//                return makeFlag(ItemTouchHelper.ACTION_STATE_DRAG, ItemTouchHelper.ACTION_STATE_SWIPE);
                 return makeFlag(ItemTouchHelper.ACTION_STATE_DRAG,
-                        ItemTouchHelper.DOWN | ItemTouchHelper.UP | ItemTouchHelper.START | ItemTouchHelper.END | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
+                        ItemTouchHelper.DOWN | ItemTouchHelper.UP | ItemTouchHelper.START | ItemTouchHelper.END);
             }
 
             @Override
@@ -156,22 +169,23 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
-                Log.d(TAG, "HALLO HIER SWIPEY SWUPP SWIPE");
+//                Log.d(TAG, "HALLO HIER SWIPEY SWUPP SWIPE");
+//                adapter.notifyItemRemoved(i);
             }
         };
 
-//        SwipeController swipeController = new SwipeController();
-//        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeController);
-//        itemTouchhelper.attachToRecyclerView(recyclerView);
+        SwipeController swipeController = new SwipeController();
+        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeController);
+        itemTouchhelper.attachToRecyclerView(recyclerView);
 
         datachanged();
 
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
-                Log.d(TAG, "das ist das menu item: "+menuItem);
+                Log.d(TAG, "das ist das menu item: " + menuItem);
 
-                if (!isMultiSelect){
+                if (!isMultiSelect) {
                     selectedIds = new ArrayList<>();
                     isMultiSelect = true;
                 }
@@ -258,7 +272,7 @@ public class MainActivity extends AppCompatActivity {
                             if (categories.get(i).getTitle().contentEquals(input.getText())) {
                                 String temp = input.getText().toString();
                                 while (categories.get(i).getTitle().contentEquals(temp)) {
-                                    temp+="*";
+                                    temp += "*";
                                 }
                                 newCat = new Category(temp, list);
                             }
@@ -297,15 +311,6 @@ public class MainActivity extends AppCompatActivity {
         }
         adapter.notifyDataSetChanged();
     }
-
-    //TODO WO MÜSSEN DIE METHODEN AUFGERUFEN WERDEN?
-    //speichere den status vom expandable recyclerview
-    @Override
-    protected void onRestoreInstanceState(Bundle restoreState) {
-        super.onRestoreInstanceState(restoreState);
-        adapter.onRestoreInstanceState(restoreState);
-    }
-
 
     private void addStandardCats() {
         ArrayList<ShopItem> veggie_list = new ArrayList<>();
@@ -365,7 +370,7 @@ public class MainActivity extends AppCompatActivity {
 //    }
 
     //aus Json string wird wieder eine Arraylist<ShopItem>
-    public ArrayList<ShopItem> getListFromJson(String json){
+    public ArrayList<ShopItem> getListFromJson(String json) {
         Gson gson = new Gson();
         Type type = new TypeToken<ArrayList<ShopItem>>() {
         }.getType();
@@ -401,7 +406,8 @@ public class MainActivity extends AppCompatActivity {
         //Json string aus Shared Preferences abrufen
         String json = prefs.getString(key, null);
         //Type angeben damit Gson weiß in welchen Typ Json konvertiert werden soll
-        Type type = new TypeToken<ArrayList<Category>>() {}.getType();
+        Type type = new TypeToken<ArrayList<Category>>() {
+        }.getType();
         //der categories Liste den zu einer ArrayList<Category> konvertierten Json String hinzufügen
         categories = gson.fromJson(json, type);
         //Log.d(TAG, "HALLO HIER DIE CATEGORY LIST IN LOAD: "+categories);

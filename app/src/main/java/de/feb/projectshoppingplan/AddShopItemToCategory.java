@@ -23,6 +23,7 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -256,11 +257,15 @@ public class AddShopItemToCategory extends AppCompatActivity {
 //                performClick();
 
                 if(event.getAction() == MotionEvent.ACTION_UP) {
+//                    if (event.getRawX() >= editText.getLeft() && event.getRawX() <= editText.getRight()) {
+                    Log.d(TAG, "onTouch: back button width = " + editText.getCompoundDrawables()[DRAWABLE_LEFT].getBounds().width());
                     if(event.getRawX() >= (editText.getLeft() - editText.getCompoundDrawables()[DRAWABLE_LEFT].getBounds().width())) {
                         // your action here
+                        Log.d(TAG, "onTouch: HALLOOOOOOOOOOOOOO");
                         finish();
                     }
 
+                    Log.d(TAG, "onTouch: microphone button width = " + editText.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width());
                     if (event.getRawX() >= (editText.getRight() - editText.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
                         // your action here
                         Log.d(TAG, "Hallo hier click on voice button!");

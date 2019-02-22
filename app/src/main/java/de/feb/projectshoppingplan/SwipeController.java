@@ -29,22 +29,31 @@ public class SwipeController extends Callback {
 
     private ArrayList<Category> categories = new ArrayList<>();
 
-        @Override
-        public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
-            this.recyclerView = recyclerView;
-            this.adapter = (ExpandableRecyclerViewAdapter) recyclerView.getAdapter();
-            return makeMovementFlags(0, LEFT | RIGHT);
-        }
+    @Override
+    public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
+        this.recyclerView = recyclerView;
+        this.adapter = (ExpandableRecyclerViewAdapter) recyclerView.getAdapter();
+        return makeMovementFlags(0, LEFT | RIGHT);
+    }
 
-        @Override
-        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-            return false;
-        }
+    @Override
+    public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+        return false;
+    }
 
-        @Override
-        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+    @Override
+    public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+        Log.d(TAG, "onSwiped: da passiert was");
+        Log.d(TAG, "onSwiped: direction = " + direction);
+
+        //swipe LEFT
+        if (direction == 4)
+            adapter.swipeItemLeft(viewHolder.getAdapterPosition());
+//        else
+//            adapter.swipeItemRight();
+
 //TODO richtige position bekommen, löschen, categories saven, adapter notify
-            //            this.viewHolder = viewHolder;
+        //            this.viewHolder = viewHolder;
 //            loadArrayList("categories_arraylist");
 //
 //            Log.d(TAG, "Das ist recyclerview: " + (recyclerView.getAdapter().getItemCount()));
@@ -64,7 +73,7 @@ public class SwipeController extends Callback {
 //            Log.d(TAG, "RealPosition: "+ realPosition);
 
 
-            //            this.viewHolder = viewHolder;
+        //            this.viewHolder = viewHolder;
 //            Log.d(TAG, "Das ist viewholder getitemid: "+viewHolder.getItemViewType());
 //            loadArrayList("categories_arraylist");
 //
@@ -74,7 +83,8 @@ public class SwipeController extends Callback {
 //                saveArrayList(categories, "categories_arraylist");
 //            }
 
-        }
+    }
+
     @Override
     public void onChildDraw(@NonNull Canvas c,
                             @NonNull RecyclerView recyclerView,
@@ -91,7 +101,7 @@ public class SwipeController extends Callback {
     }
 
     //aus Json string wird wieder eine Arraylist<ShopItem>
-    public ArrayList<ShopItem> getListFromJson(String json){
+    public ArrayList<ShopItem> getListFromJson(String json) {
         Gson gson = new Gson();
         Type type = new TypeToken<ArrayList<ShopItem>>() {
         }.getType();
@@ -127,8 +137,10 @@ public class SwipeController extends Callback {
         //Json string aus Shared Preferences abrufen
         String json = prefs.getString(key, null);
         //Type angeben damit Gson weiß in welchen Typ Json konvertiert werden soll
-        Type type = new TypeToken<ArrayList<Category>>() {}.getType();
+        Type type = new TypeToken<ArrayList<Category>>() {
+        }.getType();
         //der categories Liste den zu einer ArrayList<Category> konvertierten Json String hinzufügen
         categories = gson.fromJson(json, type);
         //Log.d(TAG, "HALLO HIER DIE CATEGORY LIST IN LOAD: "+categories);
-    }}
+    }
+}

@@ -49,6 +49,11 @@ public class ExpandableRecyclerViewAdapter extends com.thoughtbot.expandablerecy
         notifyItemMoved(flatPosFrom, flatPostTo);
     }
 
+    public void swipeItemLeft(int flatPos) {
+        Log.d(TAG, "swipeItem: SWIPE NOW!");
+        ExpandableListUtils.notifyItemRemoved(this, flatPos);
+    }
+
 
     @Override
     public boolean onGroupClick(int flatPos) {
@@ -71,11 +76,6 @@ public class ExpandableRecyclerViewAdapter extends com.thoughtbot.expandablerecy
 //        }
 //        return expanded;
 //    }
-
-    public void notifySwapItem() {
-        Log.d(TAG, "notifySwapItem: HUHUUU ");
-
-    }
 
     public void addNewGroup() {
         ExpandableListUtils.notifyGroupDataChanged(this);
