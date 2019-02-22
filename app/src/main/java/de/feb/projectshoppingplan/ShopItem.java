@@ -13,6 +13,7 @@ import android.widget.ImageView;
 public class ShopItem implements Parcelable {
 
     public final String name;
+    String spinner_value;
     Bitmap icon;
     Boolean checked = false;
     transient Activity activity;
@@ -44,6 +45,10 @@ public class ShopItem implements Parcelable {
         LetterIconProvider letterIconProvider = new LetterIconProvider(activity);
         int tilesize = 64;
         this.icon = letterIconProvider.getLetterIcon(name, firstchars, tilesize, tilesize, true);
+    }
+
+    void setSpinner_value(String value) {
+        this.spinner_value = value;
     }
 
     public Bitmap getIcon() {

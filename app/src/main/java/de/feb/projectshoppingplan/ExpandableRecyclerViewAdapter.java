@@ -1,9 +1,12 @@
 package de.feb.projectshoppingplan;
 
+import android.app.Activity;
+import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Spinner;
 
 import com.thoughtbot.expandablerecyclerview.ExpandableListUtils;
 import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup;
@@ -14,6 +17,7 @@ import java.util.List;
 public class ExpandableRecyclerViewAdapter extends com.thoughtbot.expandablerecyclerview.ExpandableRecyclerViewAdapter<ViewHolderCat, ViewHolderShopI> {
 
     private static final String TAG = "RecyclerViewAdapter";
+    private View view;
 
     ExpandableRecyclerViewAdapter(List<? extends ExpandableGroup> groups) {
         super(groups);
@@ -22,6 +26,7 @@ public class ExpandableRecyclerViewAdapter extends com.thoughtbot.expandablerecy
     @Override
     public ViewHolderCat onCreateGroupViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.category, parent, false);
+        this.view = v;
         return new ViewHolderCat(v);
     }
 
