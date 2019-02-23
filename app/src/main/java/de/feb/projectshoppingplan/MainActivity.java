@@ -23,8 +23,10 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.google.gson.Gson;
-import java.util.ArrayList;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -84,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
         //recycler view finden
         recyclerView = findViewById(R.id.recyclerViewMain);
 
-        delete();
+//        delete();
         loadSharedPreferences();
 
         if (categories.isEmpty()) {
@@ -139,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "onMove: adapter POSITION TO = " + toViewHolder.getAdapterPosition());
                 adapter.moveItem(fromViewHolder.getAdapterPosition(), toViewHolder.getAdapterPosition());
 
-                categories = (ArrayList<Category>)adapter.getGroups();
+                categories = (ArrayList<Category>) adapter.getGroups();
                 arrayListHelper.saveArrayList(categories, "categories_arraylist");
 
                 return true;
@@ -163,42 +165,50 @@ public class MainActivity extends AppCompatActivity {
             public boolean onMenuItemClick(MenuItem menuItem) {
                 Log.d(TAG, "das ist das menu item: " + menuItem);
 
-                if (!isMultiSelect){
+                //TODO category sorting...
+                if (!isMultiSelect) {
                     //selectedIds = new ArrayList<>();
                     isMultiSelect = true;
                 }
 
+                if (menuItem.toString().equals("Sort Categories")) {
+                    sortList();
+                    arrayListHelper.saveArrayList(categories, "categories_arraylist");
+                    datachanged();
+                }
 
-                AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.this);
-                builder.setTitle("Remove all items from each category?");
-                LayoutInflater.from(MainActivity.this).inflate(R.layout.alert_dialog, (ViewGroup) findViewById(android.R.id.content), false);
+                if (menuItem.toString().equals("Clear Categories")) {
 
-                // button setup
-                builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
+                    AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.this);
+                    builder.setTitle("Remove all items from each category?");
+                    LayoutInflater.from(MainActivity.this).inflate(R.layout.alert_dialog, (ViewGroup) findViewById(android.R.id.content), false);
 
-                        //lässt Kategorie-Erweiterungspfeile verschwinden
+                    // button setup
+                    builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+
+                            //lässt Kategorie-Erweiterungspfeile verschwinden
 //                        showCategoryNotExpandable();
 
-                        clearAllCategories();
+                            clearAllCategories();
 
-                        //Save der Liste nachdem alle categories gecleared wurden
-                        arrayListHelper.saveArrayList(categories, "categories_arraylist");
+                            //Save der Liste nachdem alle categories gecleared wurden
+                            arrayListHelper.saveArrayList(categories, "categories_arraylist");
 
 
-                    }
-                });
-                builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
+                        }
+                    });
+                    builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
 
-                builder.show();
-
+                    builder.show();
+                }
 
                 return false;
             }
@@ -215,7 +225,8 @@ public class MainActivity extends AppCompatActivity {
         //Adapter auf den recyclerview setzen
         recyclerView.setAdapter(adapter);
 
-        datachanged();
+//        datachanged();
+//        adapter.notifyDataSetChanged();
 
         Log.d(TAG, "Das ist die Größe der Category Liste: " + categories.size());
 
@@ -252,7 +263,7 @@ public class MainActivity extends AppCompatActivity {
                             if (categories.get(i).getTitle().equals(temp)) {
                                 while (categories.get(i).getTitle().equals(temp)) {
                                     help++;
-                                    temp = input.getText().toString()+"("+help+")";
+                                    temp = input.getText().toString() + "(" + help + ")";
                                 }
                             }
                         }
@@ -330,6 +341,26 @@ public class MainActivity extends AppCompatActivity {
         categories.add(hygienics);
     }
 
+    private void sortList() {
+        Log.d(TAG, "sortList: arrayList = " + categories);
+        Collections.sort(categories, new Comparator<Category>() {
+            @Override
+            public int compare(Category catLeft, Category catRight) {
+                return catLeft.getTitle().compareTo(catRight.getTitle());
+            }
+        });
+        Log.d(TAG, "sortList: arrayList AFTER SORT = " + categories);
+
+
+//        ArrayList<Category> arrayList = new ArrayList<>();
+//        for (int i = 0; i < categories.size(); i++) {
+//            if (categories.get(i).getTitle().toString() > ) {
+//
+//            }
+//        }
+//        arrayListHelper.loadArrayList("")
+    }
+
     //TODO TODO
 //    private void multiSelect(int position) {
 //        ShopItem item = categories.get(position);
@@ -393,7 +424,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 categories.get(i).getItems().clear();
                 categories.get(i).getItems().addAll(shopItems);
-                Log.d(TAG, "LOADSHAREDPREFERENCES: shopis: "+shopItems);
+                Log.d(TAG, "LOADSHAREDPREFERENCES: shopis: " + shopItems);
             }
         }
     }

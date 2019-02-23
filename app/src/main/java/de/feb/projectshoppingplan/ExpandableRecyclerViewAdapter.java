@@ -39,6 +39,9 @@ public class ExpandableRecyclerViewAdapter extends com.thoughtbot.expandablerecy
     @Override
     public void onBindGroupViewHolder(ViewHolderCat holder, int flatPosition, ExpandableGroup group) {
         final Category category = (Category) group;
+        if (category.getItems().size() < 1) {
+
+        }
         holder.bind(category);
     }
 
@@ -58,7 +61,6 @@ public class ExpandableRecyclerViewAdapter extends com.thoughtbot.expandablerecy
         Log.d(TAG, "swipeItem: SWIPE NOW!");
         ExpandableListUtils.notifyItemRemoved(this, flatPos, view);
     }
-
 
     @Override
     public boolean onGroupClick(int flatPos) {

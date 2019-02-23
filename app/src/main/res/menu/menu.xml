@@ -5,9 +5,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MainActivity">
     <item
-        android:id="@+id/action_settings"
         android:orderInCategory="100"
-        android:title="Clear Categories"
+        android:title="Clear Categories!"
+        app:showAsAction="never" >
+        @android:color/colorPrimary
+    </item>
+    <item
+        android:orderInCategory="100"
+        android:title="Sort Categories"
         app:showAsAction="never" />
-
 </menu>

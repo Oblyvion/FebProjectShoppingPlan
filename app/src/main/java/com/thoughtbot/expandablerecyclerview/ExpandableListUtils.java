@@ -70,12 +70,14 @@ public class ExpandableListUtils {
                 Log.d(TAG, "notifyItemMoved: expandedGroupIndexes length = " + adapter.expandableList.expandedGroupIndexes.length);
 
 
+                //notifiy group moved
                 adapter.notifyItemMoved(flatPosFrom, --flatPosTo);
+
+                //notifiy shopItems of group moved
                 for (flatPosFrom += 1; flatPosFrom <= ((Category) adapter.getGroups().get(groupIndexFrom)).getItemCount(); flatPosFrom++) {
                     Log.d(TAG, "notifyItemMoved: SWAP all shopItems after group");
                     Log.d(TAG, "notifyItemMoved: groupViewFrom = " + flatPosFrom);
                     Log.d(TAG, "notifyItemMoved: groupViewTo = " + flatPosFrom);
-                    // baue liste neu auf
                     adapter.notifyItemMoved(flatPosFrom, flatPosTo);
                 }
                 adapter.expandableList.expandedGroupIndexes[groupIndexFrom] = false;
@@ -87,12 +89,14 @@ public class ExpandableListUtils {
             }
             Log.d(TAG, "notifyItemMoved: groupIndexFrom = " + groupIndexFrom);
             Log.d(TAG, "notifyItemMoved: groupIndexTo = " + groupIndexTo);
+
             Collections.swap(adapter.getGroups(), groupIndexFrom, groupIndexTo);
+
             adapter.notifyDataSetChanged(); //
         } else
-            //move shopItem inside current group
             Log.d(TAG, "notifyItemMoved: groupIndexFrom = " + groupIndexFrom);
         Log.d(TAG, "notifyItemMoved: groupIndexTo = " + groupIndexTo);
+        //move shopItem inside current group
         if (typeFrom == 1 && typeTo == 1
                 && groupIndexFrom == groupIndexTo) {
             Log.d(TAG, "notifyItemMoved: SHOPITEM MOVE");
@@ -104,7 +108,9 @@ public class ExpandableListUtils {
 //            Log.d(TAG, "notifyItemMoved: get Group Item MOVED NOW = " + currentGroupFrom.getItems().get(shopItemIndexFrom));
             Collections.swap(currentGroupFrom.getItems(), shopItemIndexFrom, shopItemIndexTo);
 //            Log.d(TAG, "notifyItemMoved: get Group Items SWAPED! = " + currentGroupFrom.getItems());
-        } else if (typeFrom == 1 && typeTo == 1) {
+        }
+
+        else if (typeFrom == 1 && typeTo == 1) {
             Log.d(TAG, "notifyItemMoved: jlfda");
             //try to add shopItem to another group
 //            List items = ((Category) adapter.getGroups().get(groupIndexTo)).getItems();
@@ -180,7 +186,16 @@ public class ExpandableListUtils {
         //swiped SHOPITEM
         else {
             Log.d(TAG, "notifyItemRemoved: shopItem swiped and shopItem removed!");
+            Log.d(TAG, "notifyItemRemoved: DELETE CHILD = " + ((Category) adapter.getGroups().get(groupPos)).getItems().get(shopItemPos));
+
+//            if (((Category) adapter.getGroups().get(groupPos)).getItems().iterator().hasNext()) {
+//
+//            }
             ((Category) adapter.getGroups().get(groupPos)).getItems().remove(shopItemPos);
+
+
+            Log.d(TAG, "notifyItemRemoved: flatPOS SHOPITEM = " + flatPos);
+//            adapter.notifyItemRangeChanged(0, ((Category) adapter.getGroups().get(groupPos)).getItems().size());
             adapter.notifyItemRemoved(flatPos);
         }
 //        if (((Category) adapter.getGroups().get(groupPos)).getItems().size() < 1) {
@@ -189,8 +204,7 @@ public class ExpandableListUtils {
         arrayListUtils.saveArrayList((ArrayList<Category>) adapter.getGroups(), "categories_arraylist");
         Log.d(TAG, "notifyItemRemoved: SAVE THIS =" + (ArrayList<Category>) adapter.getGroups());
 
-            adapter.notifyDataSetChanged();
-//        }
+//        adapter.notifyDataSetChanged();
     }
 
     public static boolean notifyGroupNotClickable(ExpandableRecyclerViewAdapter adapter, int flatPosGroup) {
