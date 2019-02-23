@@ -29,6 +29,7 @@ import android.widget.Spinner;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 
@@ -49,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
     // TODO  dummy_items anlegen: ZUGRIFF = categories.addAll(Arrays.asList(context.getResources().getStringArray(R.array.dummy_items)));
     //Categories
     final static String[] STANDARD_CATEGORIES = {"Vegetables", "Sausage & dairy products",
-            "Wheat products", "Meat and fish", "Hygiene", "Convenience"};
+            "Cereal products", "Meat and fish", "Hygiene", "Convenience"};
 
     ExpandableRecyclerViewAdapter adapter;
 
@@ -308,38 +309,24 @@ public class MainActivity extends AppCompatActivity {
         }
 
         private void addStandardCats () {
-            ArrayList<ShopItem> veggie_list = new ArrayList<>();
-            Category veggie = new Category(STANDARD_CATEGORIES[0], veggie_list);
-
-            veggie_list.add(new ShopItem("banana"));
-            veggie_list.add(new ShopItem("apple"));
-            veggie_list.add(new ShopItem("cucumber"));
-            veggie_list.add(new ShopItem("apricots"));
-            veggie_list.add(new ShopItem("salad"));
-
-            for (int i = 0; i < veggie_list.size(); i++) {
-                veggie_list.get(i).setActivity(this);
-                veggie_list.get(i).setIcon();
+            for (int i = 0; i < STANDARD_CATEGORIES.length; i++) {
+                ArrayList<ShopItem> list = new ArrayList<>();
+                Category cat = new Category(STANDARD_CATEGORIES[i], list);
+//                for (int j = 0; j < list.size(); j++) {
+//                    list.get(j).setActivity(this);
+//                    list.get(j).setIcon();
+//                }
+                categories.add(cat);
+                Log.d(TAG, "addStandardCats: cats = " + categories);
             }
 
-            categories.add(veggie);
+            ShopItem shopItem = new ShopItem("EXAMPLE GROCERY");
+            shopItem.setActivity(this);
+            shopItem.setIcon();
+
+            categories.get(0).getItems().add(shopItem);
 
 
-            ArrayList<ShopItem> hygienics_list = new ArrayList<>();
-            Category hygienics = new Category(STANDARD_CATEGORIES[4], hygienics_list);
-
-            hygienics_list.add(new ShopItem("deonummer1"));
-            hygienics_list.add(new ShopItem("toothbrush"));
-            hygienics_list.add(new ShopItem("shampoo"));
-            hygienics_list.add(new ShopItem("perfume"));
-            hygienics_list.add(new ShopItem("soap"));
-
-            for (int i = 0; i < hygienics_list.size(); i++) {
-                hygienics_list.get(i).setActivity(this);
-                hygienics_list.get(i).setIcon();
-            }
-
-            categories.add(hygienics);
         }
 
         private void sortList () {
