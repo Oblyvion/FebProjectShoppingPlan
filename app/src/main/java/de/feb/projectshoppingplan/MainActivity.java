@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean isMultiSelect = false;
     //private ArrayList<Integer> selectedIds = new ArrayList<>();
-
+    
     //Categories
     final String[] STANDARD_CATEGORIES = {AppContext.getContext().getString(R.string.standardCat0), AppContext.getContext().getString(R.string.standardCat1),
             AppContext.getContext().getString(R.string.standardCat2), AppContext.getContext().getString(R.string.standardCat3), AppContext.getContext().getString(R.string.standardCat4), AppContext.getContext().getString(R.string.standardCat5)};
