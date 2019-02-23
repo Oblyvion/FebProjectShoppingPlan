@@ -40,6 +40,9 @@ public class ShopItem implements Parcelable {
         }
     };
 
+    /**
+     * Sets icon of a shopItem with its first letter.
+     */
     void setIcon() {
         String firstchars = name.substring(0,1);
         LetterIconProvider letterIconProvider = new LetterIconProvider(activity);

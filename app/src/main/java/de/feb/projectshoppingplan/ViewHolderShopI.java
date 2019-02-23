@@ -20,13 +20,15 @@ import static android.content.Context.MODE_PRIVATE;
 
 class ViewHolderShopI extends ChildViewHolder {
 
-    //private static final String TAG = "MyActivity";
-
     private ImageView imageViewShopI;
     private TextView textViewShopI;
     private Spinner spinnerShopI;
     private ArrayAdapter<String> adapter;
 
+    /**
+     * Creates shopItem viewHolder.
+     * @param view View
+     */
     ViewHolderShopI(final View view) {
         super(view);
 
@@ -55,24 +57,36 @@ class ViewHolderShopI extends ChildViewHolder {
             }
         });
 
+        //TODO REQUIRED ?
         //delete();
-        // Dropdown-Listen Inhalt mit dazugehörigem Adapter
+
+        //spinner dropDown list content array
         final String[] numberShopI = new String[100];
 
+        //adds 0 to 99 ints to spinner array
         for (int i = 0; i < 100; i++) {
             numberShopI[i] = "" + i;
         }
+
+        //initialise ArrayAdapter
         adapter = new ArrayAdapter<>(view.getContext(), R.layout.spinner_item, numberShopI);
     }
 
+    /**
+     * Builds shopItem itemView.
+     * @param shopItem ShopItem
+     */
     void bind(ShopItem shopItem) {
         textViewShopI.setText(shopItem.name);
         imageViewShopI.setImageBitmap(shopItem.icon);
         spinnerShopI.setAdapter(adapter);
+
+        //sets spinner value
         if (spinnerShopI.getSelectedItem() == null) {
             spinnerShopI.setSelection(0, true);
         } else getSpinnerValue();
         spinnerShopI.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            //saves spinner value
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 saveSpinnerValue();
@@ -84,7 +98,10 @@ class ViewHolderShopI extends ChildViewHolder {
         });
     }
 
-    void saveSpinnerValue() {
+    /**
+     * Saves spinner value.
+     */
+    private void saveSpinnerValue() {
         String userChoice = spinnerShopI.getSelectedItem().toString();
         Log.d("hallo", "save: "+userChoice);
         SharedPreferences sharedPref = spinnerShopI.getContext().getSharedPreferences(textViewShopI.getText().toString(),MODE_PRIVATE);
@@ -93,7 +110,10 @@ class ViewHolderShopI extends ChildViewHolder {
         prefEditor.apply();
     }
 
-    void getSpinnerValue() {
+    /**
+     * Gets spinner value.
+     */
+    private void getSpinnerValue() {
         SharedPreferences sharedPref = spinnerShopI.getContext().getSharedPreferences(textViewShopI.getText().toString(),MODE_PRIVATE);
         String spinnerValue = sharedPref.getString("userChoiceSpinner",null);
         if(spinnerValue != null) {
@@ -101,9 +121,5 @@ class ViewHolderShopI extends ChildViewHolder {
             Log.d("hallo", "hallo hier spinnerValue: "+spinnerValue);
             spinnerShopI.setSelection(Integer.parseInt(spinnerValue),true);
         }
-    }
-
-    void delete() {
-        spinnerShopI.getContext().getSharedPreferences("FileName", MODE_PRIVATE).edit().clear().apply();
     }
 }

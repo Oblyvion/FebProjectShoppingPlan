@@ -123,7 +123,6 @@ public class AddShopItemToCategory extends AppCompatActivity {
                     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
                     @Override
                     public void onItemClick(View view, int position) {
-//                        MediaPlayer mediaPlayer = MediaPlayer.create(AddShopItemToCategory.this, R.raw.service_bell_daniel_simion);
                         //Toast.makeText(getApplicationContext(), "Hallo hier Item Click", Toast.LENGTH_LONG).show();
                         itemList_text.get(position).setChecked(!itemList_text.get(position).checked);
                         if (!findDuplicates(itemList_text.get(position)) && itemList_text.get(position).checked) {
