@@ -20,13 +20,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Spinner;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 
@@ -47,8 +43,8 @@ public class MainActivity extends AppCompatActivity {
 
     // TODO  dummy_items anlegen: ZUGRIFF = categories.addAll(Arrays.asList(context.getResources().getStringArray(R.array.dummy_items)));
     //Categories
-    final static String[] STANDARD_CATEGORIES = {"Veggetables", "Saucage & ",
-            "Getreideprodukte", "Fleisch & Fisch", "Hygiene", "Fertiggerichte"};
+    final static String[] STANDARD_CATEGORIES = {"Vegetables", "Sausage & dairy products",
+            "Wheat products", "Meat and fish", "Hygiene", "Convenience"};
 
     ExpandableRecyclerViewAdapter adapter;
 
@@ -88,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
         //recycler view finden
         recyclerView = findViewById(R.id.recyclerViewMain);
 
-//        delete();
+        delete();
         loadSharedPreferences();
 
         if (categories.isEmpty()) {
@@ -184,7 +180,7 @@ public class MainActivity extends AppCompatActivity {
                         dialog.dismiss();
 
                         //lässt Kategorie-Erweiterungspfeile verschwinden
-                        showCategoryNotExpandable();
+//                        showCategoryNotExpandable();
 
                         clearAllCategories();
 
@@ -267,11 +263,11 @@ public class MainActivity extends AppCompatActivity {
                         //Zur Liste der categories hinzufügen
                         categories.add(newCat);
 
-                        //lässt Kategorie-Erweiterungspfeile verschwinden
-                        showCategoryNotExpandable();
-
                         //dafür sorgen das der adapter die neue category auch anzeigt
                         adapter.addNewGroup();
+
+                        //lässt Kategorie-Erweiterungspfeile verschwinden
+//                        showCategoryNotExpandable();
 
                         //Save der Liste nachdem eine neue Cat hinzugefügt wurde
                         arrayListHelper.saveArrayList(categories, "categories_arraylist");
@@ -365,14 +361,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //wenn category Grösse < 1, dann blende Kategorie-Erweiterungspfeile aus
-    private void showCategoryNotExpandable() {
-        for (Category cat : categories) {
-            ImageView imageViewCatArrow = findViewById(R.id.imageViewCategory);
-            if (cat.getItems().size() < 1) {
-                imageViewCatArrow.setVisibility(View.INVISIBLE);
-            }
-        }
-    }
+//    private void showCategoryNotExpandable() {
+//        for (Category cat : categories) {
+//            ImageView imageViewCatArrow = findViewById(R.id.imageViewCategory);
+//            if (cat.getItems().size() < 1) {
+//                imageViewCatArrow.setVisibility(View.INVISIBLE);
+//            }
+//        }
+//    }
 
     private void loadSharedPreferences() {
         SharedPreferences prefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);

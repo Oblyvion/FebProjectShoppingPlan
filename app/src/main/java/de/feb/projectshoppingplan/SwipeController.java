@@ -47,8 +47,8 @@ public class SwipeController extends Callback {
         Log.d(TAG, "onSwiped: direction = " + direction);
 
         //swipe LEFT
-        if (direction == 4)
-            adapter.swipeItemLeft(viewHolder.getAdapterPosition());
+//        if (direction == 4)
+        adapter.swipeItemLeft(viewHolder.getAdapterPosition());
 //        else
 //            adapter.swipeItemRight();
 

@@ -11,7 +11,7 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
-class ArrayListUtils {
+public class ArrayListUtils {
 
     //TAG logcat
     private final static String TAG = "MyActivity";
@@ -19,7 +19,7 @@ class ArrayListUtils {
     //Main Liste der Categories (enthält alle Categories und die dazu gehörigen ShopItem Listen)
     private ArrayList<Category> categories = new ArrayList<>();
 
-    ArrayListUtils(Activity activity) {
+    public ArrayListUtils(Activity activity) {
         this.act = activity;
     }
 
@@ -40,7 +40,7 @@ class ArrayListUtils {
         return shopis;
     }
 
-    void saveArrayList(ArrayList<Category> list, String key) {
+    public void saveArrayList(ArrayList<Category> list, String key) {
         SharedPreferences prefs = act.getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         Gson gson = new Gson();
