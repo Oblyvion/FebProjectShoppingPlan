@@ -12,5 +12,11 @@
     <string name="imageViewProductDescription">IconWithCapitalLetter</string>
     <string name="menuitem_sort">Sort Categories</string>
     <string name="menuitem_clear">Clear Categories!</string>
+    <string name="standardCat0">Vegetables &amp; Fruits</string>
+    <string name="standardCat1">Sausage &amp; dairy products</string>
+    <string name="standardCat2">Cereal products</string>
+    <string name="standardCat3">Meat and fish</string>
+    <string name="standardCat4">Hygiene</string>
+    <string name="standardCat5">Convenience</string>
 
 </resources>
