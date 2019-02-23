@@ -20,13 +20,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Spinner;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 
@@ -47,8 +43,8 @@ public class MainActivity extends AppCompatActivity {
 
     // TODO  dummy_items anlegen: ZUGRIFF = categories.addAll(Arrays.asList(context.getResources().getStringArray(R.array.dummy_items)));
     //Categories
-    final static String[] STANDARD_CATEGORIES = {"Veggetables", "Saucage & ",
-            "Getreideprodukte", "Fleisch & Fisch", "Hygiene", "Fertiggerichte"};
+    final static String[] STANDARD_CATEGORIES = {"Vegetables", "Sausage & dairy products",
+            "Wheat products", "Meat and fish", "Hygiene", "Convenience"};
 
     ExpandableRecyclerViewAdapter adapter;
 

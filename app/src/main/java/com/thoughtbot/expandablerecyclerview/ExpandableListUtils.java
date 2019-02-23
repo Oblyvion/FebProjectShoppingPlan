@@ -166,7 +166,7 @@ public class ExpandableListUtils {
             for (int i = size - 1; i >= 0; i--) {
                 Log.d(TAG, "notifyItemRemoved: shopitem removed " + i);
                 ((Category) adapter.getGroups().get(groupPos)).getItems().remove(i);
-                adapter.notifyItemRemoved(flatPos + i + 2);
+                adapter.notifyItemRemoved(flatPos + i + 1);
             }
             adapter.getGroups().remove(groupPos);
             adapter.notifyItemRemoved(flatPos);

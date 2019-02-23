@@ -43,6 +43,7 @@ public class AddShopItemToCategory extends AppCompatActivity {
     EditText editText;
     RecyclerView recyclerView;
     List<ShopItem> itemList_text;
+    ArrayList<ShopItem> shopItems = new ArrayList<>();
     List<ShopItem> itemList_voice;
     ListElementAdapterAddShopItemToCategory adapter;
     String categoryName;
@@ -127,9 +128,13 @@ public class AddShopItemToCategory extends AppCompatActivity {
                         itemList_text.get(position).setChecked(!itemList_text.get(position).checked);
                         if (!findDuplicates(itemList_text.get(position)) && itemList_text.get(position).checked) {
                             itemList_text.get(position).setCheckmark();
+                            Toast.makeText(AddShopItemToCategoryActivity,itemList_text.get(position).name+" added", Toast.LENGTH_LONG).show();
+
                             mediaPlayer.start();
                         } else {
                             itemList_text.get(position).setCheckmark();
+                            Toast.makeText(AddShopItemToCategoryActivity,"deleted!", Toast.LENGTH_LONG).show();
+
                         }
                         adapter.notifyDataSetChanged();
                     }
@@ -187,7 +192,7 @@ public class AddShopItemToCategory extends AppCompatActivity {
                 final int DRAWABLE_RIGHT = 2;
 
                 if (event.getAction() == MotionEvent.ACTION_UP) {
-                    if (event.getRawX() >= (editText.getRight() - 50 - editText.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                    if (event.getRawX() >= (editText.getRight() - 80 - editText.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
                         Log.d(TAG, "Hallo hier click on voice button!");
                         promptSpeechInput();
                         return true;
@@ -316,14 +321,16 @@ public class AddShopItemToCategory extends AppCompatActivity {
             itemList_text.set(0, item);
         }
 
+        shopItems.addAll(itemList_text);
+
         adapter.notifyDataSetChanged();
 
     }
 
     public void addToMainList() {
-        for (int i = 0; i < itemList_text.size(); i++) {
-            if (itemList_text.get(i).checked) {
-                ShopItem shopItem = new ShopItem(itemList_text.get(i).name);
+        for (int i = 0; i < shopItems.size(); i++) {
+            if(shopItems.get(i).checked) {
+                ShopItem shopItem = new ShopItem(shopItems.get(i).name);
                 shopItem.setActivity(AddShopItemToCategoryActivity);
                 shopItem.setIcon();
                 itemList_forMain.add(shopItem);
