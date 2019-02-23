@@ -54,9 +54,9 @@ public class ExpandableRecyclerViewAdapter extends com.thoughtbot.expandablerecy
         notifyItemMoved(flatPosFrom, flatPostTo);
     }
 
-    public void swipeItemLeft(int flatPos) {
+    public void swipeItem(int flatPos) {
         Log.d(TAG, "swipeItem: SWIPE NOW!");
-        ExpandableListUtils.notifyItemRemoved(this, flatPos);
+        ExpandableListUtils.notifyItemRemoved(this, flatPos, view);
     }
 
 
