@@ -141,7 +141,46 @@ public class ExpandableListUtils {
 
     }
 
-    public static boolean  notifyGroupNotClickable(ExpandableRecyclerViewAdapter adapter, int flatPosGroup) {
+    public static void notifyItemRemoved(ExpandableRecyclerViewAdapter adapter, int flatPos) {
+        ExpandableListPosition itemPosition = adapter.expandableList.getUnflattenedPosition(flatPos);
+
+        int groupPos = itemPosition.groupPos;
+        int shopItemPos = itemPosition.childPos;
+
+        Log.d(TAG, "notifyItemSwiped: HUHUUUUUUUUUUUUUUUUUUUUUUU");
+        Log.d(TAG, "notifyItemRemoved: groupPos = " + groupPos);
+        Log.d(TAG, "notifyItemRemoved: shopItemPos = " + shopItemPos);
+
+        //swiped GROUP
+        if (shopItemPos == -1 && adapter.isGroupExpanded(flatPos)) {
+            Log.d(TAG, "notifyItemRemoved: group swiped and group is expanded...");
+            //delete all children
+            for (int i = ((Category) adapter.getGroups().get(groupPos)).getItems().size() - 1; i >= 0; i--) {
+                Log.d(TAG, "notifyItemRemoved: shopitem removed " + i);
+                ((Category) adapter.getGroups().get(groupPos)).getItems().remove(i);
+                adapter.notifyItemRemoved(flatPos + i + 1);
+            }
+            adapter.getGroups().remove(groupPos);
+            adapter.notifyItemRemoved(flatPos);
+        }
+        //delete collapsed group
+        else if (shopItemPos == -1 && !adapter.isGroupExpanded(flatPos)) {
+            Log.d(TAG, "notifyItemRemoved: swiped collapsed group...");
+            adapter.getGroups().remove(groupPos);
+            adapter.notifyItemRemoved(flatPos);
+        }
+        //swiped SHOPITEM
+        else {
+            Log.d(TAG, "notifyItemRemoved: shopItem swiped and shopItem removed!");
+            ((Category) adapter.getGroups().get(groupPos)).getItems().remove(shopItemPos);
+            adapter.notifyItemRemoved(flatPos);
+        }
+        if (((Category) adapter.getGroups().get(groupPos)).getItems().size() < 1) {
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+    public static boolean notifyGroupNotClickable(ExpandableRecyclerViewAdapter adapter, int flatPosGroup) {
         Log.d(TAG, "notifyGroupNotClickable: JOJJOJOJOJ");
         ExpandableListPosition groupPos = adapter.expandableList.getUnflattenedPosition(flatPosGroup);
         int groupPosition = groupPos.groupPos;

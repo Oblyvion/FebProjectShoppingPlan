@@ -3,6 +3,7 @@ package de.feb.projectshoppingplan;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
@@ -23,6 +24,9 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 
@@ -43,13 +47,17 @@ public class MainActivity extends AppCompatActivity {
 
     // TODO  dummy_items anlegen: ZUGRIFF = categories.addAll(Arrays.asList(context.getResources().getStringArray(R.array.dummy_items)));
     //Categories
-    final static String[] STANDARD_CATEGORIES = {"Obst & Gemüse", "Wurst & Milchprodukte",
+    final static String[] STANDARD_CATEGORIES = {"Veggetables", "Saucage & ",
             "Getreideprodukte", "Fleisch & Fisch", "Hygiene", "Fertiggerichte"};
 
     ExpandableRecyclerViewAdapter adapter;
 
     //Main Liste der Categories (enthält alle Categories und die dazu gehörigen ShopItem Listen)
     public ArrayList<Category> categories = new ArrayList<>();
+
+    SharedPreferences prefs;
+    private Parcelable viewState = null;
+    private static final String VIEW_STATE = "view-state";
 
     @Override
     protected void onResume() {
@@ -70,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
+//        onRestoreInstanceState(savedInstanceState);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -106,9 +115,14 @@ public class MainActivity extends AppCompatActivity {
         ItemTouchHelper.Callback itemTouchHelperCallback = new ItemTouchHelper.Callback() {
             @Override
             public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
-                Log.d(TAG, "getMovementFlags: GRAP ITEM...");
+//                Log.d(TAG, "getMovementFlags: GRAP ITEM...");
+//                int dragAction = ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.START | ItemTouchHelper.END;
+//                Log.d(TAG, "getMovementFlags: dragAction = " + dragAction);
+//                int swipeAction = ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
+//                Log.d(TAG, "getMovementFlags: swipeAction = " + swipeAction);
+//                return makeFlag(ItemTouchHelper.ACTION_STATE_DRAG, ItemTouchHelper.ACTION_STATE_SWIPE);
                 return makeFlag(ItemTouchHelper.ACTION_STATE_DRAG,
-                        ItemTouchHelper.DOWN | ItemTouchHelper.UP | ItemTouchHelper.START | ItemTouchHelper.END | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
+                        ItemTouchHelper.DOWN | ItemTouchHelper.UP | ItemTouchHelper.START | ItemTouchHelper.END);
             }
 
             @Override
@@ -137,20 +151,21 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
-                Log.d(TAG, "HALLO HIER SWIPEY SWUPP SWIPE");
+//                Log.d(TAG, "HALLO HIER SWIPEY SWUPP SWIPE");
+//                adapter.notifyItemRemoved(i);
             }
         };
 
-//        SwipeController swipeController = new SwipeController();
-//        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeController);
-//        itemTouchhelper.attachToRecyclerView(recyclerView);
+        SwipeController swipeController = new SwipeController();
+        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeController);
+        itemTouchhelper.attachToRecyclerView(recyclerView);
 
         datachanged();
 
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
-                Log.d(TAG, "das ist das menu item: "+menuItem);
+                Log.d(TAG, "das ist das menu item: " + menuItem);
 
                 if (!isMultiSelect){
                     //selectedIds = new ArrayList<>();
@@ -281,15 +296,6 @@ public class MainActivity extends AppCompatActivity {
         }
         adapter.notifyDataSetChanged();
     }
-
-    //TODO WO MÜSSEN DIE METHODEN AUFGERUFEN WERDEN?
-    //speichere den status vom expandable recyclerview
-    @Override
-    protected void onRestoreInstanceState(Bundle restoreState) {
-        super.onRestoreInstanceState(restoreState);
-        adapter.onRestoreInstanceState(restoreState);
-    }
-
 
     private void addStandardCats() {
         ArrayList<ShopItem> veggie_list = new ArrayList<>();
