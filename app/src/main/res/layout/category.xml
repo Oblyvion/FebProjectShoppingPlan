@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/dragLinearLayoutCat"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -14,7 +15,7 @@
         android:layout_height="40dp"
         android:layout_gravity="center"
         android:layout_weight="20"
-        android:src="@drawable/ic_keyboard_arrow_down_black_24dp"
+        app:srcCompat="@drawable/ic_keyboard_arrow_down_black_24dp"
         android:contentDescription="list symbol"/>
 
     <TextView
@@ -25,7 +26,8 @@
         android:layout_weight="60"
         android:textAlignment="center"
         android:textSize="20sp"
-        android:text="Category"/>
+        android:text="Category"
+        android:textStyle="bold"/>
 
     <ImageView
         android:id="@+id/imageViewAddCategory"
@@ -33,7 +35,7 @@
         android:layout_height="30dp"
         android:layout_gravity="center"
         android:layout_weight="20"
-        android:src="@drawable/ic_add_circle_24dp"
+        app:srcCompat="@drawable/ic_add_circle_24dp"
         android:contentDescription="add symbol" />
 
 </LinearLayout>

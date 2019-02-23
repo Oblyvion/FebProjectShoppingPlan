@@ -23,9 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Spinner;
-
 import com.google.gson.Gson;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -43,11 +41,9 @@ public class MainActivity extends AppCompatActivity {
     private boolean isMultiSelect = false;
     //private ArrayList<Integer> selectedIds = new ArrayList<>();
 
-
-    // TODO  dummy_items anlegen: ZUGRIFF = categories.addAll(Arrays.asList(context.getResources().getStringArray(R.array.dummy_items)));
-    //Categories standard values
-    final static String[] STANDARD_CATEGORIES = {"Vegetables", "Sausage & dairy products",
-            "Cereal products", "Meat and fish", "Hygiene", "Convenience"};
+    //Categories
+    final String[] STANDARD_CATEGORIES = {AppContext.getContext().getString(R.string.standardCat0), AppContext.getContext().getString(R.string.standardCat1),
+            AppContext.getContext().getString(R.string.standardCat2), AppContext.getContext().getString(R.string.standardCat3), AppContext.getContext().getString(R.string.standardCat4), AppContext.getContext().getString(R.string.standardCat5)};
 
     ExpandableRecyclerViewAdapter adapter;
 
@@ -170,14 +166,14 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
-                Log.d(TAG, "das ist das menu item: " + menuItem);
 
                 if (!isMultiSelect) {
                     //selectedIds = new ArrayList<>();
                     isMultiSelect = true;
                 }
 
-                if (menuItem.toString().equals("Clear Categories")) {
+                if (menuItem.toString().equals("Clear Categories!")) {
+                    Log.d(TAG, "das ist das menu item: " + menuItem);
 
                     AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.this);
                     builder.setTitle("Remove all items from each category?");
@@ -210,6 +206,7 @@ public class MainActivity extends AppCompatActivity {
                     builder.show();
                 }
                 if (menuItem.toString().equals("Sort Categories")) {
+                    Log.d("MENUItem", "Menu Item sort");
                     sortList();
                     arrayListHelper.saveArrayList(categories, "categories_arraylist");
                     datachanged();

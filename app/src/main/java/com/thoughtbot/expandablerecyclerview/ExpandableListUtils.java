@@ -92,8 +92,15 @@ public class ExpandableListUtils {
 
             //move group collapsed
             Log.d(TAG, "notifyItemMoved: COLLAPSED group MOVE");
-
             Collections.swap(adapter.getGroups(), groupIndexFrom, groupIndexTo);
+
+            //groupIndexTo is expanded
+            if (adapter.isGroupExpanded(flatPosTo)) {
+//                Log.d(TAG, "notifyItemMoved: groupTo is expanded = " + flatPosTo);
+                //expand the group after swap
+                adapter.expandableList.expandedGroupIndexes[groupIndexFrom] = true;
+                adapter.expandableList.expandedGroupIndexes[groupIndexTo] = false;
+            }
             adapter.notifyDataSetChanged();
         } else
             //move shopItem inside current group
