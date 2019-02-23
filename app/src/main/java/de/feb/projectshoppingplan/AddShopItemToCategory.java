@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.speech.RecognizerIntent;
 import android.support.annotation.RequiresApi;
@@ -28,6 +29,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -71,14 +73,14 @@ public class AddShopItemToCategory extends AppCompatActivity {
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
 
-
+        final MediaPlayer mediaPlayer = MediaPlayer.create(AddShopItemToCategory.this, R.raw.service_bell_daniel_simion);
 
         Intent intent = getIntent();
         categoryName = intent.getStringExtra("category_name");
 
         categories = arrayListHelper.loadArrayList("categories_arraylist");
 
-        Log.d(TAG, "Categories hier!!: "+categories);
+        Log.d(TAG, "Categories hier!!: " + categories);
 
         //get the elements from the activity
         editText = findViewById(R.id.editText_newShopItem);
@@ -96,14 +98,14 @@ public class AddShopItemToCategory extends AppCompatActivity {
         for (int i = 0; i < categories.size(); i++) {
             if (categories.get(i).getTitle().equals(categoryName)) {
                 category = categories.get(i);
-                Log.d(TAG, "Category name: "+categoryName);
-                Log.d(TAG, "list of Category: "+category.getItems());
+                Log.d(TAG, "Category name: " + categoryName);
+                Log.d(TAG, "list of Category: " + category.getItems());
                 Gson gson = new Gson();
                 String json = gson.toJson(category.getItems());
                 itemList_forMain = arrayListHelper.getListFromJson(json);
-                Log.d(TAG, "Hallo hier itemListForMain      "+ itemList_forMain.toString());
+                Log.d(TAG, "Hallo hier itemListForMain      " + itemList_forMain.toString());
                 for (int j = 0; j < itemList_forMain.size(); j++) {
-                    Log.d("MyActivity", "Hier einzelnes item *_*: "+itemList_forMain.get(j));
+                    Log.d("MyActivity", "Hier einzelnes item *_*: " + itemList_forMain.get(j));
                 }
             }
         }
@@ -115,16 +117,17 @@ public class AddShopItemToCategory extends AppCompatActivity {
         recyclerView.setLayoutManager(LayoutManager);
 
         recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getApplicationContext(), recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
-            //Wegen dem drawable muss mindestens Lollipop auf dem Smartphone sein => todo schauen ob es eine andere lösung gibt
-            @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+                    //Wegen dem drawable muss mindestens Lollipop auf dem Smartphone sein => todo schauen ob es eine andere lösung gibt
+                    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
                     @Override
                     public void onItemClick(View view, int position) {
+//                        MediaPlayer mediaPlayer = MediaPlayer.create(AddShopItemToCategory.this, R.raw.service_bell_daniel_simion);
                         //Toast.makeText(getApplicationContext(), "Hallo hier Item Click", Toast.LENGTH_LONG).show();
                         itemList_text.get(position).setChecked(!itemList_text.get(position).checked);
-                        if(!findDuplicates(itemList_text.get(position)) && itemList_text.get(position).checked) {
+                        if (!findDuplicates(itemList_text.get(position)) && itemList_text.get(position).checked) {
                             itemList_text.get(position).setCheckmark();
-                        }
-                        else {
+                            mediaPlayer.start();
+                        } else {
                             itemList_text.get(position).setCheckmark();
                         }
                         adapter.notifyDataSetChanged();
@@ -160,7 +163,7 @@ public class AddShopItemToCategory extends AppCompatActivity {
 
                 if (s.toString().length() > 1) {
                     temp_user_input = s.toString();
-                    Log.d(TAG, "TEMP USER INPUT 1: "+temp_user_input);
+                    Log.d(TAG, "TEMP USER INPUT 1: " + temp_user_input);
                     addtoRecyclerViewandgiveIcon(temp_user_input);
 //                    if (s.charAt(s.length() - 1) == '\n') {
                     sharedPrefEditor = sharedPreferences.edit();
@@ -182,8 +185,8 @@ public class AddShopItemToCategory extends AppCompatActivity {
             public boolean onTouch(View v, MotionEvent event) {
                 final int DRAWABLE_RIGHT = 2;
 
-                if(event.getAction() == MotionEvent.ACTION_UP) {
-                    if(event.getRawX() >= (editText.getRight() - 50 - editText.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    if (event.getRawX() >= (editText.getRight() - 50 - editText.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
                         Log.d(TAG, "Hallo hier click on voice button!");
                         promptSpeechInput();
                         return true;
@@ -265,7 +268,7 @@ public class AddShopItemToCategory extends AppCompatActivity {
                 //categories.get(i).setItems(itemList_forMain);
                 //TODO Lösung für Warnung
                 categories.get(i).getItems().addAll(itemList_forMain);
-                Log.d(TAG, "Das ist die liste nachdem was geadded wurde: "+categories);
+                Log.d(TAG, "Das ist die liste nachdem was geadded wurde: " + categories);
                 arrayListHelper.saveArrayList(categories, "categories_arraylist");
             }
         }
@@ -277,15 +280,14 @@ public class AddShopItemToCategory extends AppCompatActivity {
     private String addVoiceItemsToList(ShopItem item) {
         String result = "";
 
-        if(!findDuplicates(item)) {
+        if (!findDuplicates(item)) {
             this.itemList_voice.add(item);
         }
 
         for (int i = 0; i < itemList_voice.size(); i++) {
             if (i == 0) {
                 result = result.concat(itemList_voice.get(i).name);
-            }
-            else if (i == itemList_voice.size() - 1) {
+            } else if (i == itemList_voice.size() - 1) {
                 result = result.concat(" and " + itemList_voice.get(i).name);
             } else result = result.concat(", " + itemList_voice.get(i).name);
         }
@@ -295,7 +297,7 @@ public class AddShopItemToCategory extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void addtoRecyclerViewandgiveIcon(String text) {
         temp_user_input = text;
-        Log.d(TAG, "TEMP USER INPUT 2: "+temp_user_input);
+        Log.d(TAG, "TEMP USER INPUT 2: " + temp_user_input);
 
         ShopItem item = new ShopItem(temp_user_input);
         item.setActivity(this);
@@ -319,7 +321,7 @@ public class AddShopItemToCategory extends AppCompatActivity {
 
     public void addToMainList() {
         for (int i = 0; i < itemList_text.size(); i++) {
-            if(itemList_text.get(i).checked) {
+            if (itemList_text.get(i).checked) {
                 ShopItem shopItem = new ShopItem(itemList_text.get(i).name);
                 shopItem.setActivity(AddShopItemToCategoryActivity);
                 shopItem.setIcon();
@@ -327,12 +329,12 @@ public class AddShopItemToCategory extends AppCompatActivity {
             }
         }
 
-        Log.d(TAG, "Hallo hier itemList Main: "+itemList_forMain);
+        Log.d(TAG, "Hallo hier itemList Main: " + itemList_forMain);
 
         for (int i = 0; i < categories.size(); i++) {
             if (categories.get(i).getTitle().equals(categoryName)) {
                 categories.get(i).setItems(itemList_forMain);
-                Log.d(TAG, "Das ist die liste nachdem was geadded wurde: "+categories);
+                Log.d(TAG, "Das ist die liste nachdem was geadded wurde: " + categories);
             }
         }
         arrayListHelper.saveArrayList(categories, "categories_arraylist");
@@ -347,6 +349,6 @@ public class AddShopItemToCategory extends AppCompatActivity {
                 return true;
             }
         }
-        return  false;
+        return false;
     }
 }

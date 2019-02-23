@@ -1,22 +1,28 @@
 package com.thoughtbot.expandablerecyclerview;
 
+import android.app.Activity;
+import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 
 import com.thoughtbot.expandablerecyclerview.models.ExpandableListPosition;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
-import de.feb.projectshoppingplan.AddShopItemToCategory;
+import de.feb.projectshoppingplan.ArrayListUtils;
 import de.feb.projectshoppingplan.Category;
 
 public class ExpandableListUtils {
 
     private static final String TAG = "LISTUTILS";
 
-    public static void notifyGroupDataChanged(ExpandableRecyclerViewAdapter adapter) {
+    public static void notifyGroupDataChanged(ExpandableRecyclerViewAdapter adapter, View view) {
+        Context context = view.getContext();
+        ArrayListUtils arrayListUtils = new ArrayListUtils((Activity) context);
+        arrayListUtils.saveArrayList((ArrayList<Category>) adapter.getGroups(), "categories_arraylist");
         adapter.expandableList.expandedGroupIndexes = new boolean[adapter.getGroups().size()];
         for (int i = 0; i < adapter.getGroups().size(); i++) {
             adapter.expandableList.expandedGroupIndexes[i] = false;
@@ -151,14 +157,16 @@ public class ExpandableListUtils {
         Log.d(TAG, "notifyItemRemoved: groupPos = " + groupPos);
         Log.d(TAG, "notifyItemRemoved: shopItemPos = " + shopItemPos);
 
+        int size = ((Category) adapter.getGroups().get(groupPos)).getItems().size();
+
         //swiped GROUP
         if (shopItemPos == -1 && adapter.isGroupExpanded(flatPos)) {
-            Log.d(TAG, "notifyItemRemoved: group swiped and group is expanded...");
+            Log.d(TAG, "notifyItemRemoved: group swiped and group is expanded... " + adapter.isGroupExpanded(flatPos));
             //delete all children
-            for (int i = ((Category) adapter.getGroups().get(groupPos)).getItems().size() - 1; i >= 0; i--) {
+            for (int i = size - 1; i >= 0; i--) {
                 Log.d(TAG, "notifyItemRemoved: shopitem removed " + i);
                 ((Category) adapter.getGroups().get(groupPos)).getItems().remove(i);
-                adapter.notifyItemRemoved(flatPos + i + 1);
+                adapter.notifyItemRemoved(flatPos + i + 2);
             }
             adapter.getGroups().remove(groupPos);
             adapter.notifyItemRemoved(flatPos);
@@ -175,9 +183,9 @@ public class ExpandableListUtils {
             ((Category) adapter.getGroups().get(groupPos)).getItems().remove(shopItemPos);
             adapter.notifyItemRemoved(flatPos);
         }
-        if (((Category) adapter.getGroups().get(groupPos)).getItems().size() < 1) {
+//        if (((Category) adapter.getGroups().get(groupPos)).getItems().size() < 1) {
             adapter.notifyDataSetChanged();
-        }
+//        }
     }
 
     public static boolean notifyGroupNotClickable(ExpandableRecyclerViewAdapter adapter, int flatPosGroup) {

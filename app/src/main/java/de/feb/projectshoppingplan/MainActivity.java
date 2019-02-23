@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
         //recycler view finden
         recyclerView = findViewById(R.id.recyclerViewMain);
 
-//        delete();
+        delete();
         loadSharedPreferences();
 
         if (categories.isEmpty()) {
@@ -184,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
                         dialog.dismiss();
 
                         //lässt Kategorie-Erweiterungspfeile verschwinden
-                        showCategoryNotExpandable();
+//                        showCategoryNotExpandable();
 
                         clearAllCategories();
 
@@ -267,11 +267,11 @@ public class MainActivity extends AppCompatActivity {
                         //Zur Liste der categories hinzufügen
                         categories.add(newCat);
 
-                        //lässt Kategorie-Erweiterungspfeile verschwinden
-                        showCategoryNotExpandable();
-
                         //dafür sorgen das der adapter die neue category auch anzeigt
                         adapter.addNewGroup();
+
+                        //lässt Kategorie-Erweiterungspfeile verschwinden
+//                        showCategoryNotExpandable();
 
                         //Save der Liste nachdem eine neue Cat hinzugefügt wurde
                         arrayListHelper.saveArrayList(categories, "categories_arraylist");
@@ -365,14 +365,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //wenn category Grösse < 1, dann blende Kategorie-Erweiterungspfeile aus
-    private void showCategoryNotExpandable() {
-        for (Category cat : categories) {
-            ImageView imageViewCatArrow = findViewById(R.id.imageViewCategory);
-            if (cat.getItems().size() < 1) {
-                imageViewCatArrow.setVisibility(View.INVISIBLE);
-            }
-        }
-    }
+//    private void showCategoryNotExpandable() {
+//        for (Category cat : categories) {
+//            ImageView imageViewCatArrow = findViewById(R.id.imageViewCategory);
+//            if (cat.getItems().size() < 1) {
+//                imageViewCatArrow.setVisibility(View.INVISIBLE);
+//            }
+//        }
+//    }
 
     private void loadSharedPreferences() {
         SharedPreferences prefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);

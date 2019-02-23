@@ -83,7 +83,8 @@ public class ExpandableRecyclerViewAdapter extends com.thoughtbot.expandablerecy
 //    }
 
     public void addNewGroup() {
-        ExpandableListUtils.notifyGroupDataChanged(this);
+
+        ExpandableListUtils.notifyGroupDataChanged(this, view);
         notifyDataSetChanged();
     }
 
