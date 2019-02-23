@@ -73,6 +73,7 @@ public class AddShopItemToCategory extends AppCompatActivity {
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
 
+        //create music player with free sound "service_bell" from source: http://soundbible.com/2218-Service-Bell-Help.html
         final MediaPlayer mediaPlayer = MediaPlayer.create(AddShopItemToCategory.this, R.raw.service_bell_daniel_simion);
 
         Intent intent = getIntent();

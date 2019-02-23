@@ -270,6 +270,8 @@ public class MainActivity extends AppCompatActivity {
                         //dafür sorgen das der adapter die neue category auch anzeigt
                         adapter.addNewGroup();
 
+                        datachanged();
+
                         //lässt Kategorie-Erweiterungspfeile verschwinden
 //                        showCategoryNotExpandable();
 

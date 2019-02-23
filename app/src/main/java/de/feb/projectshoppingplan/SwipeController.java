@@ -7,7 +7,6 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.support.v7.widget.helper.ItemTouchHelper.Callback;
-import android.text.LoginFilter;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -48,7 +47,7 @@ public class SwipeController extends Callback {
 
         //swipe LEFT
 //        if (direction == 4)
-        adapter.swipeItemLeft(viewHolder.getAdapterPosition());
+        adapter.swipeItem(viewHolder.getAdapterPosition());
 //        else
 //            adapter.swipeItemRight();
 

@@ -147,7 +147,7 @@ public class ExpandableListUtils {
 
     }
 
-    public static void notifyItemRemoved(ExpandableRecyclerViewAdapter adapter, int flatPos) {
+    public static void notifyItemRemoved(ExpandableRecyclerViewAdapter adapter, int flatPos, View view) {
         ExpandableListPosition itemPosition = adapter.expandableList.getUnflattenedPosition(flatPos);
 
         int groupPos = itemPosition.groupPos;
@@ -184,6 +184,11 @@ public class ExpandableListUtils {
             adapter.notifyItemRemoved(flatPos);
         }
 //        if (((Category) adapter.getGroups().get(groupPos)).getItems().size() < 1) {
+        Context context = view.getContext();
+        ArrayListUtils arrayListUtils = new ArrayListUtils((Activity) context);
+        arrayListUtils.saveArrayList((ArrayList<Category>) adapter.getGroups(), "categories_arraylist");
+        Log.d(TAG, "notifyItemRemoved: SAVE THIS =" + (ArrayList<Category>) adapter.getGroups());
+
             adapter.notifyDataSetChanged();
 //        }
     }
