@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="categories_standard">
+        <item>Vegetables &amp; Fruits</item>
+        <item>Sausage  &amp; dairy products</item>
+        <item>Cereal products</item>
+        <item>Meat and fish</item>
+        <item>Hygiene products</item>
+        <item>Convenience products</item>
+    </string-array>
+
+</resources>
