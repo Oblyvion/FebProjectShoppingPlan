@@ -40,6 +40,7 @@ public class AddShopItemToCategory extends AppCompatActivity {
     EditText editText;
     RecyclerView recyclerView;
     List<ShopItem> itemList_text;
+    ArrayList<ShopItem> shopItems = new ArrayList<>();
     List<ShopItem> itemList_voice;
     ListElementAdapterAddShopItemToCategory adapter;
     String categoryName;
@@ -312,14 +313,16 @@ public class AddShopItemToCategory extends AppCompatActivity {
             itemList_text.set(0, item);
         }
 
+        shopItems.addAll(itemList_text);
+
         adapter.notifyDataSetChanged();
 
     }
 
     public void addToMainList() {
-        for (int i = 0; i < itemList_text.size(); i++) {
-            if(itemList_text.get(i).checked) {
-                ShopItem shopItem = new ShopItem(itemList_text.get(i).name);
+        for (int i = 0; i < shopItems.size(); i++) {
+            if(shopItems.get(i).checked) {
+                ShopItem shopItem = new ShopItem(shopItems.get(i).name);
                 shopItem.setActivity(AddShopItemToCategoryActivity);
                 shopItem.setIcon();
                 itemList_forMain.add(shopItem);
