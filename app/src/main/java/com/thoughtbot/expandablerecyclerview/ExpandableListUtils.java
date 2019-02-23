@@ -18,10 +18,12 @@ import de.feb.projectshoppingplan.Category;
 public class ExpandableListUtils {
 
     private static final String TAG = "LISTUTILS";
+    private View view;
 
     public static void notifyGroupDataChanged(ExpandableRecyclerViewAdapter adapter, View view) {
         Context context = view.getContext();
         ArrayListUtils arrayListUtils = new ArrayListUtils((Activity) context);
+        Log.d(TAG, "Das ist Arraylist vor save: "+(ArrayList<Category>) adapter.getGroups());
         arrayListUtils.saveArrayList((ArrayList<Category>) adapter.getGroups(), "categories_arraylist");
         adapter.expandableList.expandedGroupIndexes = new boolean[adapter.getGroups().size()];
         for (int i = 0; i < adapter.getGroups().size(); i++) {
@@ -198,13 +200,20 @@ public class ExpandableListUtils {
 //            adapter.notifyItemRangeChanged(0, ((Category) adapter.getGroups().get(groupPos)).getItems().size());
             adapter.notifyItemRemoved(flatPos);
         }
+
+        
 //        if (((Category) adapter.getGroups().get(groupPos)).getItems().size() < 1) {
         Context context = view.getContext();
         ArrayListUtils arrayListUtils = new ArrayListUtils((Activity) context);
         arrayListUtils.saveArrayList((ArrayList<Category>) adapter.getGroups(), "categories_arraylist");
         Log.d(TAG, "notifyItemRemoved: SAVE THIS =" + (ArrayList<Category>) adapter.getGroups());
 
+<<<<<<< HEAD
 //        adapter.notifyDataSetChanged();
+=======
+            //adapter.notifyDataSetChanged();
+//        }
+>>>>>>> f0219f9d0fe89fed76793b26733bc478a7c8040a
     }
 
     public static boolean notifyGroupNotClickable(ExpandableRecyclerViewAdapter adapter, int flatPosGroup) {

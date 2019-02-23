@@ -3,6 +3,7 @@ package de.feb.projectshoppingplan;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -13,6 +14,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -27,7 +31,6 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-
 
 public class MainActivity extends AppCompatActivity {
 
@@ -53,10 +56,6 @@ public class MainActivity extends AppCompatActivity {
     //Main Liste der Categories (enthält alle Categories und die dazu gehörigen ShopItem Listen)
     public ArrayList<Category> categories = new ArrayList<>();
 
-    SharedPreferences prefs;
-    private Parcelable viewState = null;
-    private static final String VIEW_STATE = "view-state";
-
     @Override
     protected void onResume() {
         Log.d(TAG, "MainActivity: On Resume");
@@ -70,6 +69,12 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu, menu);
+
+        MenuItem item = menu.findItem(R.id.deleteCats);
+        SpannableString spannableString = new SpannableString(item.getTitle().toString());
+        spannableString.setSpan(new ForegroundColorSpan(Color.rgb(179, 0, 0)), 0, spannableString.length(), 0);
+
+        item.setTitle(spannableString);
         return true;
     }
 
@@ -134,9 +139,6 @@ public class MainActivity extends AppCompatActivity {
                     return false;
                 }
 
-                //TODO SPEICHER NEUE LISTE NACH DRAG & DROP
-//                adapter.onSaveInstanceState(savedInstanceState);
-
                 Log.d(TAG, "onMove: adapter POSITION FROM = " + fromViewHolder.getAdapterPosition());
                 Log.d(TAG, "onMove: adapter POSITION TO = " + toViewHolder.getAdapterPosition());
                 adapter.moveItem(fromViewHolder.getAdapterPosition(), toViewHolder.getAdapterPosition());
@@ -165,16 +167,9 @@ public class MainActivity extends AppCompatActivity {
             public boolean onMenuItemClick(MenuItem menuItem) {
                 Log.d(TAG, "das ist das menu item: " + menuItem);
 
-                //TODO category sorting...
                 if (!isMultiSelect) {
                     //selectedIds = new ArrayList<>();
                     isMultiSelect = true;
-                }
-
-                if (menuItem.toString().equals("Sort Categories")) {
-                    sortList();
-                    arrayListHelper.saveArrayList(categories, "categories_arraylist");
-                    datachanged();
                 }
 
                 if (menuItem.toString().equals("Clear Categories")) {
@@ -209,33 +204,38 @@ public class MainActivity extends AppCompatActivity {
 
                     builder.show();
                 }
-
+                if (menuItem.toString().equals("Sort Categories")) {
+                    sortList();
+                    arrayListHelper.saveArrayList(categories, "categories_arraylist");
+                    datachanged();
+                }
                 return false;
-            }
-        });
+            }});
 
 
-        // recyclerView wird itemTouchHelper hinzugefügt
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemTouchHelperCallback);
+            // recyclerView wird itemTouchHelper hinzugefügt
+            ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemTouchHelperCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
 
-        //erster wichtiger save der liste
-        arrayListHelper.saveArrayList(categories, "categories_arraylist");
+            //erster wichtiger save der liste
+        arrayListHelper.saveArrayList(categories,"categories_arraylist");
 
-        //Adapter auf den recyclerview setzen
+            //Adapter auf den recyclerview setzen
         recyclerView.setAdapter(adapter);
 
 //        datachanged();
 //        adapter.notifyDataSetChanged();
 
-        Log.d(TAG, "Das ist die Größe der Category Liste: " + categories.size());
+        Log.d(TAG,"Das ist die Größe der Category Liste: "+categories.size());
 
-        //Floating button und Alert Dialog für Category Adding
-        FloatingActionButton floatingBttn_add = findViewById(R.id.floatingBttn_add);
+            //Floating button und Alert Dialog für Category Adding
+            FloatingActionButton floatingBttn_add = findViewById(R.id.floatingBttn_add);
         floatingBttn_add.setSize(50);
-        floatingBttn_add.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        floatingBttn_add.setOnClickListener(new View.OnClickListener()
+
+            {
+                @Override
+                public void onClick (View view){
 
                 Log.d(TAG, "Das ist die Liste bei click auf floating button: " + categories.toString());
 
@@ -296,60 +296,60 @@ public class MainActivity extends AppCompatActivity {
 
                 builder.show();
             }
-        });
-    }
-
-    private void clearAllCategories() {
-        for (int i = 0; i < categories.size(); i++) {
-            categories.get(i).getItems().clear();
-        }
-        adapter.notifyDataSetChanged();
-    }
-
-    private void addStandardCats() {
-        ArrayList<ShopItem> veggie_list = new ArrayList<>();
-        Category veggie = new Category(STANDARD_CATEGORIES[0], veggie_list);
-
-        veggie_list.add(new ShopItem("banana"));
-        veggie_list.add(new ShopItem("apple"));
-        veggie_list.add(new ShopItem("cucumber"));
-        veggie_list.add(new ShopItem("apricots"));
-        veggie_list.add(new ShopItem("salad"));
-
-        for (int i = 0; i < veggie_list.size(); i++) {
-            veggie_list.get(i).setActivity(this);
-            veggie_list.get(i).setIcon();
+            });
         }
 
-        categories.add(veggie);
-
-
-        ArrayList<ShopItem> hygienics_list = new ArrayList<>();
-        Category hygienics = new Category(STANDARD_CATEGORIES[4], hygienics_list);
-
-        hygienics_list.add(new ShopItem("deonummer1"));
-        hygienics_list.add(new ShopItem("toothbrush"));
-        hygienics_list.add(new ShopItem("shampoo"));
-        hygienics_list.add(new ShopItem("perfume"));
-        hygienics_list.add(new ShopItem("soap"));
-
-        for (int i = 0; i < hygienics_list.size(); i++) {
-            hygienics_list.get(i).setActivity(this);
-            hygienics_list.get(i).setIcon();
-        }
-
-        categories.add(hygienics);
-    }
-
-    private void sortList() {
-        Log.d(TAG, "sortList: arrayList = " + categories);
-        Collections.sort(categories, new Comparator<Category>() {
-            @Override
-            public int compare(Category catLeft, Category catRight) {
-                return catLeft.getTitle().compareTo(catRight.getTitle());
+        private void clearAllCategories () {
+            for (int i = 0; i < categories.size(); i++) {
+                categories.get(i).getItems().clear();
             }
-        });
-        Log.d(TAG, "sortList: arrayList AFTER SORT = " + categories);
+            adapter.notifyDataSetChanged();
+        }
+
+        private void addStandardCats () {
+            ArrayList<ShopItem> veggie_list = new ArrayList<>();
+            Category veggie = new Category(STANDARD_CATEGORIES[0], veggie_list);
+
+            veggie_list.add(new ShopItem("banana"));
+            veggie_list.add(new ShopItem("apple"));
+            veggie_list.add(new ShopItem("cucumber"));
+            veggie_list.add(new ShopItem("apricots"));
+            veggie_list.add(new ShopItem("salad"));
+
+            for (int i = 0; i < veggie_list.size(); i++) {
+                veggie_list.get(i).setActivity(this);
+                veggie_list.get(i).setIcon();
+            }
+
+            categories.add(veggie);
+
+
+            ArrayList<ShopItem> hygienics_list = new ArrayList<>();
+            Category hygienics = new Category(STANDARD_CATEGORIES[4], hygienics_list);
+
+            hygienics_list.add(new ShopItem("deonummer1"));
+            hygienics_list.add(new ShopItem("toothbrush"));
+            hygienics_list.add(new ShopItem("shampoo"));
+            hygienics_list.add(new ShopItem("perfume"));
+            hygienics_list.add(new ShopItem("soap"));
+
+            for (int i = 0; i < hygienics_list.size(); i++) {
+                hygienics_list.get(i).setActivity(this);
+                hygienics_list.get(i).setIcon();
+            }
+
+            categories.add(hygienics);
+        }
+
+        private void sortList () {
+            Log.d(TAG, "sortList: arrayList = " + categories);
+            Collections.sort(categories, new Comparator<Category>() {
+                @Override
+                public int compare(Category catLeft, Category catRight) {
+                    return catLeft.getTitle().compareTo(catRight.getTitle());
+                }
+            });
+            Log.d(TAG, "sortList: arrayList AFTER SORT = " + categories);
 
 
 //        ArrayList<Category> arrayList = new ArrayList<>();
@@ -359,9 +359,9 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        }
 //        arrayListHelper.loadArrayList("")
-    }
+        }
 
-    //TODO TODO
+        //TODO TODO
 //    private void multiSelect(int position) {
 //        ShopItem item = categories.get(position);
 //        if (item != null){
@@ -383,17 +383,17 @@ public class MainActivity extends AppCompatActivity {
 //        }
 //    }
 
-    public void delete() {
-        this.getSharedPreferences("myPrefs", 0).edit().clear().apply();
-    }
+        public void delete () {
+            this.getSharedPreferences("myPrefs", 0).edit().clear().apply();
+        }
 
-    public void datachanged() {
-        recyclerView.getRecycledViewPool().clear();
-        Log.d(TAG, "datachanged: adapter = " + adapter);
-        adapter.notifyDataSetChanged();
-    }
+        public void datachanged () {
+            recyclerView.getRecycledViewPool().clear();
+            Log.d(TAG, "datachanged: adapter = " + adapter);
+            adapter.notifyDataSetChanged();
+        }
 
-    //wenn category Grösse < 1, dann blende Kategorie-Erweiterungspfeile aus
+        //wenn category Grösse < 1, dann blende Kategorie-Erweiterungspfeile aus
 //    private void showCategoryNotExpandable() {
 //        for (Category cat : categories) {
 //            ImageView imageViewCatArrow = findViewById(R.id.imageViewCategory);
@@ -403,29 +403,29 @@ public class MainActivity extends AppCompatActivity {
 //        }
 //    }
 
-    private void loadSharedPreferences() {
-        SharedPreferences prefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
-        Spinner spinner = findViewById(R.id.spinnerShopItem);
-        if (prefs.getString("categories_arraylist", null) != null) {
-            categories.clear();
-            categories.addAll(arrayListHelper.loadArrayList("categories_arraylist"));
-            Log.d(TAG, "SharedPreferences JSON categories: " + categories, null);
-            for (int i = 0; i < categories.size(); i++) {
-                ArrayList<ShopItem> shopItems;
-                //Log.d(TAG, "LOAD shop item lists: "+categories.get(i).getItems());
-                //shopItems = (ArrayList<ShopItem>) categories.get(i).getItems();
-                Gson gson = new Gson();
-                String json = gson.toJson(categories.get(i).getItems());
-                shopItems = arrayListHelper.getListFromJson(json);
-                for (int j = 0; j < shopItems.size(); j++) {
-                    //Log.d(TAG, "SharedPreferences einzelne items nach load shop item list: "+shopItems.get(j).name);
-                    shopItems.get(j).setActivity(this);
-                    shopItems.get(j).setIcon();
+        private void loadSharedPreferences () {
+            SharedPreferences prefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
+            Spinner spinner = findViewById(R.id.spinnerShopItem);
+            if (prefs.getString("categories_arraylist", null) != null) {
+                categories.clear();
+                categories.addAll(arrayListHelper.loadArrayList("categories_arraylist"));
+                Log.d(TAG, "SharedPreferences JSON categories: " + categories, null);
+                for (int i = 0; i < categories.size(); i++) {
+                    ArrayList<ShopItem> shopItems;
+                    //Log.d(TAG, "LOAD shop item lists: "+categories.get(i).getItems());
+                    //shopItems = (ArrayList<ShopItem>) categories.get(i).getItems();
+                    Gson gson = new Gson();
+                    String json = gson.toJson(categories.get(i).getItems());
+                    shopItems = arrayListHelper.getListFromJson(json);
+                    for (int j = 0; j < shopItems.size(); j++) {
+                        //Log.d(TAG, "SharedPreferences einzelne items nach load shop item list: "+shopItems.get(j).name);
+                        shopItems.get(j).setActivity(this);
+                        shopItems.get(j).setIcon();
+                    }
+                    categories.get(i).getItems().clear();
+                    categories.get(i).getItems().addAll(shopItems);
+                    Log.d(TAG, "LOADSHAREDPREFERENCES: shopis: " + shopItems);
                 }
-                categories.get(i).getItems().clear();
-                categories.get(i).getItems().addAll(shopItems);
-                Log.d(TAG, "LOADSHAREDPREFERENCES: shopis: " + shopItems);
             }
         }
     }
-}
