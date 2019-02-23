@@ -207,6 +207,45 @@ public class MainActivity extends AppCompatActivity {
                     arrayListHelper.saveArrayList(categories, "categories_arraylist");
                     datachanged();
                 }
+
+                if (menuItem.toString().equals("Intro Screen ON/OFF")) {
+
+                    SharedPreferences prefs = recyclerView.getContext().getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
+
+                    Log.d(TAG, "onMenuItemClick: sharedPrefs = " + prefs);
+
+                    AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.this);
+                    //intro screen is off
+                    if (prefs.getInt("splashTimeOut", 500) != 500) {
+
+                        builder.setTitle("Do you want to set intro screen ON?");
+                    } else builder.setTitle("Do you want to set intro screen OFF?");
+
+                    LayoutInflater.from(MainActivity.this).inflate(R.layout.alert_dialog, (ViewGroup) findViewById(android.R.id.content), false);
+
+                    // button setup
+                    builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            SharedPreferences prefs = recyclerView.getContext().getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = prefs.edit();
+
+                            if (prefs.getInt("splashTimeOut", 500) != 500)
+                                editor.putInt("splashTimeOut", 500).apply();
+                            else editor.putInt("splashTimeOut", 0).apply();
+                        }
+                    });
+                    builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+
+                    builder.show();
+                }
+
                 return false;
             }
         });
