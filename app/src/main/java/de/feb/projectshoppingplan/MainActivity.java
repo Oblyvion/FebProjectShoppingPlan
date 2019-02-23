@@ -3,6 +3,7 @@ package de.feb.projectshoppingplan;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -13,6 +14,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -24,7 +28,6 @@ import android.widget.Spinner;
 
 import com.google.gson.Gson;
 import java.util.ArrayList;
-
 
 
 public class MainActivity extends AppCompatActivity {
@@ -51,10 +54,6 @@ public class MainActivity extends AppCompatActivity {
     //Main Liste der Categories (enthält alle Categories und die dazu gehörigen ShopItem Listen)
     public ArrayList<Category> categories = new ArrayList<>();
 
-    SharedPreferences prefs;
-    private Parcelable viewState = null;
-    private static final String VIEW_STATE = "view-state";
-
     @Override
     protected void onResume() {
         Log.d(TAG, "MainActivity: On Resume");
@@ -68,6 +67,12 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu, menu);
+
+        MenuItem item = menu.findItem(R.id.deleteCats);
+        SpannableString spannableString = new SpannableString(item.getTitle().toString());
+        spannableString.setSpan(new ForegroundColorSpan(Color.rgb(179,0,0)), 0, spannableString.length(), 0 );
+
+        item.setTitle(spannableString);
         return true;
     }
 
@@ -132,9 +137,6 @@ public class MainActivity extends AppCompatActivity {
                     return false;
                 }
 
-                //TODO SPEICHER NEUE LISTE NACH DRAG & DROP
-//                adapter.onSaveInstanceState(savedInstanceState);
-
                 Log.d(TAG, "onMove: adapter POSITION FROM = " + fromViewHolder.getAdapterPosition());
                 Log.d(TAG, "onMove: adapter POSITION TO = " + toViewHolder.getAdapterPosition());
                 adapter.moveItem(fromViewHolder.getAdapterPosition(), toViewHolder.getAdapterPosition());
@@ -163,45 +165,51 @@ public class MainActivity extends AppCompatActivity {
             public boolean onMenuItemClick(MenuItem menuItem) {
                 Log.d(TAG, "das ist das menu item: " + menuItem);
 
-                if (!isMultiSelect){
+                if (!isMultiSelect) {
                     //selectedIds = new ArrayList<>();
                     isMultiSelect = true;
                 }
 
+                if (menuItem.toString().equals("Clear Categories")) {
 
-                AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.this);
-                builder.setTitle("Remove all items from each category?");
-                LayoutInflater.from(MainActivity.this).inflate(R.layout.alert_dialog, (ViewGroup) findViewById(android.R.id.content), false);
+                    AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.this);
+                    builder.setTitle("Remove all items from each category?");
+                    LayoutInflater.from(MainActivity.this).inflate(R.layout.alert_dialog, (ViewGroup) findViewById(android.R.id.content), false);
 
-                // button setup
-                builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
+                    // button setup
+                    builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
 
-                        //lässt Kategorie-Erweiterungspfeile verschwinden
+                            //lässt Kategorie-Erweiterungspfeile verschwinden
 //                        showCategoryNotExpandable();
 
-                        clearAllCategories();
+                            clearAllCategories();
 
-                        //Save der Liste nachdem alle categories gecleared wurden
-                        arrayListHelper.saveArrayList(categories, "categories_arraylist");
-
-
-                    }
-                });
-                builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-
-                builder.show();
+                            //Save der Liste nachdem alle categories gecleared wurden
+                            arrayListHelper.saveArrayList(categories, "categories_arraylist");
 
 
-                return false;
-            }
+                        }
+                    });
+                    builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+
+                    builder.show();
+                }
+
+
+                if (menuItem.toString().equals("Sort Categories")) {
+
+                }
+
+                    return false;
+                }
         });
 
 

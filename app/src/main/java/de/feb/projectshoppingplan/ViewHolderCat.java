@@ -2,7 +2,7 @@ package de.feb.projectshoppingplan;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.RotateAnimation;
@@ -39,9 +39,11 @@ class ViewHolderCat extends GroupViewHolder implements View.OnClickListener {
     void bind(final Category category) {
         textViewCat.setText(category.getTitle());
 
-        if (category.getItems().size() < 1)
-            imageViewCatArrow.setVisibility(View.INVISIBLE);
-        else imageViewCatArrow.setVisibility(View.VISIBLE);
+        Log.d("VIEWHOLDERCAT", "BIND: size: " + category.getItems().size());
+        if (category.getItems().size() < 1) {
+            imageViewCatArrow.setImageDrawable(ContextCompat.getDrawable(imageViewCatArrow.getContext(),R.drawable.leer));
+        }
+        else imageViewCatArrow.setImageDrawable(ContextCompat.getDrawable(imageViewCatArrow.getContext(), R.drawable.ic_keyboard_arrow_down_black_24dp));
 
         imageViewCatAdd.setOnClickListener(new View.OnClickListener() {
             @Override

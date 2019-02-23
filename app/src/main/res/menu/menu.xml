@@ -5,9 +5,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MainActivity">
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/deleteCats"
         android:orderInCategory="100"
         android:title="Clear Categories"
         app:showAsAction="never" />
-
+    <item
+        android:orderInCategory="100"
+        android:title="Sort Categories"
+        app:showAsAction="never" />
 </menu>

@@ -193,7 +193,7 @@ public class ExpandableListUtils {
         arrayListUtils.saveArrayList((ArrayList<Category>) adapter.getGroups(), "categories_arraylist");
         Log.d(TAG, "notifyItemRemoved: SAVE THIS =" + (ArrayList<Category>) adapter.getGroups());
 
-            adapter.notifyDataSetChanged();
+            //adapter.notifyDataSetChanged();
 //        }
     }
 

@@ -128,12 +128,12 @@ public class AddShopItemToCategory extends AppCompatActivity {
                         itemList_text.get(position).setChecked(!itemList_text.get(position).checked);
                         if (!findDuplicates(itemList_text.get(position)) && itemList_text.get(position).checked) {
                             itemList_text.get(position).setCheckmark();
-                            Toast.makeText(AddShopItemToCategoryActivity,itemList_text.get(position).name+" added", Toast.LENGTH_LONG).show();
+                            Toast.makeText(AddShopItemToCategoryActivity,itemList_text.get(position).name+" added", Toast.LENGTH_SHORT).show();
 
                             mediaPlayer.start();
                         } else {
                             itemList_text.get(position).setCheckmark();
-                            Toast.makeText(AddShopItemToCategoryActivity,"deleted!", Toast.LENGTH_LONG).show();
+                            Toast.makeText(AddShopItemToCategoryActivity,"deleted!", Toast.LENGTH_SHORT).show();
 
                         }
                         adapter.notifyDataSetChanged();
