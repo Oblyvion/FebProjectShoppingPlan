@@ -165,14 +165,14 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
-                Log.d(TAG, "das ist das menu item: " + menuItem);
 
                 if (!isMultiSelect) {
                     //selectedIds = new ArrayList<>();
                     isMultiSelect = true;
                 }
 
-                if (menuItem.toString().equals("Clear Categories")) {
+                if (menuItem.toString().equals("Clear Categories!")) {
+                    Log.d(TAG, "das ist das menu item: " + menuItem);
 
                     AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.this);
                     builder.setTitle("Remove all items from each category?");
@@ -205,6 +205,7 @@ public class MainActivity extends AppCompatActivity {
                     builder.show();
                 }
                 if (menuItem.toString().equals("Sort Categories")) {
+                    Log.d("MENUItem", "Menu Item sort");
                     sortList();
                     arrayListHelper.saveArrayList(categories, "categories_arraylist");
                     datachanged();

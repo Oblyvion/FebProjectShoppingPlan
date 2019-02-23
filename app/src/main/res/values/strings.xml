@@ -10,5 +10,7 @@
     <string name="checkmark_description">CheckMark</string>
     <string name="textViewProductName">NameProdukt</string>
     <string name="imageViewProductDescription">IconWithCapitalLetter</string>
+    <string name="menuitem_sort">Sort Categories</string>
+    <string name="menuitem_clear">Clear Categories!</string>
 
 </resources>

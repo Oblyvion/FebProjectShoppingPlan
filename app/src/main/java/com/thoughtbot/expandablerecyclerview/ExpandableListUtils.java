@@ -208,12 +208,6 @@ public class ExpandableListUtils {
         arrayListUtils.saveArrayList((ArrayList<Category>) adapter.getGroups(), "categories_arraylist");
         Log.d(TAG, "notifyItemRemoved: SAVE THIS =" + (ArrayList<Category>) adapter.getGroups());
 
-<<<<<<< HEAD
-//        adapter.notifyDataSetChanged();
-=======
-            //adapter.notifyDataSetChanged();
-//        }
->>>>>>> f0219f9d0fe89fed76793b26733bc478a7c8040a
     }
 
     public static boolean notifyGroupNotClickable(ExpandableRecyclerViewAdapter adapter, int flatPosGroup) {
