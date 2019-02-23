@@ -18,9 +18,9 @@
             android:id="@+id/input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="ex. dairy products"
+            android:hint="1. letter is capital for better sorting."
             android:imeOptions="actionDone"
-            android:inputType="text" />
+            android:inputType="textCapWords" />
 
     </android.support.design.widget.TextInputLayout>
 </FrameLayout>

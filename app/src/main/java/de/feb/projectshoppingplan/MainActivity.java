@@ -25,6 +25,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import com.google.gson.Gson;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 
@@ -367,7 +368,7 @@ public class MainActivity extends AppCompatActivity {
      * Sorts the arrayList alphabetically.
      */
     private void sortList() {
-//        Log.d(TAG, "sortList: arrayList = " + categories);
+//        Log.d(TAG, "sortList: VORRRRHEEEEEEEEEEEEERRRRRR arrayList = " + categories);
 
         Collections.sort(categories, new Comparator<Category>() {
             @Override
@@ -376,7 +377,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-//        Log.d(TAG, "sortList: arrayList AFTER SORT = " + categories);
+//        Log.d(TAG, "sortList: NACHHHEEEEEERRRRRRRR arrayList AFTER SORT = " + categories);
     }
 
     /**
