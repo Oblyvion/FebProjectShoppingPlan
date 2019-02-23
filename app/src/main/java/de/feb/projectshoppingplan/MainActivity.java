@@ -210,33 +210,71 @@ public class MainActivity extends AppCompatActivity {
                     arrayListHelper.saveArrayList(categories, "categories_arraylist");
                     datachanged();
                 }
+
+                if (menuItem.toString().equals("Intro Screen ON/OFF")) {
+
+                    SharedPreferences prefs = recyclerView.getContext().getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
+
+                    Log.d(TAG, "onMenuItemClick: sharedPrefs = " + prefs);
+
+                    AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.this);
+                    //intro screen is off
+                    if (prefs.getInt("splashTimeOut", 500) != 500) {
+
+                        builder.setTitle("Do you want to set intro screen ON?");
+                    } else builder.setTitle("Do you want to set intro screen OFF?");
+
+                    LayoutInflater.from(MainActivity.this).inflate(R.layout.alert_dialog, (ViewGroup) findViewById(android.R.id.content), false);
+
+                    // button setup
+                    builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            SharedPreferences prefs = recyclerView.getContext().getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = prefs.edit();
+
+                            if (prefs.getInt("splashTimeOut", 500) != 500)
+                                editor.putInt("splashTimeOut", 500).apply();
+                            else editor.putInt("splashTimeOut", 0).apply();
+                        }
+                    });
+                    builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+
+                    builder.show();
+                }
+
                 return false;
-            }});
+            }
+        });
 
 
-            // recyclerView wird itemTouchHelper hinzugefügt
-            ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemTouchHelperCallback);
+        // recyclerView wird itemTouchHelper hinzugefügt
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemTouchHelperCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
 
-            //erster wichtiger save der liste
-        arrayListHelper.saveArrayList(categories,"categories_arraylist");
+        //erster wichtiger save der liste
+        arrayListHelper.saveArrayList(categories, "categories_arraylist");
 
-            //Adapter auf den recyclerview setzen
+        //Adapter auf den recyclerview setzen
         recyclerView.setAdapter(adapter);
 
 //        datachanged();
 //        adapter.notifyDataSetChanged();
 
-        Log.d(TAG,"Das ist die Größe der Category Liste: "+categories.size());
+        Log.d(TAG, "Das ist die Größe der Category Liste: " + categories.size());
 
-            //Floating button und Alert Dialog für Category Adding
-            FloatingActionButton floatingBttn_add = findViewById(R.id.floatingBttn_add);
+        //Floating button und Alert Dialog für Category Adding
+        FloatingActionButton floatingBttn_add = findViewById(R.id.floatingBttn_add);
         floatingBttn_add.setSize(50);
-        floatingBttn_add.setOnClickListener(new View.OnClickListener()
-
-            {
-                @Override
-                public void onClick (View view){
+        floatingBttn_add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
                 Log.d(TAG, "Das ist die Liste bei click auf floating button: " + categories.toString());
 
@@ -297,46 +335,46 @@ public class MainActivity extends AppCompatActivity {
 
                 builder.show();
             }
-            });
-        }
+        });
+    }
 
-        private void clearAllCategories () {
-            for (int i = 0; i < categories.size(); i++) {
-                categories.get(i).getItems().clear();
-            }
-            adapter.notifyDataSetChanged();
+    private void clearAllCategories() {
+        for (int i = 0; i < categories.size(); i++) {
+            categories.get(i).getItems().clear();
         }
+        adapter.notifyDataSetChanged();
+    }
 
-        private void addStandardCats () {
-            for (int i = 0; i < STANDARD_CATEGORIES.length; i++) {
-                ArrayList<ShopItem> list = new ArrayList<>();
-                Category cat = new Category(STANDARD_CATEGORIES[i], list);
+    private void addStandardCats() {
+        for (int i = 0; i < STANDARD_CATEGORIES.length; i++) {
+            ArrayList<ShopItem> list = new ArrayList<>();
+            Category cat = new Category(STANDARD_CATEGORIES[i], list);
 //                for (int j = 0; j < list.size(); j++) {
 //                    list.get(j).setActivity(this);
 //                    list.get(j).setIcon();
 //                }
-                categories.add(cat);
-                Log.d(TAG, "addStandardCats: cats = " + categories);
-            }
-
-            ShopItem shopItem = new ShopItem("EXAMPLE GROCERY");
-            shopItem.setActivity(this);
-            shopItem.setIcon();
-
-            categories.get(0).getItems().add(shopItem);
-
-
+            categories.add(cat);
+            Log.d(TAG, "addStandardCats: cats = " + categories);
         }
 
-        private void sortList () {
-            Log.d(TAG, "sortList: arrayList = " + categories);
-            Collections.sort(categories, new Comparator<Category>() {
-                @Override
-                public int compare(Category catLeft, Category catRight) {
-                    return catLeft.getTitle().compareTo(catRight.getTitle());
-                }
-            });
-            Log.d(TAG, "sortList: arrayList AFTER SORT = " + categories);
+        ShopItem shopItem = new ShopItem("EXAMPLE GROCERY");
+        shopItem.setActivity(this);
+        shopItem.setIcon();
+
+        categories.get(0).getItems().add(shopItem);
+
+
+    }
+
+    private void sortList() {
+        Log.d(TAG, "sortList: arrayList = " + categories);
+        Collections.sort(categories, new Comparator<Category>() {
+            @Override
+            public int compare(Category catLeft, Category catRight) {
+                return catLeft.getTitle().compareTo(catRight.getTitle());
+            }
+        });
+        Log.d(TAG, "sortList: arrayList AFTER SORT = " + categories);
 
 
 //        ArrayList<Category> arrayList = new ArrayList<>();
@@ -346,9 +384,9 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        }
 //        arrayListHelper.loadArrayList("")
-        }
+    }
 
-        //TODO TODO
+    //TODO TODO
 //    private void multiSelect(int position) {
 //        ShopItem item = categories.get(position);
 //        if (item != null){
@@ -370,17 +408,17 @@ public class MainActivity extends AppCompatActivity {
 //        }
 //    }
 
-        public void delete () {
-            this.getSharedPreferences("myPrefs", 0).edit().clear().apply();
-        }
+    public void delete() {
+        this.getSharedPreferences("myPrefs", 0).edit().clear().apply();
+    }
 
-        public void datachanged () {
-            recyclerView.getRecycledViewPool().clear();
-            Log.d(TAG, "datachanged: adapter = " + adapter);
-            adapter.notifyDataSetChanged();
-        }
+    public void datachanged() {
+        recyclerView.getRecycledViewPool().clear();
+        Log.d(TAG, "datachanged: adapter = " + adapter);
+        adapter.notifyDataSetChanged();
+    }
 
-        //wenn category Grösse < 1, dann blende Kategorie-Erweiterungspfeile aus
+    //wenn category Grösse < 1, dann blende Kategorie-Erweiterungspfeile aus
 //    private void showCategoryNotExpandable() {
 //        for (Category cat : categories) {
 //            ImageView imageViewCatArrow = findViewById(R.id.imageViewCategory);
@@ -390,29 +428,29 @@ public class MainActivity extends AppCompatActivity {
 //        }
 //    }
 
-        private void loadSharedPreferences () {
-            SharedPreferences prefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
-            Spinner spinner = findViewById(R.id.spinnerShopItem);
-            if (prefs.getString("categories_arraylist", null) != null) {
-                categories.clear();
-                categories.addAll(arrayListHelper.loadArrayList("categories_arraylist"));
-                Log.d(TAG, "SharedPreferences JSON categories: " + categories, null);
-                for (int i = 0; i < categories.size(); i++) {
-                    ArrayList<ShopItem> shopItems;
-                    //Log.d(TAG, "LOAD shop item lists: "+categories.get(i).getItems());
-                    //shopItems = (ArrayList<ShopItem>) categories.get(i).getItems();
-                    Gson gson = new Gson();
-                    String json = gson.toJson(categories.get(i).getItems());
-                    shopItems = arrayListHelper.getListFromJson(json);
-                    for (int j = 0; j < shopItems.size(); j++) {
-                        //Log.d(TAG, "SharedPreferences einzelne items nach load shop item list: "+shopItems.get(j).name);
-                        shopItems.get(j).setActivity(this);
-                        shopItems.get(j).setIcon();
-                    }
-                    categories.get(i).getItems().clear();
-                    categories.get(i).getItems().addAll(shopItems);
-                    Log.d(TAG, "LOADSHAREDPREFERENCES: shopis: " + shopItems);
+    private void loadSharedPreferences() {
+        SharedPreferences prefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
+        Spinner spinner = findViewById(R.id.spinnerShopItem);
+        if (prefs.getString("categories_arraylist", null) != null) {
+            categories.clear();
+            categories.addAll(arrayListHelper.loadArrayList("categories_arraylist"));
+            Log.d(TAG, "SharedPreferences JSON categories: " + categories, null);
+            for (int i = 0; i < categories.size(); i++) {
+                ArrayList<ShopItem> shopItems;
+                //Log.d(TAG, "LOAD shop item lists: "+categories.get(i).getItems());
+                //shopItems = (ArrayList<ShopItem>) categories.get(i).getItems();
+                Gson gson = new Gson();
+                String json = gson.toJson(categories.get(i).getItems());
+                shopItems = arrayListHelper.getListFromJson(json);
+                for (int j = 0; j < shopItems.size(); j++) {
+                    //Log.d(TAG, "SharedPreferences einzelne items nach load shop item list: "+shopItems.get(j).name);
+                    shopItems.get(j).setActivity(this);
+                    shopItems.get(j).setIcon();
                 }
+                categories.get(i).getItems().clear();
+                categories.get(i).getItems().addAll(shopItems);
+                Log.d(TAG, "LOADSHAREDPREFERENCES: shopis: " + shopItems);
             }
         }
     }
+}
