@@ -3,11 +3,9 @@ package de.feb.projectshoppingplan;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -315,8 +313,7 @@ public class MainActivity extends AppCompatActivity {
 
                         datachanged();
 
-                        //lässt Kategorie-Erweiterungspfeile verschwinden
-//                        showCategoryNotExpandable();
+                        Log.d("HILFE", "categories: "+categories);
 
                         //Save der Liste nachdem eine neue Cat hinzugefügt wurde
                         arrayListHelper.saveArrayList(categories, "categories_arraylist");
@@ -343,9 +340,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void addStandardCats() {
-        for (int i = 0; i < STANDARD_CATEGORIES.length; i++) {
+        for (String STANDARD_CATEGORY : STANDARD_CATEGORIES) {
             ArrayList<ShopItem> list = new ArrayList<>();
-            Category cat = new Category(STANDARD_CATEGORIES[i], list);
+            Category cat = new Category(STANDARD_CATEGORY, list);
 //                for (int j = 0; j < list.size(); j++) {
 //                    list.get(j).setActivity(this);
 //                    list.get(j).setIcon();
@@ -353,6 +350,7 @@ public class MainActivity extends AppCompatActivity {
             categories.add(cat);
             Log.d(TAG, "addStandardCats: cats = " + categories);
         }
+
 
         ShopItem shopItem = new ShopItem("EXAMPLE GROCERY");
         shopItem.setActivity(this);
@@ -372,38 +370,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         Log.d(TAG, "sortList: arrayList AFTER SORT = " + categories);
-
-
-//        ArrayList<Category> arrayList = new ArrayList<>();
-//        for (int i = 0; i < categories.size(); i++) {
-//            if (categories.get(i).getTitle().toString() > ) {
-//
-//            }
-//        }
-//        arrayListHelper.loadArrayList("")
     }
 
-    //TODO TODO
-//    private void multiSelect(int position) {
-//        ShopItem item = categories.get(position);
-//        if (item != null){
-//            if (actionMode != null) {
-//                if (selectedIds.contains(item.))
-//                    selectedIds.remove(Integer.valueOf(item.getId()));
-//                else
-//                    selectedIds.add(item.getId());
-//
-//                if (selectedIds.size() > 0)
-//                    actionMode.setTitle(String.valueOf(selectedIds.size())); //show selected item count on action mode.
-//                else{
-//                    actionMode.setTitle(""); //remove item count from action mode.
-//                    actionMode.finish(); //hide action mode.
-//                }
-//                adapter.setSelectedIds(selectedIds);
-//
-//            }
-//        }
-//    }
 
     public void delete() {
         this.getSharedPreferences("myPrefs", 0).edit().clear().apply();
@@ -427,7 +395,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadSharedPreferences() {
         SharedPreferences prefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
-        Spinner spinner = findViewById(R.id.spinnerShopItem);
         if (prefs.getString("categories_arraylist", null) != null) {
             categories.clear();
             categories.addAll(arrayListHelper.loadArrayList("categories_arraylist"));
@@ -446,7 +413,6 @@ public class MainActivity extends AppCompatActivity {
                 }
                 categories.get(i).getItems().clear();
                 categories.get(i).getItems().addAll(shopItems);
-                Log.d(TAG, "LOADSHAREDPREFERENCES: shopis: " + shopItems);
             }
         }
     }

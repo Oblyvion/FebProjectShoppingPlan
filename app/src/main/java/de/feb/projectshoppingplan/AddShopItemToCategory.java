@@ -1,7 +1,6 @@
 package de.feb.projectshoppingplan;
 
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -9,9 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 
 import android.media.MediaPlayer;
-import android.os.Build;
 import android.speech.RecognizerIntent;
-import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,7 +22,6 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -119,8 +115,6 @@ public class AddShopItemToCategory extends AppCompatActivity {
         recyclerView.setLayoutManager(LayoutManager);
 
         recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getApplicationContext(), recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
-                    //Wegen dem drawable muss mindestens Lollipop auf dem Smartphone sein => todo schauen ob es eine andere lösung gibt
-                    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
                     @Override
                     public void onItemClick(View view, int position) {
 //                        MediaPlayer mediaPlayer = MediaPlayer.create(AddShopItemToCategory.this, R.raw.service_bell_daniel_simion);
@@ -159,8 +153,6 @@ public class AddShopItemToCategory extends AppCompatActivity {
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
 
-            //@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void afterTextChanged(Editable s) {
                 SharedPreferences.Editor sharedPrefEditor;
@@ -258,9 +250,9 @@ public class AddShopItemToCategory extends AppCompatActivity {
         String[] separated = input.split("( and )");
         String added = "";
 
-        for (int i = 0; i < separated.length; i++) {
-            Log.d(TAG, "seperateSpokenWords[i]: " + separated[i]);
-            ShopItem item = new ShopItem(separated[i]);
+        for (String aSeparated : separated) {
+            Log.d(TAG, "seperateSpokenWords[i]: " + aSeparated);
+            ShopItem item = new ShopItem(aSeparated);
             Log.d(TAG, "Item: " + item);
             added = addVoiceItemsToList(item);
         }
@@ -299,7 +291,6 @@ public class AddShopItemToCategory extends AppCompatActivity {
         return result;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void addtoRecyclerViewandgiveIcon(String text) {
         temp_user_input = text;
         Log.d(TAG, "TEMP USER INPUT 2: " + temp_user_input);

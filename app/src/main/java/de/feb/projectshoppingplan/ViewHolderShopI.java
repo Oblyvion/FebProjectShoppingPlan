@@ -3,8 +3,7 @@ package de.feb.projectshoppingplan;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.os.Build;
-import android.support.annotation.RequiresApi;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -37,19 +36,18 @@ class ViewHolderShopI extends ChildViewHolder {
         view.setOnClickListener(new View.OnClickListener() {
             boolean clicked = false;
 
-            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onClick(View v) {
 
                 if (!clicked) {
                     textViewShopI.setPaintFlags(textViewShopI.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-                    v.setBackground(view.getContext().getDrawable(R.drawable.border));
+                    v.setBackground(ContextCompat.getDrawable(AppContext.getContext(), R.drawable.border));
                     v.setBackgroundColor(Color.LTGRAY);
                     clicked = true;
                 } else {
                     textViewShopI.setPaintFlags(textViewShopI.getPaintFlags() & (~ Paint.STRIKE_THRU_TEXT_FLAG));
                     v.setBackgroundColor(Color.WHITE);
-                    v.setBackground(view.getContext().getDrawable(R.drawable.border));
+                    v.setBackground(ContextCompat.getDrawable(AppContext.getContext(), R.drawable.border));
                     clicked = false;
                 }
             }
@@ -84,7 +82,7 @@ class ViewHolderShopI extends ChildViewHolder {
         });
     }
 
-    void saveSpinnerValue() {
+    private void saveSpinnerValue() {
         String userChoice = spinnerShopI.getSelectedItem().toString();
         Log.d("hallo", "save: "+userChoice);
         SharedPreferences sharedPref = spinnerShopI.getContext().getSharedPreferences(textViewShopI.getText().toString(),MODE_PRIVATE);
@@ -93,7 +91,7 @@ class ViewHolderShopI extends ChildViewHolder {
         prefEditor.apply();
     }
 
-    void getSpinnerValue() {
+    private void getSpinnerValue() {
         SharedPreferences sharedPref = spinnerShopI.getContext().getSharedPreferences(textViewShopI.getText().toString(),MODE_PRIVATE);
         String spinnerValue = sharedPref.getString("userChoiceSpinner",null);
         if(spinnerValue != null) {

@@ -83,22 +83,4 @@ class ViewHolderCat extends GroupViewHolder implements View.OnClickListener {
         rotate.setFillAfter(true);
         imageViewCatArrow.setAnimation(rotate);
     }
-
-//    @Override
-//    public void onItemSelected() {
-//        itemView.setBackgroundColor(Color.LTGRAY);
-//    }
-//
-//    @Override
-//    public void onItemClear() {
-//        itemView.setBackgroundColor(0);
-//    }
-
-//    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-//    @Override
-//    public void bindType(final InterfaceListElement item) {
-//        imageViewCatArrow.setImageDrawable(item.getDrawable());
-//        textViewCat.setText(((Category)item).getName());
-//        imageViewCatAdd.setImageDrawable(itemView.getResources().getDrawable(R.drawable.ic_add_circle_24dp));
-//    }
 }
