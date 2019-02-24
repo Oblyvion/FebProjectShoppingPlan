@@ -180,4 +180,10 @@ public class ExpandableListUtils {
         //group has child elements and is clickable
         return true;
     }
+
+    public static void notifyCollapseAllGroups(ExpandableRecyclerViewAdapter adapter) {
+        for (int i = 0; i < adapter.getGroups().size(); i++) {
+            adapter.expandableList.expandedGroupIndexes[i] = false;
+        }
+    }
 }

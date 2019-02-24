@@ -368,16 +368,13 @@ public class MainActivity extends AppCompatActivity {
      * Sorts the arrayList alphabetically.
      */
     private void sortList() {
-//        Log.d(TAG, "sortList: VORRRRHEEEEEEEEEEEEERRRRRR arrayList = " + categories);
-
         Collections.sort(categories, new Comparator<Category>() {
             @Override
             public int compare(Category catLeft, Category catRight) {
                 return catLeft.getTitle().compareTo(catRight.getTitle());
             }
         });
-
-//        Log.d(TAG, "sortList: NACHHHEEEEEERRRRRRRR arrayList AFTER SORT = " + categories);
+        adapter.onSortCategories();
     }
 
     /**
