@@ -21,11 +21,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.Spinner;
-
 import com.google.gson.Gson;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -34,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
     //TAG logcat
     final static String TAG = "MyActivity";
-    //Deklaration Recyclerview
+    //Recyclerview declaration
     RecyclerView recyclerView;
 
     private final ArrayListUtils arrayListHelper = new ArrayListUtils(this);
@@ -42,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean isMultiSelect = false;
     //private ArrayList<Integer> selectedIds = new ArrayList<>();
-    
+
     //Categories
     final String[] STANDARD_CATEGORIES = {AppContext.getContext().getString(R.string.standardCat0), AppContext.getContext().getString(R.string.standardCat1),
             AppContext.getContext().getString(R.string.standardCat2), AppContext.getContext().getString(R.string.standardCat3), AppContext.getContext().getString(R.string.standardCat4), AppContext.getContext().getString(R.string.standardCat5)};
@@ -52,6 +51,9 @@ public class MainActivity extends AppCompatActivity {
     //Main Liste der Categories (enthält alle Categories und die dazu gehörigen ShopItem Listen)
     public ArrayList<Category> categories = new ArrayList<>();
 
+    /**
+     * Loads the categories list when app returned to current activity.
+     */
     @Override
     protected void onResume() {
         Log.d(TAG, "MainActivity: On Resume");
@@ -61,9 +63,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * @param menu Options
+     * @return true: Inflate the menu. This adds items to the action bar if it is present.
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu, menu);
 
         MenuItem item = menu.findItem(R.id.deleteCats);
@@ -74,7 +79,9 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-
+    /**
+     * @param savedInstanceState Bundle
+     */
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,10 +90,12 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         Log.d(TAG, "MainActivity: On Create");
 
-        //recycler view finden
+        //finden recycler view
         recyclerView = findViewById(R.id.recyclerViewMain);
 
+        //developer is able to reset all
 //        delete();
+
         loadSharedPreferences();
 
         if (categories.isEmpty()) {
@@ -96,11 +105,6 @@ public class MainActivity extends AppCompatActivity {
         //Adapter wird deklariert und initialisiert
         //Kann erst hier gemacht werden, da in categories was drin sein muss
         adapter = new ExpandableRecyclerViewAdapter(categories);
-
-//        if (adapter != null) {
-//            adapter.onRestoreInstanceState(savedInstanceState);
-//        } else adapter = new ExpandableRecyclerViewAdapter(categories);
-//        adapter = new ExpandableRecyclerViewAdapter(categories);
 
         //Soll man machen wenn man weiß das sich die recyclerview elemente nicht ändern (also bezogen auf größe immer gleich bleibend)
         recyclerView.setHasFixedSize(true);
@@ -114,30 +118,35 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
 //                Log.d(TAG, "getMovementFlags: GRAP ITEM...");
-//                int dragAction = ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.START | ItemTouchHelper.END;
-//                Log.d(TAG, "getMovementFlags: dragAction = " + dragAction);
-//                int swipeAction = ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
-//                Log.d(TAG, "getMovementFlags: swipeAction = " + swipeAction);
-//                return makeFlag(ItemTouchHelper.ACTION_STATE_DRAG, ItemTouchHelper.ACTION_STATE_SWIPE);
                 return makeFlag(ItemTouchHelper.ACTION_STATE_DRAG,
                         ItemTouchHelper.DOWN | ItemTouchHelper.UP | ItemTouchHelper.START | ItemTouchHelper.END);
             }
 
+            /**
+             *
+             * @param recyclerView The current recycler view.
+             * @param fromViewHolder ViewHolder which is dragged.
+             * @param toViewHolder ViewHolder where dropped to.
+             * @return true: If items have equal types, than swap them.
+             */
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder fromViewHolder, @NonNull RecyclerView.ViewHolder toViewHolder) {
 
-                Log.d(TAG, "onMove: itemViewFROM TYPE = " + fromViewHolder.getItemViewType());
-                Log.d(TAG, "onMove: itemViewTO TYPE = " + toViewHolder.getItemViewType());
+//                Log.d(TAG, "onMove: itemViewFROM TYPE = " + fromViewHolder.getItemViewType());
+//                Log.d(TAG, "onMove: itemViewTO TYPE = " + toViewHolder.getItemViewType());
 
                 //do not swap when item types are unequal
                 if (fromViewHolder.getItemViewType() != toViewHolder.getItemViewType()) {
                     return false;
                 }
 
-                Log.d(TAG, "onMove: adapter POSITION FROM = " + fromViewHolder.getAdapterPosition());
-                Log.d(TAG, "onMove: adapter POSITION TO = " + toViewHolder.getAdapterPosition());
+//                Log.d(TAG, "onMove: adapter POSITION FROM = " + fromViewHolder.getAdapterPosition());
+//                Log.d(TAG, "onMove: adapter POSITION TO = " + toViewHolder.getAdapterPosition());
+
+                //notifies adapter that items are moving
                 adapter.moveItem(fromViewHolder.getAdapterPosition(), toViewHolder.getAdapterPosition());
 
+                //saves changes after drag & drop
                 categories = (ArrayList<Category>) adapter.getGroups();
                 arrayListHelper.saveArrayList(categories, "categories_arraylist");
 
@@ -146,8 +155,6 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
-//                Log.d(TAG, "HALLO HIER SWIPEY SWUPP SWIPE");
-//                adapter.notifyItemRemoved(i);
             }
         };
 
@@ -253,14 +260,11 @@ public class MainActivity extends AppCompatActivity {
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(itemTouchHelperCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
 
-        //erster wichtiger save der liste
+        //saves arrayList categories
         arrayListHelper.saveArrayList(categories, "categories_arraylist");
 
-        //Adapter auf den recyclerview setzen
+        //set adapter to recyclerView
         recyclerView.setAdapter(adapter);
-
-//        datachanged();
-//        adapter.notifyDataSetChanged();
 
         Log.d(TAG, "Das ist die Größe der Category Liste: " + categories.size());
 
@@ -271,7 +275,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                Log.d(TAG, "Das ist die Liste bei click auf floating button: " + categories.toString());
+                //Log.d(TAG, "Das ist die Liste vor dem Hinzufügen einer Kategorie: " + categories.toString());
 
                 AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.this);
                 builder.setTitle("Add a new category");
@@ -280,6 +284,20 @@ public class MainActivity extends AppCompatActivity {
                 final EditText input = viewInflated.findViewById(R.id.input);
                 builder.setView(viewInflated);
 
+                AlertDialog dialog = builder.create();
+
+                dialog.setCanceledOnTouchOutside(true);
+                dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(input.getWindowToken(), 0);
+                    }
+                });
+
+                Log.d(TAG, "onClick: FOCUS KEYBOARD");
+                //TODO das keyboard sollte nach add group button angezeigt werden => geht aber so nicht!
+
                 // button setup
                 builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
@@ -287,9 +305,6 @@ public class MainActivity extends AppCompatActivity {
                         dialog.dismiss();
                         //item liste für neue cat erstellen
                         ArrayList<ShopItem> list = new ArrayList<>();
-
-                        //newCat erstellen mit Name und Liste
-                        //Category newCat = new Category(input.getText().toString() , list);
 
                         String temp = input.getText().toString();
                         int help = 0;
@@ -313,9 +328,7 @@ public class MainActivity extends AppCompatActivity {
 
                         datachanged();
 
-                        Log.d("HILFE", "categories: "+categories);
-
-                        //Save der Liste nachdem eine neue Cat hinzugefügt wurde
+                        //saves arrayList categories after added new category group
                         arrayListHelper.saveArrayList(categories, "categories_arraylist");
 
                     }
@@ -328,10 +341,16 @@ public class MainActivity extends AppCompatActivity {
                 });
 
                 builder.show();
+                input.requestFocus();
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
             }
         });
     }
 
+    /**
+     * Delete all categories.
+     */
     private void clearAllCategories() {
         for (int i = 0; i < categories.size(); i++) {
             categories.get(i).getItems().clear();
@@ -339,16 +358,15 @@ public class MainActivity extends AppCompatActivity {
         adapter.notifyDataSetChanged();
     }
 
+    /**
+     * Adds standard categories to arrayList.
+     */
     private void addStandardCats() {
         for (String STANDARD_CATEGORY : STANDARD_CATEGORIES) {
             ArrayList<ShopItem> list = new ArrayList<>();
             Category cat = new Category(STANDARD_CATEGORY, list);
-//                for (int j = 0; j < list.size(); j++) {
-//                    list.get(j).setActivity(this);
-//                    list.get(j).setIcon();
-//                }
             categories.add(cat);
-            Log.d(TAG, "addStandardCats: cats = " + categories);
+//            Log.d(TAG, "addStandardCats: cats = " + categories);
         }
 
 
@@ -358,41 +376,43 @@ public class MainActivity extends AppCompatActivity {
 
         categories.get(0).getItems().add(shopItem);
 
-
     }
 
+    /**
+     * Sorts the arrayList alphabetically.
+     */
     private void sortList() {
-        Log.d(TAG, "sortList: arrayList = " + categories);
+//        Log.d(TAG, "sortList: VORRRRHEEEEEEEEEEEEERRRRRR arrayList = " + categories);
+
         Collections.sort(categories, new Comparator<Category>() {
             @Override
             public int compare(Category catLeft, Category catRight) {
                 return catLeft.getTitle().compareTo(catRight.getTitle());
             }
         });
-        Log.d(TAG, "sortList: arrayList AFTER SORT = " + categories);
+
+//        Log.d(TAG, "sortList: NACHHHEEEEEERRRRRRRR arrayList AFTER SORT = " + categories);
     }
 
-
+    /**
+     * Deletes all shared preferences with name myPrefs.
+     */
     public void delete() {
         this.getSharedPreferences("myPrefs", 0).edit().clear().apply();
     }
 
+    /**
+     * Adapter notifies data changes and show them.
+     */
     public void datachanged() {
         recyclerView.getRecycledViewPool().clear();
         Log.d(TAG, "datachanged: adapter = " + adapter);
         adapter.notifyDataSetChanged();
     }
 
-    //wenn category Grösse < 1, dann blende Kategorie-Erweiterungspfeile aus
-//    private void showCategoryNotExpandable() {
-//        for (Category cat : categories) {
-//            ImageView imageViewCatArrow = findViewById(R.id.imageViewCategory);
-//            if (cat.getItems().size() < 1) {
-//                imageViewCatArrow.setVisibility(View.INVISIBLE);
-//            }
-//        }
-//    }
-
+    /**
+     * Load shared preferences with name myPrefs.
+     */
     private void loadSharedPreferences() {
         SharedPreferences prefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
         if (prefs.getString("categories_arraylist", null) != null) {

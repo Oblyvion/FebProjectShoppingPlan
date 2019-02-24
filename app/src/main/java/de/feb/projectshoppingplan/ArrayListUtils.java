@@ -23,7 +23,11 @@ public class ArrayListUtils {
         this.act = activity;
     }
 
-    //aus Json string wird wieder eine Arraylist<ShopItem>
+    /**
+     * Convert json string to ArrayList<ShopItem>.
+     * @param json String
+     * @return ArrayList<ShopItem>
+     */
     ArrayList<ShopItem> getListFromJson(String json){
         Gson gson = new Gson();
         Type type = new TypeToken<ArrayList<ShopItem>>() {
@@ -40,6 +44,11 @@ public class ArrayListUtils {
         return shopis;
     }
 
+    /**
+     * Saves the arrayList in shared preferences with name myPrefs.
+     * @param list ArrayList<Category>
+     * @param key String
+     */
     public void saveArrayList(ArrayList<Category> list, String key) {
         SharedPreferences prefs = act.getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
@@ -49,6 +58,11 @@ public class ArrayListUtils {
         editor.apply();     // This line is IMPORTANT !!!
     }
 
+    /**
+     * Loads shared preferences with name myPrefs.
+     * @param key string
+     * @return ArrayList<Category>
+     */
     ArrayList<Category> loadArrayList(String key) {
         //Log.d(TAG, "Categories vor .clear(): "+categories+"\n");
         //Categories löschen bevor alles aus den Shared Preferences hinzugefügt wird

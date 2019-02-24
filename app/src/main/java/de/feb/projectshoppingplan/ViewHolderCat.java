@@ -32,14 +32,13 @@ class ViewHolderCat extends GroupViewHolder implements View.OnClickListener {
     }
 
     /**
-     * build category item
-     *
-     * @param category
+     * Build category itemView.
+     * @param category Category
      */
     void bind(final Category category) {
         textViewCat.setText(category.getTitle());
 
-        Log.d("VIEWHOLDERCAT", "BIND: size: " + category.getItems().size());
+//        Log.d("VIEWHOLDERCAT", "BIND: size: " + category.getItems().size());
         if (category.getItems().size() < 1) {
             imageViewCatArrow.setImageDrawable(ContextCompat.getDrawable(imageViewCatArrow.getContext(),R.drawable.leer));
         }
@@ -68,6 +67,9 @@ class ViewHolderCat extends GroupViewHolder implements View.OnClickListener {
         animateCollapse();
     }
 
+    /**
+     * Animation for expand group.
+     */
     private void animateExpand() {
         RotateAnimation rotate =
                 new RotateAnimation(360, 180, RELATIVE_TO_SELF, 0.5f, RELATIVE_TO_SELF, 0.5f);
@@ -76,6 +78,9 @@ class ViewHolderCat extends GroupViewHolder implements View.OnClickListener {
         imageViewCatArrow.setAnimation(rotate);
     }
 
+    /**
+     * Animation for collapse group.
+     */
     private void animateCollapse() {
         RotateAnimation rotate =
                 new RotateAnimation(180, 360, RELATIVE_TO_SELF, 0.5f, RELATIVE_TO_SELF, 0.5f);

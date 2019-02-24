@@ -1,16 +1,12 @@
 package de.feb.projectshoppingplan;
 
-import android.app.Activity;
-import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Spinner;
 
 import com.thoughtbot.expandablerecyclerview.ExpandableListUtils;
 import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup;
-import com.thoughtbot.expandablerecyclerview.models.ExpandableListPosition;
 
 import java.util.List;
 
@@ -39,9 +35,6 @@ public class ExpandableRecyclerViewAdapter extends com.thoughtbot.expandablerecy
     @Override
     public void onBindGroupViewHolder(ViewHolderCat holder, int flatPosition, ExpandableGroup group) {
         final Category category = (Category) group;
-        if (category.getItems().size() < 1) {
-
-        }
         holder.bind(category);
     }
 
@@ -51,13 +44,21 @@ public class ExpandableRecyclerViewAdapter extends com.thoughtbot.expandablerecy
         holder.bind(shopItem);
     }
 
-    public void moveItem(int flatPosFrom, int flatPostTo) {
-        Log.d(TAG, "moveItem: HELLOOOOOOOOO");
+    /**
+     * Moves the item from position A to position B.
+     * @param flatPosFrom int: Flat position of layout.
+     * @param flatPostTo int: Flat position of layout.
+     */
+    void moveItem(int flatPosFrom, int flatPostTo) {
         ExpandableListUtils.notifyItemMoved(this, flatPosFrom, flatPostTo);
         notifyItemMoved(flatPosFrom, flatPostTo);
     }
 
-    public void swipeItem(int flatPos) {
+    /**
+     * Swipes one item to the left and right side as well.
+     * @param flatPos int: Flat position of layout.
+     */
+    void swipeItem(int flatPos) {
         Log.d(TAG, "swipeItem: SWIPE NOW!");
         ExpandableListUtils.notifyItemRemoved(this, flatPos, view);
     }
@@ -72,29 +73,12 @@ public class ExpandableRecyclerViewAdapter extends com.thoughtbot.expandablerecy
         return false;
     }
 
-//    @Override
-//    public boolean toggleGroup(int flatPos) {
-//        ExpandableListPosition listPos = expandableList.getUnflattenedPosition(flatPos);
-//        boolean expanded = expandableList.expandedGroupIndexes[listPos.groupPos];
-//        if (expanded) {
-//            collapseGroup(listPos);
-//        } else {
-//            expandGroup(listPos);
-//        }
-//        return expanded;
-//    }
-
-    public void addNewGroup() {
+    /**
+     * Adds new group.
+     */
+    void addNewGroup() {
 
         ExpandableListUtils.notifyGroupDataChanged(this, view);
         notifyDataSetChanged();
-    }
-
-    public Category getCategory(int position) {
-        return (Category) getGroups().get(position);
-    }
-
-    public void remove() {
-        getGroups().clear();
     }
 }

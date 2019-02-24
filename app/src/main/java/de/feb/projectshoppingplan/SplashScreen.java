@@ -8,17 +8,18 @@ import android.os.Handler;
 
 public class SplashScreen extends Activity {
 
-    private int splashTimeOut;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
 
+        //get shared preferences
         SharedPreferences sharedPreferences = getSharedPreferences("myPrefs", MODE_PRIVATE);
 
-        splashTimeOut = sharedPreferences.getInt("splashTimeOut", 500);
+        //get splash screen timeOut
+        int splashTimeOut = sharedPreferences.getInt("splashTimeOut", 500);
 
+        //start next activity after splash timeOut.
         new Handler().postDelayed(new Runnable() {
             //Das hier wird NACH dem Time_Out ausgeführt
             @Override

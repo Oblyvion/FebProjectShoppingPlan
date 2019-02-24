@@ -17,6 +17,10 @@ public class Category extends CheckedExpandableGroup {
         
     }
 
+    /**
+     * Insert shopItem list into category.
+     * @param list ArrayList<ShopItem>
+     */
     void setItems(ArrayList<ShopItem> list) {
         this.getItems().clear();
         this.getItems().addAll(list);
