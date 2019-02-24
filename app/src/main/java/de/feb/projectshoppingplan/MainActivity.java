@@ -51,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
     //Main Liste der Categories (enthält alle Categories und die dazu gehörigen ShopItem Listen)
     public ArrayList<Category> categories = new ArrayList<>();
 
+    private InputMethodManager imm;
+
     /**
      * Loads the categories list when app returned to current activity.
      */
@@ -286,17 +288,17 @@ public class MainActivity extends AppCompatActivity {
 
                 AlertDialog dialog = builder.create();
 
+                imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+                input.requestFocus();
+
                 dialog.setCanceledOnTouchOutside(true);
                 dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
                     @Override
                     public void onCancel(DialogInterface dialog) {
-                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.hideSoftInputFromWindow(input.getWindowToken(), 0);
+                        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
                     }
                 });
-
-                Log.d(TAG, "onClick: FOCUS KEYBOARD");
-                //TODO das keyboard sollte nach add group button angezeigt werden => geht aber so nicht!
 
                 // button setup
                 builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -331,6 +333,9 @@ public class MainActivity extends AppCompatActivity {
                         //saves arrayList categories after added new category group
                         arrayListHelper.saveArrayList(categories, "categories_arraylist");
 
+                        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+                        input.clearFocus();
+
                     }
                 });
                 builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -339,11 +344,7 @@ public class MainActivity extends AppCompatActivity {
                         dialog.cancel();
                     }
                 });
-
                 builder.show();
-                input.requestFocus();
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
             }
         });
     }
