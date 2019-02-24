@@ -21,11 +21,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.Spinner;
 import com.google.gson.Gson;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 
@@ -275,7 +275,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                Log.d(TAG, "Das ist die Liste bei click auf floating button: " + categories.toString());
+                //Log.d(TAG, "Das ist die Liste vor dem Hinzufügen einer Kategorie: " + categories.toString());
 
                 AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.this);
                 builder.setTitle("Add a new category");
@@ -284,9 +284,19 @@ public class MainActivity extends AppCompatActivity {
                 final EditText input = viewInflated.findViewById(R.id.input);
                 builder.setView(viewInflated);
 
+                AlertDialog dialog = builder.create();
+
+                dialog.setCanceledOnTouchOutside(true);
+                dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(input.getWindowToken(), 0);
+                    }
+                });
+
                 Log.d(TAG, "onClick: FOCUS KEYBOARD");
                 //TODO das keyboard sollte nach add group button angezeigt werden => geht aber so nicht!
-                input.requestFocus();
 
                 // button setup
                 builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -331,6 +341,9 @@ public class MainActivity extends AppCompatActivity {
                 });
 
                 builder.show();
+                input.requestFocus();
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
             }
         });
     }
@@ -355,6 +368,7 @@ public class MainActivity extends AppCompatActivity {
             categories.add(cat);
 //            Log.d(TAG, "addStandardCats: cats = " + categories);
         }
+
 
         ShopItem shopItem = new ShopItem("EXAMPLE GROCERY");
         shopItem.setActivity(this);
@@ -398,7 +412,6 @@ public class MainActivity extends AppCompatActivity {
      */
     private void loadSharedPreferences() {
         SharedPreferences prefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
-        Spinner spinner = findViewById(R.id.spinnerShopItem);
         if (prefs.getString("categories_arraylist", null) != null) {
             categories.clear();
             categories.addAll(arrayListHelper.loadArrayList("categories_arraylist"));
@@ -417,7 +430,6 @@ public class MainActivity extends AppCompatActivity {
                 }
                 categories.get(i).getItems().clear();
                 categories.get(i).getItems().addAll(shopItems);
-                Log.d(TAG, "LOADSHAREDPREFERENCES: shopis: " + shopItems);
             }
         }
     }

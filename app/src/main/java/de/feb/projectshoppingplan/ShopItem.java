@@ -1,22 +1,18 @@
 package de.feb.projectshoppingplan;
 
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.RequiresApi;
-import android.widget.ImageView;
+import android.support.v4.content.ContextCompat;
 
 public class ShopItem implements Parcelable {
 
     public final String name;
-    String spinner_value;
     Bitmap icon;
     Boolean checked = false;
-    transient Activity activity;
+    private transient Activity activity;
     transient Drawable checkmark;
 
 
@@ -50,11 +46,7 @@ public class ShopItem implements Parcelable {
         this.icon = letterIconProvider.getLetterIcon(name, firstchars, tilesize, tilesize, true);
     }
 
-    void setSpinner_value(String value) {
-        this.spinner_value = value;
-    }
-
-    public Bitmap getIcon() {
+    Bitmap getIcon() {
         return this.icon;
     }
 
@@ -73,13 +65,12 @@ public class ShopItem implements Parcelable {
         parcel.writeString(name);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public void setCheckmark() {
+    void setCheckmark() {
         if (this.checked) {
-            this.checkmark = activity.getDrawable(R.drawable.ic_check_box_black_24dp);
+            this.checkmark = ContextCompat.getDrawable(AppContext.getContext(), R.drawable.ic_check_box_black_24dp);
         }
-        else this.checkmark = activity.getDrawable(R.drawable.ic_check_box_outline_blank_black_24dp);
+        else this.checkmark = ContextCompat.getDrawable(AppContext.getContext(),R.drawable.ic_check_box_outline_blank_black_24dp);
     }
 
-    public void setChecked(boolean check) { this.checked = check; }
+    void setChecked(boolean check) { this.checked = check; }
 }
