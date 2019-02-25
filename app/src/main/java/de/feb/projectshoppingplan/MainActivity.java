@@ -291,7 +291,8 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onCancel(DialogInterface dialog) {
                         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.hideSoftInputFromWindow(input.getWindowToken(), 0);
+                        imm.hideSoftInputFromWindow(getWindow().getDecorView()
+                                .getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
                     }
                 });
 
@@ -341,7 +342,6 @@ public class MainActivity extends AppCompatActivity {
                 });
 
                 builder.show();
-                input.requestFocus();
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
             }
