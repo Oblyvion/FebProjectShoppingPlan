@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Shopping Plan</string>
+    <string name="imageView_logo">Cooles Logo</string>
+    <string name="hint_editText_AddNewShopItemToCategory">Text eingeben oder Sprache benutzen</string>
+    <string name="speech_prompt">Produkte auflisten und mit \"und\" trennen</string>
+    <string name="speech_not_supported">Sorry! Ihr Gerät unterstützt keine Spracheingabe</string>
+    <string name="tap_on_mic">Mikrofon drücken um zu sprechen</string>
+    <string name="groceries">GespeicherteProdukte</string>
+    <string name="checkmark_description">Häkchen</string>
+    <string name="textViewProductName">Produkt_Name</string>
+    <string name="imageViewProductDescription">IconMitGroßbuchstabe</string>
+    <string name="menuitem_sort">Kategorien sortieren</string>
+    <string name="menuitem_clear">Kategorien leeren!</string>
+    <string name="standardCat0">Obst &amp; Gemüse</string>
+    <string name="standardCat1">Wurst &amp; Molkereiprodukte</string>
+    <string name="standardCat2">Getreideprodukte</string>
+    <string name="standardCat3">Fleisch &amp; Fisch</string>
+    <string name="standardCat4">Hygiene</string>
+    <string name="standardCat5">Fertigprodukte</string>
+    <string name="speech_input_separator">und</string>
+    <string name="speech_string_part1">"Sie haben: "</string>
+    <string name="speech_string_part2">" zur Kategorie"</string>
+    <string name="speech_string_part3">" hinzugefügt!"</string>
+</resources>

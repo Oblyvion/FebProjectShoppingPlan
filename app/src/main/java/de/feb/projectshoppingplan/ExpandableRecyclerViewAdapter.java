@@ -73,6 +73,10 @@ public class ExpandableRecyclerViewAdapter extends com.thoughtbot.expandablerecy
         return false;
     }
 
+    public void onSortCategories() {
+        ExpandableListUtils.notifyCollapseAllGroups(this);
+    }
+
     /**
      * Adds new group.
      */

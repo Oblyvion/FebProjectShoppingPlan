@@ -2,21 +2,24 @@
     <string name="app_name">Shopping Plan</string>
     <string name="imageView_logo">Logo of the most awesome Shopping Plan App</string>
     <string name="hint_editText_AddNewShopItemToCategory">type in new product or use voice</string>|
-    <string name="action_settings">Settings</string>
     <string name="speech_prompt">List your items and separate them with \"and\"</string>
     <string name="speech_not_supported">Sorry! Your device doesn\'t support speech input</string>
     <string name="tap_on_mic">Tap on mic to speak</string>
     <string name="groceries">SavedGroceries</string>
     <string name="checkmark_description">CheckMark</string>
-    <string name="textViewProductName">NameProdukt</string>
+    <string name="textViewProductName">Product_name</string>
     <string name="imageViewProductDescription">IconWithCapitalLetter</string>
     <string name="menuitem_sort">Sort Categories</string>
     <string name="menuitem_clear">Clear Categories!</string>
     <string name="standardCat0">Vegetables &amp; Fruits</string>
     <string name="standardCat1">Sausage &amp; dairy products</string>
     <string name="standardCat2">Cereal products</string>
-    <string name="standardCat3">Meat and fish</string>
+    <string name="standardCat3">Meat &amp; fish</string>
     <string name="standardCat4">Hygiene</string>
     <string name="standardCat5">Convenience</string>
+    <string name="speech_input_separator">and</string>
+    <string name="speech_string_part1">You added:</string>
+    <string name="speech_string_part2">" to the category "</string>
+    <string name="speech_string_part3">!</string>
 
 </resources>

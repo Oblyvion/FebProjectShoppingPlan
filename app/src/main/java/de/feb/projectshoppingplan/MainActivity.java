@@ -51,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
     //Main Liste der Categories (enthält alle Categories und die dazu gehörigen ShopItem Listen)
     public ArrayList<Category> categories = new ArrayList<>();
 
+    private InputMethodManager imm;
+
     /**
      * Loads the categories list when app returned to current activity.
      */
@@ -286,23 +288,24 @@ public class MainActivity extends AppCompatActivity {
 
                 AlertDialog dialog = builder.create();
 
+                imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+                input.requestFocus();
+
                 dialog.setCanceledOnTouchOutside(true);
                 dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
                     @Override
                     public void onCancel(DialogInterface dialog) {
-                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                        imm.hideSoftInputFromWindow(getWindow().getDecorView()
-                                .getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+                        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
                     }
                 });
-
-                Log.d(TAG, "onClick: FOCUS KEYBOARD");
-                //TODO das keyboard sollte nach add group button angezeigt werden => geht aber so nicht!
 
                 // button setup
                 builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        Log.d(TAG, "onClick: HELLO POSITIVE BUTTON");
+
                         dialog.dismiss();
                         //item liste für neue cat erstellen
                         ArrayList<ShopItem> list = new ArrayList<>();
@@ -332,18 +335,20 @@ public class MainActivity extends AppCompatActivity {
                         //saves arrayList categories after added new category group
                         arrayListHelper.saveArrayList(categories, "categories_arraylist");
 
+                        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+                        input.clearFocus();
+
                     }
                 });
                 builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        Log.d(TAG, "onClick: HELLO NEGATIVE BUTTON");
+                        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
                         dialog.cancel();
                     }
                 });
-
                 builder.show();
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
             }
         });
     }
@@ -382,16 +387,13 @@ public class MainActivity extends AppCompatActivity {
      * Sorts the arrayList alphabetically.
      */
     private void sortList() {
-//        Log.d(TAG, "sortList: VORRRRHEEEEEEEEEEEEERRRRRR arrayList = " + categories);
-
         Collections.sort(categories, new Comparator<Category>() {
             @Override
             public int compare(Category catLeft, Category catRight) {
                 return catLeft.getTitle().compareTo(catRight.getTitle());
             }
         });
-
-//        Log.d(TAG, "sortList: NACHHHEEEEEERRRRRRRR arrayList AFTER SORT = " + categories);
+        adapter.onSortCategories();
     }
 
     /**

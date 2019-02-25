@@ -149,8 +149,12 @@ public class ExpandableListUtils {
                 Log.d(TAG, "notifyItemRemoved: shopItem swiped and shopItem removed!");
                 //swiped SHOPITEM
                 ((Category) adapter.getGroups().get(groupPos)).getItems().remove(shopItemPos);
-
                 adapter.notifyItemRemoved(flatPos);
+
+                //group is empty
+                if (((Category) adapter.getGroups().get(groupPos)).getItems().size() < 1) {
+                    adapter.notifyDataSetChanged();
+                }
             }
 
         Context context = view.getContext();
@@ -179,5 +183,11 @@ public class ExpandableListUtils {
         }
         //group has child elements and is clickable
         return true;
+    }
+
+    public static void notifyCollapseAllGroups(ExpandableRecyclerViewAdapter adapter) {
+        for (int i = 0; i < adapter.getGroups().size(); i++) {
+            adapter.expandableList.expandedGroupIndexes[i] = false;
+        }
     }
 }
