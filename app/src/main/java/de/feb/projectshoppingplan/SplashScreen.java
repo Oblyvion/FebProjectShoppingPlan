@@ -17,7 +17,7 @@ public class SplashScreen extends Activity {
         SharedPreferences sharedPreferences = getSharedPreferences("myPrefs", MODE_PRIVATE);
 
         //get splash screen timeOut
-        int splashTimeOut = sharedPreferences.getInt("splashTimeOut", 500);
+        int splashTimeOut = sharedPreferences.getInt("splashTimeOut", 1500);
 
         //start next activity after splash timeOut.
         new Handler().postDelayed(new Runnable() {

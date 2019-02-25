@@ -1,5 +1,6 @@
 package de.feb.projectshoppingplan;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -24,7 +25,9 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+
 import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -277,36 +280,24 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                //Log.d(TAG, "Das ist die Liste vor dem Hinzufügen einer Kategorie: " + categories.toString());
-
                 AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.this);
-                builder.setTitle("Add a new category");
                 View viewInflated = LayoutInflater.from(MainActivity.this).inflate(R.layout.alert_dialog, (ViewGroup) findViewById(android.R.id.content), false);
+
                 // input setup
                 final EditText input = viewInflated.findViewById(R.id.input);
                 builder.setView(viewInflated);
 
-                AlertDialog dialog = builder.create();
-
                 imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-                input.requestFocus();
 
-                dialog.setCanceledOnTouchOutside(true);
-                dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                    @Override
-                    public void onCancel(DialogInterface dialog) {
-                        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-                    }
-                });
+                builder.setCancelable(false);
 
                 // button setup
                 builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Log.d(TAG, "onClick: HELLO POSITIVE BUTTON");
-
                         dialog.dismiss();
+
                         //item liste für neue cat erstellen
                         ArrayList<ShopItem> list = new ArrayList<>();
 
@@ -336,14 +327,12 @@ public class MainActivity extends AppCompatActivity {
                         arrayListHelper.saveArrayList(categories, "categories_arraylist");
 
                         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-                        input.clearFocus();
-
                     }
                 });
                 builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Log.d(TAG, "onClick: HELLO NEGATIVE BUTTON");
+                        Log.d(TAG, "onClick: 3: NEGATIVE BUTTON");
                         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
                         dialog.cancel();
                     }
