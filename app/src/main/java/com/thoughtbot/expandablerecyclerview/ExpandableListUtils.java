@@ -149,8 +149,12 @@ public class ExpandableListUtils {
                 Log.d(TAG, "notifyItemRemoved: shopItem swiped and shopItem removed!");
                 //swiped SHOPITEM
                 ((Category) adapter.getGroups().get(groupPos)).getItems().remove(shopItemPos);
-
                 adapter.notifyItemRemoved(flatPos);
+
+                //group is empty
+                if (((Category) adapter.getGroups().get(groupPos)).getItems().size() < 1) {
+                    adapter.notifyDataSetChanged();
+                }
             }
 
         Context context = view.getContext();

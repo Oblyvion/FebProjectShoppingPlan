@@ -304,6 +304,8 @@ public class MainActivity extends AppCompatActivity {
                 builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        Log.d(TAG, "onClick: HELLO POSITIVE BUTTON");
+
                         dialog.dismiss();
                         //item liste für neue cat erstellen
                         ArrayList<ShopItem> list = new ArrayList<>();
@@ -341,6 +343,8 @@ public class MainActivity extends AppCompatActivity {
                 builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        Log.d(TAG, "onClick: HELLO NEGATIVE BUTTON");
+                        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
                         dialog.cancel();
                     }
                 });

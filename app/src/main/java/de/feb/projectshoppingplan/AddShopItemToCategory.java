@@ -119,14 +119,21 @@ public class AddShopItemToCategory extends AppCompatActivity {
                     public void onItemClick(View view, int position) {
                         //Toast.makeText(getApplicationContext(), "Hallo hier Item Click", Toast.LENGTH_LONG).show();
                         itemList_text.get(position).setChecked(!itemList_text.get(position).checked);
+                        Log.d(TAG, "onItemClick: findDuplicates = " + findDuplicates(itemList_text.get(position)));
+                        //add shopItem
                         if (!findDuplicates(itemList_text.get(position)) && itemList_text.get(position).checked) {
+                            Log.d(TAG, "onItemClick: DUPLICATES WERE NOT FINDED....");
                             itemList_text.get(position).setCheckmark();
-                            Toast.makeText(AddShopItemToCategoryActivity,itemList_text.get(position).name+" added", Toast.LENGTH_SHORT).show();
+
+                            Toast.makeText(AddShopItemToCategoryActivity, itemList_text.get(position).name + " added", Toast.LENGTH_SHORT).show();
+
+                            //TODO SPEICHER ITEM INTO CATEGORIES LIST MAIN
 
                             mediaPlayer.start();
-                        } else {
+                        }
+                        else {
                             itemList_text.get(position).setCheckmark();
-                            Toast.makeText(AddShopItemToCategoryActivity,"deleted!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddShopItemToCategoryActivity, "deleted!", Toast.LENGTH_SHORT).show();
                         }
                         adapter.notifyDataSetChanged();
                     }
@@ -302,13 +309,11 @@ public class AddShopItemToCategory extends AppCompatActivity {
         if (findDuplicates(item)) {
             item.setChecked(true);
             item.setCheckmark();
+            showItemList(item);
+            adapter.notifyDataSetChanged();
+            return;
         }
-
-        if (itemList_text.isEmpty()) {
-            itemList_text.add(item);
-        } else {
-            itemList_text.set(0, item);
-        }
+        showItemList(item);
 
         shopItems.addAll(itemList_text);
 
@@ -316,9 +321,22 @@ public class AddShopItemToCategory extends AppCompatActivity {
 
     }
 
+    /**
+     * Displays itemlist after text input.
+     *
+     * @param item ShopItem
+     */
+    private void showItemList(ShopItem item) {
+        if (itemList_text.isEmpty()) {
+            itemList_text.add(item);
+        } else {
+            itemList_text.set(0, item);
+        }
+    }
+
     public void addToMainList() {
         for (int i = 0; i < shopItems.size(); i++) {
-            if(shopItems.get(i).checked) {
+            if (shopItems.get(i).checked) {
                 ShopItem shopItem = new ShopItem(shopItems.get(i).name);
                 shopItem.setActivity(AddShopItemToCategoryActivity);
                 shopItem.setIcon();
@@ -340,12 +358,21 @@ public class AddShopItemToCategory extends AppCompatActivity {
     //true heißt duplikat gefunden
     //false nicht gefunden
     public boolean findDuplicates(ShopItem item) {
+        Log.d(TAG, "findDuplicates: itemlist_forMain = " + itemList_forMain);
+        Log.d(TAG, "findDuplicates: categories = " + categories);
         for (int i = 0; i < itemList_forMain.size(); i++) {
-
+            Log.d(TAG, "findDuplicates: itemlist_forMain ITEM = " + itemList_forMain.get(i).name);
+//            for (int j = 0; j < categories.get(i).getItems().size(); j++) {
+//                if (((Category) categories.get(i).getItems().get(j)).getTitle().equals(item.name)) {
             if (itemList_forMain.get(i).name.equals(item.name)) {
                 return true;
             }
+//            }
+
+//            if (itemList_forMain.get(i).name.equals(item.name)) {
+//                    return true;
         }
+//            }
         return false;
     }
 }
