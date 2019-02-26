@@ -65,6 +65,7 @@ public class ExpandableListUtils {
 //        Log.d(TAG, "notifyItemMoved: typeTo = " + typeTo);
 
         Category currentGroupFrom = (Category) adapter.getGroups().get(groupIndexFrom);
+        Category currentGroupTo = (Category) adapter.getGroups().get(groupIndexTo);
 
         //move category
         if (typeFrom == 2 && typeTo == 2) {
@@ -109,6 +110,10 @@ public class ExpandableListUtils {
                 Log.d(TAG, "notifyItemMoved: SHOPITEM MOVE");
                 Collections.swap(currentGroupFrom.getItems(), shopItemIndexFrom, shopItemIndexTo);
             }
+            else {
+                Log.d(TAG, "notifyItemMoved: SHOPITEM MOVES INTO OTHER GROUP!");
+                adapter.notifyDataSetChanged();
+            }
     }
 
     /**
@@ -140,7 +145,6 @@ public class ExpandableListUtils {
             adapter.getGroups().remove(groupPos);
             adapter.notifyItemRemoved(flatPos);
         } else
-
             //delete collapsed group
             if (shopItemPos == -1 && !adapter.isGroupExpanded(flatPos)) {
                 Log.d(TAG, "notifyItemRemoved: swiped collapsed group...");
