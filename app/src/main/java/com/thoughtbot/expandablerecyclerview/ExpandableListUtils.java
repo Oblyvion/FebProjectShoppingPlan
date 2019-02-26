@@ -65,13 +65,10 @@ public class ExpandableListUtils {
 //        Log.d(TAG, "notifyItemMoved: typeTo = " + typeTo);
 
         Category currentGroupFrom = (Category) adapter.getGroups().get(groupIndexFrom);
-        Category currentGroupTo = (Category) adapter.getGroups().get(groupIndexTo);
 
         //move category
         if (typeFrom == 2 && typeTo == 2) {
-//            Log.d(TAG, "notifyItemMoved: CATEGORY MOVED");
-
-            Log.d(TAG, "notifyItemMoved: ");
+            Log.d(TAG, "notifyItemMoved: CATEGORY MOVED");
 
             //move category expanded
             if (adapter.isGroupExpanded(flatPosFrom)) {
@@ -81,26 +78,15 @@ public class ExpandableListUtils {
                 //notifiy group moved
                 adapter.notifyItemMoved(flatPosFrom, flatPosTo);
 
-                Log.d(TAG, "notifyItemMoved: flatPos = " + flatPosFrom);
                 //notifiy shopItems of group moved
                 for (int fPosF = flatPosFrom + 1;
                      fPosF <= ((Category) adapter.getGroups().get(groupIndexFrom)).getItemCount();
                      fPosF++) {
                     adapter.notifyItemMoved(fPosF, flatPosTo);
                 }
-                Log.d(TAG, "notifyItemMoved: flatPos = " + flatPosFrom);
-                Log.d(TAG, "notifyItemMoved: flatPos to = " + flatPosTo);
 
-                Log.d(TAG, "notifyItemMoved: isExpanded = " + adapter.isGroupExpanded(flatPosFrom));
-                Log.d(TAG, "notifyItemMoved: isExpanded to = " + adapter.isGroupExpanded(flatPosTo));
-
-                //groupIndexTO is expanded as well
-                if (adapter.isGroupExpanded(flatPosTo)) {
-                    Log.d(TAG, "notifyItemMoved: HELLO");
-                    //expand the groups after swap
-                    adapter.expandableList.expandedGroupIndexes[groupIndexFrom] = true;
-                    adapter.expandableList.expandedGroupIndexes[groupIndexTo] = true;
-                } else {
+                //groupIndexTO is NOT expanded
+                if (!adapter.expandableList.expandedGroupIndexes[groupIndexTo]) {
                     Log.d(TAG, "notifyItemMoved: JAAAAA");
                     //group should be expanded after drag & drop
                     adapter.expandableList.expandedGroupIndexes[groupIndexFrom] = false;
@@ -109,31 +95,19 @@ public class ExpandableListUtils {
                 adapter.notifyDataSetChanged();
                 return;
             }
+//            Log.d(TAG, "notifyItemMoved: COLLAPSED group MOVE");
 
             //move category collapsed
-            Log.d(TAG, "notifyItemMoved: COLLAPSED group MOVE");
             Collections.swap(adapter.getGroups(), groupIndexFrom, groupIndexTo);
-            //groupIndexTO is expanded as well
+
+            //groupIndexTO is expanded
             if (adapter.isGroupExpanded(flatPosTo)) {
-                Log.d(TAG, "notifyItemMoved: HELLO");
                 //expand the groups after swap
                 adapter.expandableList.expandedGroupIndexes[groupIndexFrom] = true;
                 adapter.expandableList.expandedGroupIndexes[groupIndexTo] = false;
+                adapter.notifyDataSetChanged();
             }
-//            else {
-//                Log.d(TAG, "notifyItemMoved: JAAAAA");
-//                //group should be expanded after drag & drop
-//                adapter.expandableList.expandedGroupIndexes[groupIndexFrom] = false;
-//                adapter.expandableList.expandedGroupIndexes[groupIndexTo] = false;
-//            }
-//            if (areAllGroupsCollapsed(adapter)) {
-////                Log.d(TAG, "notifyItemMoved: HALLLJOSADOFJOISAJOIFDSAJ");
-////                Collections.swap(adapter.getGroups(), groupIndexFrom, groupIndexTo);
-////                adapter.notifyItemMoved(flatPosFrom, flatPosTo);
-////            } else
-
-
-            adapter.notifyDataSetChanged();
+//            adapter.notifyDataSetChanged();
         } else
             //move shopItem inside current group
             if (typeFrom == 1 && typeTo == 1 && groupIndexFrom == groupIndexTo) {
@@ -144,23 +118,6 @@ public class ExpandableListUtils {
                 adapter.notifyDataSetChanged();
             }
     }
-
-//    private static boolean areAllGroupsCollapsed(ExpandableRecyclerViewAdapter adapter) {
-//        int count = 0;
-//
-//        for (int i = 0; i < adapter.getGroups().size(); i++) {
-//            Log.d(TAG, "areAllGroupsCollapsed: BLAAAAA " + i);
-//            if (!adapter.expandableList.expandedGroupIndexes[i]) {
-//                count++;
-//            }
-//        }
-//
-//        Log.d(TAG, "areAllGroupsCollapsed: count = " + count);
-//        Log.d(TAG, "areAllGroupsCollapsed: adapter.getGroups().size() - 1 = " + (adapter.getGroups().size() - 1));
-//
-//        return count == adapter.getGroups().size();
-//
-//    }
 
     /**
      * Adapter notifies that item removed.
