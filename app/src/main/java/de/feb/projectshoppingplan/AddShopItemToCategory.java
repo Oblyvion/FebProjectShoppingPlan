@@ -39,7 +39,6 @@ public class AddShopItemToCategory extends AppCompatActivity {
     EditText editText;
     RecyclerView recyclerView;
     List<ShopItem> itemList_text;
-    ArrayList<ShopItem> shopItems = new ArrayList<>();
     List<ShopItem> itemList_voice;
     ListElementAdapterAddShopItemToCategory adapter;
     String categoryName;
@@ -53,7 +52,7 @@ public class AddShopItemToCategory extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         // handle arrow click here
         if (item.getItemId() == android.R.id.home) {
-            close();
+            finish();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -80,6 +79,8 @@ public class AddShopItemToCategory extends AppCompatActivity {
 
         Log.d(TAG, "Categories hier!!: " + categories);
 
+        getShoppingListFromCat();
+
         //get the elements from the activity
         editText = findViewById(R.id.editText_newShopItem);
         EditText editor = new EditText(this);
@@ -92,21 +93,6 @@ public class AddShopItemToCategory extends AppCompatActivity {
         itemList_text = new ArrayList<>();
         itemList_voice = new ArrayList<>();
 
-        // search for category and get item list
-        for (int i = 0; i < categories.size(); i++) {
-            if (categories.get(i).getTitle().equals(categoryName)) {
-                category = categories.get(i);
-                Log.d(TAG, "Category name: " + categoryName);
-                Log.d(TAG, "list of Category: " + category.getItems());
-                Gson gson = new Gson();
-                String json = gson.toJson(category.getItems());
-                itemList_forMain = arrayListHelper.getListFromJson(json);
-                Log.d(TAG, "Hallo hier itemListForMain      " + itemList_forMain.toString());
-                for (int j = 0; j < itemList_forMain.size(); j++) {
-                    Log.d("MyActivity", "Hier einzelnes item *_*: " + itemList_forMain.get(j));
-                }
-            }
-        }
         adapter = new ListElementAdapterAddShopItemToCategory(itemList_text);
 
         recyclerView.setAdapter(adapter);
@@ -122,25 +108,43 @@ public class AddShopItemToCategory extends AppCompatActivity {
                         Log.d(TAG, "onItemClick: findDuplicates = " + findDuplicates(itemList_text.get(position)));
                         //add shopItem
                         if (!findDuplicates(itemList_text.get(position)) && itemList_text.get(position).checked) {
-                            Log.d(TAG, "onItemClick: DUPLICATES WERE NOT FINDED....");
-                            itemList_text.get(position).setCheckmark();
-
                             Toast.makeText(AddShopItemToCategoryActivity, itemList_text.get(position).name + " added", Toast.LENGTH_SHORT).show();
+                            Log.d(TAG, "onItemClick: NO DUPLICATES WERE FOUND....");
+                            itemList_text.get(position).setCheckmark();
+                            itemList_forMain.add(itemList_text.get(position));
 
-                            //TODO SPEICHER ITEM INTO CATEGORIES LIST MAIN
+                            for (int i = 0; i < categories.size(); i++) {
+                                if(categories.get(i).getTitle().equals(categoryName)) {
+                                    categories.get(i).getItems().clear();
+                                    categories.get(i).getItems().addAll(itemList_forMain);
+                                }
+                            }
+                            arrayListHelper.saveArrayList(categories, "categories_arraylist");
 
                             mediaPlayer.start();
                         }
                         else {
                             itemList_text.get(position).setCheckmark();
                             Toast.makeText(AddShopItemToCategoryActivity, "deleted!", Toast.LENGTH_SHORT).show();
+                            for (int i = 0; i < itemList_forMain.size(); i++) {
+                                if(itemList_forMain.get(i).name.equals(itemList_text.get(position).name)) {
+                                    itemList_forMain.remove(i);
+                                }
+                            }
+                            for (int i = 0; i < categories.size(); i++) {
+                                if(categories.get(i).getTitle().equals(categoryName)) {
+                                    categories.get(i).getItems().clear();
+                                    categories.get(i).getItems().addAll(itemList_forMain);
+                                }
+                            }
+                            arrayListHelper.saveArrayList(categories, "categories_arraylist");
                         }
                         adapter.notifyDataSetChanged();
                     }
 
                     @Override
                     public void onLongItemClick(View view, int position) {
-                        close();
+                        finish();
                     }
                 })
         );
@@ -189,7 +193,7 @@ public class AddShopItemToCategory extends AppCompatActivity {
                 final int DRAWABLE_RIGHT = 2;
 
                 if (event.getAction() == MotionEvent.ACTION_UP) {
-                    if (event.getRawX() >= (editText.getRight() - 80 - editText.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                    if (event.getRawX() >= (editText.getRight() - 30 - 2*editText.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
                         Log.d(TAG, "Hallo hier click on voice button!");
                         promptSpeechInput();
                         return true;
@@ -200,17 +204,25 @@ public class AddShopItemToCategory extends AppCompatActivity {
         });
     }
 
-    void close() {
-        addToMainList();
-        finish();
-//        Intent intent = new Intent(this, MainActivity.class);
-//        this.startActivity(intent);
+    private void getShoppingListFromCat() {
+        // search for category and get item list
+        for (int i = 0; i < categories.size(); i++) {
+            if (categories.get(i).getTitle().equals(categoryName)) {
+                category = categories.get(i);
+                Log.d(TAG, "Category name: " + categoryName);
+                Log.d(TAG, "list of Category: " + category.getItems());
+                Gson gson = new Gson();
+                String json = gson.toJson(category.getItems());
+                itemList_forMain = arrayListHelper.getListFromJson(json);
+                Log.d(TAG, "Hallo hier itemListForMain      " + itemList_forMain.toString());
+            }
+        }
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        close();
+        finish();
     }
 
     //initializing speech input
@@ -244,7 +256,7 @@ public class AddShopItemToCategory extends AppCompatActivity {
                     ArrayList<String> result = data
                             .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                     temp_user_input = result.get(0);
-                    Log.d(TAG, "Das ist das ergebnis der sprachsuche: " + temp_user_input);
+                    Log.d(TAG, "Das ist das Ergebnis der Sprachsuche: " + temp_user_input);
                     seperateSpokenWords(temp_user_input);
                 }
                 break;
@@ -253,7 +265,7 @@ public class AddShopItemToCategory extends AppCompatActivity {
     }
 
     private void seperateSpokenWords(String input) {
-        String[] separated = input.split("( and )");
+        String[] separated = input.split("( "+ getString(R.string.speech_input_separator) +" )");
         String added = "";
 
         for (String aSeparated : separated) {
@@ -276,7 +288,7 @@ public class AddShopItemToCategory extends AppCompatActivity {
             }
         }
 
-        Toast.makeText(this, "You added: " + added + " to the category " + categoryName + "!", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, getString(R.string.speech_string_part1) + added + getString(R.string.speech_string_part2) + categoryName + getString(R.string.speech_string_part3), Toast.LENGTH_LONG).show();
         Log.d(TAG, "Das ist die liste: " + this.itemList_voice);
     }
 
@@ -284,14 +296,16 @@ public class AddShopItemToCategory extends AppCompatActivity {
         String result = "";
 
         if (!findDuplicates(item)) {
-            this.itemList_voice.add(item);
+            if(!itemList_voice.contains(item)) {
+                this.itemList_voice.add(item);
+            }
         }
 
         for (int i = 0; i < itemList_voice.size(); i++) {
             if (i == 0) {
                 result = result.concat(itemList_voice.get(i).name);
             } else if (i == itemList_voice.size() - 1) {
-                result = result.concat(" and " + itemList_voice.get(i).name);
+                result = result.concat(" " + getString(R.string.speech_input_separator) + " " + itemList_voice.get(i).name);
             } else result = result.concat(", " + itemList_voice.get(i).name);
         }
         return result;
@@ -315,7 +329,7 @@ public class AddShopItemToCategory extends AppCompatActivity {
         }
         showItemList(item);
 
-        shopItems.addAll(itemList_text);
+        //itemList_forMain.addAll(itemList_text);
 
         adapter.notifyDataSetChanged();
 
@@ -334,45 +348,16 @@ public class AddShopItemToCategory extends AppCompatActivity {
         }
     }
 
-    public void addToMainList() {
-        for (int i = 0; i < shopItems.size(); i++) {
-            if (shopItems.get(i).checked) {
-                ShopItem shopItem = new ShopItem(shopItems.get(i).name);
-                shopItem.setActivity(AddShopItemToCategoryActivity);
-                shopItem.setIcon();
-                itemList_forMain.add(shopItem);
-            }
-        }
-
-        Log.d(TAG, "Hallo hier itemList Main: " + itemList_forMain);
-
-        for (int i = 0; i < categories.size(); i++) {
-            if (categories.get(i).getTitle().equals(categoryName)) {
-                categories.get(i).setItems(itemList_forMain);
-                Log.d(TAG, "Das ist die liste nachdem was geadded wurde: " + categories);
-            }
-        }
-        arrayListHelper.saveArrayList(categories, "categories_arraylist");
-    }
-
     //true heißt duplikat gefunden
     //false nicht gefunden
     public boolean findDuplicates(ShopItem item) {
         Log.d(TAG, "findDuplicates: itemlist_forMain = " + itemList_forMain);
-        Log.d(TAG, "findDuplicates: categories = " + categories);
-        for (int i = 0; i < itemList_forMain.size(); i++) {
-            Log.d(TAG, "findDuplicates: itemlist_forMain ITEM = " + itemList_forMain.get(i).name);
-//            for (int j = 0; j < categories.get(i).getItems().size(); j++) {
-//                if (((Category) categories.get(i).getItems().get(j)).getTitle().equals(item.name)) {
-            if (itemList_forMain.get(i).name.equals(item.name)) {
+        Log.d(TAG, "findDuplicates: categories = " + category.getItems());
+        for (int i = 0; i < category.getItems().size(); i++) {
+//            Log.d(TAG, "findDuplicates: itemlist_forMain ITEM = " + itemList_forMain.get(i).name);
+            if (itemList_forMain.get(i).name.equals(item.name))
                 return true;
             }
-//            }
-
-//            if (itemList_forMain.get(i).name.equals(item.name)) {
-//                    return true;
-        }
-//            }
         return false;
     }
 }
