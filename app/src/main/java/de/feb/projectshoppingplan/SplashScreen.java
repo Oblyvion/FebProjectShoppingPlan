@@ -21,12 +21,12 @@ public class SplashScreen extends Activity {
 
         //start next activity after splash timeOut.
         new Handler().postDelayed(new Runnable() {
-            //Das hier wird NACH dem Time_Out ausgeführt
+            //executes after timeout
             @Override
             public void run() {
-                Intent i = new Intent(SplashScreen.this, MainActivity.class);
+                Intent intent = new Intent(SplashScreen.this, MainActivity.class);
 
-                startActivity(i);
+                startActivity(intent);
 
                 finish();
 

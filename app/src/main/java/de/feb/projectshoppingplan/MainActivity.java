@@ -1,6 +1,5 @@
 package de.feb.projectshoppingplan;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -22,7 +21,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
@@ -67,9 +65,8 @@ public class MainActivity extends AppCompatActivity {
         datachanged();
     }
 
-
     /**
-     * @param menu Options
+     * @param menu Menu
      * @return true: Inflate the menu. This adds items to the action bar if it is present.
      */
     @Override
@@ -98,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
         //finden recycler view
         recyclerView = findViewById(R.id.recyclerViewMain);
 
-        //developer is able to reset all
+        //developer is able to RESET ALL
 //        delete();
 
         loadSharedPreferences();
@@ -136,7 +133,6 @@ public class MainActivity extends AppCompatActivity {
              */
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder fromViewHolder, @NonNull RecyclerView.ViewHolder toViewHolder) {
-
 //                Log.d(TAG, "onMove: itemViewFROM TYPE = " + fromViewHolder.getItemViewType());
 //                Log.d(TAG, "onMove: itemViewTO TYPE = " + toViewHolder.getItemViewType());
 
@@ -226,7 +222,7 @@ public class MainActivity extends AppCompatActivity {
 
                     AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.this);
                     //intro screen is off
-                    if (prefs.getInt("splashTimeOut", 500) != 500) {
+                    if (prefs.getInt("splashTimeOut", 1500) != 1500) {
 
                         builder.setTitle("Do you want to set intro screen ON?");
                     } else builder.setTitle("Do you want to set intro screen OFF?");
@@ -241,8 +237,8 @@ public class MainActivity extends AppCompatActivity {
                             SharedPreferences prefs = recyclerView.getContext().getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
                             SharedPreferences.Editor editor = prefs.edit();
 
-                            if (prefs.getInt("splashTimeOut", 500) != 500)
-                                editor.putInt("splashTimeOut", 500).apply();
+                            if (prefs.getInt("splashTimeOut", 1500) != 1500)
+                                editor.putInt("splashTimeOut", 1500).apply();
                             else editor.putInt("splashTimeOut", 0).apply();
                         }
                     });
@@ -280,6 +276,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+                //create dialog
                 AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.this);
                 View viewInflated = LayoutInflater.from(MainActivity.this).inflate(R.layout.alert_dialog, (ViewGroup) findViewById(android.R.id.content), false);
 
@@ -287,6 +284,7 @@ public class MainActivity extends AppCompatActivity {
                 final EditText input = viewInflated.findViewById(R.id.input);
                 builder.setView(viewInflated);
 
+                //show keyboard
                 imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 
@@ -362,7 +360,6 @@ public class MainActivity extends AppCompatActivity {
             categories.add(cat);
 //            Log.d(TAG, "addStandardCats: cats = " + categories);
         }
-
 
         ShopItem shopItem = new ShopItem("EXAMPLE GROCERY");
         shopItem.setActivity(this);
