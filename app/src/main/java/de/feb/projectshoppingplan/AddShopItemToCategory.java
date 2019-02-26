@@ -65,18 +65,22 @@ public class AddShopItemToCategory extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_shop_item_to_category);
-        Toolbar toolbar = findViewById(R.id.toolbar_add_activity);
-        setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-        }
+
 
         //create music player with free sound "service_bell" from source: http://soundbible.com/2218-Service-Bell-Help.html
         final MediaPlayer mediaPlayer = MediaPlayer.create(AddShopItemToCategory.this, R.raw.service_bell_daniel_simion);
 
         Intent intent = getIntent();
         categoryName = intent.getStringExtra("category_name");
+        Log.d(TAG, "onCreate: category = " + categoryName);
+
+        Toolbar toolbar = findViewById(R.id.toolbar_add_activity);
+        toolbar.setTitle(categoryName);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
 
         categories = arrayListHelper.loadArrayList("categories_arraylist");
 

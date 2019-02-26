@@ -39,10 +39,6 @@ public class MainActivity extends AppCompatActivity {
 
     private final ArrayListUtils arrayListHelper = new ArrayListUtils();
 
-
-    private boolean isMultiSelect = false;
-    //private ArrayList<Integer> selectedIds = new ArrayList<>();
-
     //Categories
     final String[] STANDARD_CATEGORIES = {AppContext.getContext().getString(R.string.standardCat0), AppContext.getContext().getString(R.string.standardCat1),
             AppContext.getContext().getString(R.string.standardCat2), AppContext.getContext().getString(R.string.standardCat3), AppContext.getContext().getString(R.string.standardCat4), AppContext.getContext().getString(R.string.standardCat5)};
@@ -169,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
 
-                if (menuItem.toString().equals("Clear Categories!")) {
+                if (menuItem.toString().equals(getResources().getString(R.string.menuitem_clear))) {
                     Log.d(TAG, "das ist das menu item: " + menuItem);
 
                     AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.this);
@@ -199,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
 
                     builder.show();
                 }
-                if (menuItem.toString().equals("Sort Categories")) {
+                if (menuItem.toString().equals(getResources().getString(R.string.menuitem_sort))) {
                     Log.d("MENUItem", "Menu Item sort");
                     sortList();
                     arrayListHelper.saveArrayList(categories, "categories_arraylist");
@@ -216,8 +212,8 @@ public class MainActivity extends AppCompatActivity {
                     //intro screen is off
                     if (prefs.getInt("splashTimeOut", 1500) != 1500) {
 
-                        builder.setTitle("Do you want to set intro screen ON?");
-                    } else builder.setTitle("Do you want to set intro screen OFF?");
+                        builder.setTitle(R.string.BuilderTitleOn);
+                    } else builder.setTitle(R.string.BuilderTitleOff);
 
                     LayoutInflater.from(MainActivity.this).inflate(R.layout.alert_dialog, (ViewGroup) findViewById(android.R.id.content), false);
 
@@ -275,7 +271,7 @@ public class MainActivity extends AppCompatActivity {
                 // input setup
                 final EditText input = viewInflated.findViewById(R.id.input);
                 builder.setView(viewInflated);
-                builder.setTitle("Add new category:");
+                builder.setTitle(R.string.DialogTitleNewCat);
 
                 //show keyboard
                 imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);

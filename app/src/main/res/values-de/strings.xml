@@ -13,7 +13,7 @@
     <string name="menuitem_sort">Kategorien sortieren</string>
     <string name="menuitem_clear">Kategorien leeren!</string>
     <string name="standardCat0">Obst &amp; Gemüse</string>
-    <string name="standardCat1">Wurst &amp; Molkereiprodukte</string>
+    <string name="standardCat1">Wurst &amp; Milchprodukte</string>
     <string name="standardCat2">Getreideprodukte</string>
     <string name="standardCat3">Fleisch &amp; Fisch</string>
     <string name="standardCat4">Hygiene</string>
@@ -22,4 +22,8 @@
     <string name="speech_string_part1">"Sie haben: "</string>
     <string name="speech_string_part2">" zur Kategorie"</string>
     <string name="speech_string_part3">" hinzugefügt!"</string>
+    <string name="BuilderTitleOn">Intro Bildschirm anschalten?</string>
+    <string name="BuilderTitleOff">Intro Bildschirm ausschalten?</string>
+    <string name="DialogTitleNewCat">Neue Kategorie hinzufügen:</string>
+    <string name="hintEditTextNewCat">Besseres sortieren - Großbuchstabe am Anfang benutzen</string>
 </resources>
