@@ -62,18 +62,22 @@ public class AddShopItemToCategory extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_shop_item_to_category);
-        Toolbar toolbar = findViewById(R.id.toolbar_add_activity);
-        setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-        }
+
 
         //create music player with free sound "service_bell" from source: http://soundbible.com/2218-Service-Bell-Help.html
         final MediaPlayer mediaPlayer = MediaPlayer.create(AddShopItemToCategory.this, R.raw.service_bell_daniel_simion);
 
         Intent intent = getIntent();
         categoryName = intent.getStringExtra("category_name");
+        Log.d(TAG, "onCreate: category = " + categoryName);
+
+        Toolbar toolbar = findViewById(R.id.toolbar_add_activity);
+        toolbar.setTitle(categoryName);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
 
         categories = arrayListHelper.loadArrayList("categories_arraylist");
 
@@ -114,7 +118,7 @@ public class AddShopItemToCategory extends AppCompatActivity {
                             itemList_forMain.add(itemList_text.get(position));
 
                             for (int i = 0; i < categories.size(); i++) {
-                                if(categories.get(i).getTitle().equals(categoryName)) {
+                                if (categories.get(i).getTitle().equals(categoryName)) {
                                     categories.get(i).getItems().clear();
                                     categories.get(i).getItems().addAll(itemList_forMain);
                                 }
@@ -122,17 +126,16 @@ public class AddShopItemToCategory extends AppCompatActivity {
                             arrayListHelper.saveArrayList(categories, "categories_arraylist");
 
                             mediaPlayer.start();
-                        }
-                        else {
+                        } else {
                             itemList_text.get(position).setCheckmark();
                             Toast.makeText(AddShopItemToCategoryActivity, "deleted!", Toast.LENGTH_SHORT).show();
                             for (int i = 0; i < itemList_forMain.size(); i++) {
-                                if(itemList_forMain.get(i).name.equals(itemList_text.get(position).name)) {
+                                if (itemList_forMain.get(i).name.equals(itemList_text.get(position).name)) {
                                     itemList_forMain.remove(i);
                                 }
                             }
                             for (int i = 0; i < categories.size(); i++) {
-                                if(categories.get(i).getTitle().equals(categoryName)) {
+                                if (categories.get(i).getTitle().equals(categoryName)) {
                                     categories.get(i).getItems().clear();
                                     categories.get(i).getItems().addAll(itemList_forMain);
                                 }
@@ -193,7 +196,7 @@ public class AddShopItemToCategory extends AppCompatActivity {
                 final int DRAWABLE_RIGHT = 2;
 
                 if (event.getAction() == MotionEvent.ACTION_UP) {
-                    if (event.getRawX() >= (editText.getRight() - 30 - 2*editText.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                    if (event.getRawX() >= (editText.getRight() - 30 - 2 * editText.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
                         Log.d(TAG, "Hallo hier click on voice button!");
                         promptSpeechInput();
                         return true;
@@ -265,7 +268,7 @@ public class AddShopItemToCategory extends AppCompatActivity {
     }
 
     private void seperateSpokenWords(String input) {
-        String[] separated = input.split("( "+ getString(R.string.speech_input_separator) +" )");
+        String[] separated = input.split("( " + getString(R.string.speech_input_separator) + " )");
         String added = "";
 
         for (String aSeparated : separated) {
@@ -296,7 +299,7 @@ public class AddShopItemToCategory extends AppCompatActivity {
         String result = "";
 
         if (!findDuplicates(item)) {
-            if(!itemList_voice.contains(item)) {
+            if (!itemList_voice.contains(item)) {
                 this.itemList_voice.add(item);
             }
         }
@@ -357,7 +360,7 @@ public class AddShopItemToCategory extends AppCompatActivity {
 //            Log.d(TAG, "findDuplicates: itemlist_forMain ITEM = " + itemList_forMain.get(i).name);
             if (itemList_forMain.get(i).name.equals(item.name))
                 return true;
-            }
+        }
         return false;
     }
 }
