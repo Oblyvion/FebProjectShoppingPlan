@@ -1,28 +1,17 @@
 package de.feb.projectshoppingplan;
 
-import android.widget.Toast;
-
-import com.thoughtbot.expandablecheckrecyclerview.models.CheckedExpandableGroup;
+import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class Category extends CheckedExpandableGroup {
+public class Category extends ExpandableGroup {
+    /**
+     * creates a category with a title and a list of ShopItems
+     * @param title - String, title of the category
+     * @param items - ArrayList<ShopItem>, ShopItem list of the category
+     */
     Category(String title, ArrayList<ShopItem> items) {
         super(title, items);
     }
 
-    @Override
-    public void onChildClicked(int childIndex, boolean checked) {
-        
-    }
-
-    /**
-     * Insert shopItem list into category.
-     * @param list ArrayList<ShopItem>
-     */
-    void setItems(ArrayList<ShopItem> list) {
-        this.getItems().clear();
-        this.getItems().addAll(list);
-    }
 }

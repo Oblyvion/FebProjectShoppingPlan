@@ -5,15 +5,21 @@ import android.content.Context;
 
 public class AppContext extends Application {
 
-        private static Context mContext;
+    private static Context mContext;
 
-        @Override
-        public void onCreate() {
-            super.onCreate();
-            mContext = this;
-        }
+    /**
+     * Initializes the Context field mContext with the current applications context
+     */
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        mContext = this.getApplicationContext();
+    }
 
-        public static Context getContext(){
-            return mContext;
-        }
+    /**
+     * @return the context of the application
+     */
+    public static Context getContext() {
+        return mContext;
+    }
 }

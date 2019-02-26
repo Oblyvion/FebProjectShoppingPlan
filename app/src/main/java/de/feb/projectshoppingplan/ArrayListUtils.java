@@ -15,7 +15,7 @@ public class ArrayListUtils {
 
     //TAG logcat
     private final static String TAG = "MyActivity";
-    //Main Liste der Categories (enthält alle Categories und die dazu gehörigen ShopItem Listen)
+    //Main list of Categories (contains all Categories and the corresponding ShopItem lists)
     private ArrayList<Category> categories = new ArrayList<>();
 
     public ArrayListUtils() {
@@ -28,17 +28,9 @@ public class ArrayListUtils {
      */
     ArrayList<ShopItem> getListFromJson(String json){
         Gson gson = new Gson();
-        Type type = new TypeToken<ArrayList<ShopItem>>() {
-        }.getType();
-        Log.d(TAG, "getListFromJson: JSON HIER: " + json);
-
+        Type type = new TypeToken<ArrayList<ShopItem>>() {}.getType();
+        //Log.d(TAG, "getListFromJson: JSON HIER: " + json);
         ArrayList<ShopItem> shopis = gson.fromJson(json, type);
-
-        //Log.d(TAG, "HALLO HIER DIE SHOPITEM LIST IN GETLISTFROMJSON: "+gson.fromJson(json, type));
-        //ArrayList<ShopItem> shopis = gson.fromJson(json, type);
-        for (int i = 0; i < shopis.size(); i++) {
-            Log.d(TAG, "die einzelnen namen der shop items: " + shopis.get(i).name);
-        }
         return shopis;
     }
 
@@ -53,29 +45,29 @@ public class ArrayListUtils {
         Gson gson = new Gson();
         String json = gson.toJson(list);
         editor.putString(key, json);
-        editor.apply();     // This line is IMPORTANT !!!
+        editor.apply();
     }
 
     /**
-     * Loads shared preferences with name myPrefs.
-     * @param key string
+     * Loads shared preferences with name myPrefs and gets Arraylist<Category>
+     * @param key string which determines which SharedPreferences key will be loaded
      * @return ArrayList<Category>
      */
     ArrayList<Category> loadArrayList(String key) {
         //Log.d(TAG, "Categories vor .clear(): "+categories+"\n");
-        //Categories löschen bevor alles aus den Shared Preferences hinzugefügt wird
+        //Delete Categories before adding everything from Shared Preferences
         categories.clear();
-        //Shared Preferences abrufen
+        //get Shared Preferences myPrefs
         SharedPreferences prefs = AppContext.getContext().getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
-        //Neues gson Objekt erzeugen
+        //create new Gson object
         Gson gson = new Gson();
-        //Json string aus Shared Preferences abrufen
+        //get json string of Shared Preferences
         String json = prefs.getString(key, null);
-        //Type angeben damit Gson weiß in welchen Typ Json konvertiert werden soll
+        //specify type so that Gson knows which type Json should be converted to
         Type type = new TypeToken<ArrayList<Category>>() {}.getType();
-        //der categories Liste den zu einer ArrayList<Category> konvertierten Json String hinzufügen
+        //add the Json string converted to an ArrayList<Category> to the categories list
         categories = gson.fromJson(json, type);
-        //Log.d(TAG, "HALLO HIER DIE CATEGORY LIST IN LOAD: "+categories);
+        //Log.d(TAG, "DIE CATEGORY LIST IN LOAD: "+categories);
         return categories;
     }
 

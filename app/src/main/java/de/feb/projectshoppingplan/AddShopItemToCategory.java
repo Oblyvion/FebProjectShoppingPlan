@@ -3,9 +3,7 @@ package de.feb.projectshoppingplan;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 
 import android.media.MediaPlayer;
 import android.speech.RecognizerIntent;
@@ -26,9 +24,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 public class AddShopItemToCategory extends AppCompatActivity {
@@ -52,8 +48,8 @@ public class AddShopItemToCategory extends AppCompatActivity {
     /**
      * Back button functionality gets defined
      *
-     * @param item - Menu item which was clicked
-     * @return
+     * @param item - Menu item which was selected
+     * @return constructor from upper class
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -88,12 +84,10 @@ public class AddShopItemToCategory extends AppCompatActivity {
 
         getShoppingListFromCat();
 
-        //get the elements from the activity
+        //get the elements of the activity
         editText = findViewById(R.id.editText_newShopItem);
         EditText editor = new EditText(this);
         editor.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
-
-        final SharedPreferences sharedPreferences = this.getPreferences(Context.MODE_PRIVATE);
 
         recyclerView = findViewById(R.id.recyclerView);
 
@@ -112,15 +106,15 @@ public class AddShopItemToCategory extends AppCompatActivity {
          */
         recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getApplicationContext(), recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
                     /**
-                     * * Recognizes a click on an item
+                     * * Triggers: short click on an item, if item is not in list of category yet it will be added otherwise it is going to be deleted
+                     *
                      */
                     @Override
                     public void onItemClick(View view, int position) {
-                        //Toast.makeText(getApplicationContext(), "Hallo hier Item Click", Toast.LENGTH_LONG).show();
                         itemList_text.get(position).setChecked(!itemList_text.get(position).checked);
                         Log.d(TAG, "onItemClick: findDuplicates = " + findDuplicates(itemList_text, itemList_text.get(position)));
                         //add shopItem
-                        if (!findDuplicates(itemList_forMain ,itemList_text.get(position)) && itemList_text.get(position).checked) {
+                        if (!findDuplicates(itemList_forMain, itemList_text.get(position)) && itemList_text.get(position).checked) {
                             Toast.makeText(AddShopItemToCategoryActivity, itemList_text.get(position).name + " added", Toast.LENGTH_SHORT).show();
                             Log.d(TAG, "onItemClick: NO DUPLICATES WERE FOUND....");
                             itemList_text.get(position).setCheckmark();
@@ -132,7 +126,6 @@ public class AddShopItemToCategory extends AppCompatActivity {
                                     categories.get(i).getItems().addAll(itemList_forMain);
                                 }
                             }
-                            arrayListHelper.saveArrayList(categories, "categories_arraylist");
 
                             mediaPlayer.start();
                         } else {
@@ -141,6 +134,7 @@ public class AddShopItemToCategory extends AppCompatActivity {
                             for (int i = 0; i < itemList_forMain.size(); i++) {
                                 if (itemList_forMain.get(i).name.equals(itemList_text.get(position).name)) {
                                     itemList_forMain.remove(i);
+                                    ViewHolderShopI.delete(itemList_forMain.get(i));
                                 }
                             }
                             for (int i = 0; i < categories.size(); i++) {
@@ -149,13 +143,13 @@ public class AddShopItemToCategory extends AppCompatActivity {
                                     categories.get(i).getItems().addAll(itemList_forMain);
                                 }
                             }
-                            arrayListHelper.saveArrayList(categories, "categories_arraylist");
                         }
+                        arrayListHelper.saveArrayList(categories, "categories_arraylist");
                         adapter.notifyDataSetChanged();
                     }
 
                     /**
-                     * * Recognizes a long click on an item
+                     * * Recognizes a long click on an item and finishes the activity
                      */
                     @Override
                     public void onLongItemClick(View view, int position) {
@@ -164,18 +158,15 @@ public class AddShopItemToCategory extends AppCompatActivity {
                 })
         );
 
-        //make editText respond directly when the activity starts
+        //makes editText respond directly when the activity starts
         editText.requestFocus();
 
-        /**
-         * Notifies if text changed
-         */
+
+        // editText addTextChangedListener - Notifies if text changed
         editText.addTextChangedListener(new TextWatcher() {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                Log.d(TAG, "onCreate: CharSequence TextWatcher = " + s);
-
             }
 
             @Override
@@ -184,19 +175,10 @@ public class AddShopItemToCategory extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                SharedPreferences.Editor sharedPrefEditor;
-                String sharedPrefsKey = "Grocery";
-
                 if (s.toString().length() > 1) {
                     temp_user_input = s.toString();
-                    Log.d(TAG, "TEMP USER INPUT 1: " + temp_user_input);
                     addtoRecyclerViewandgiveIcon(temp_user_input);
-//                    if (s.charAt(s.length() - 1) == '\n') {
-                    sharedPrefEditor = sharedPreferences.edit();
-                    sharedPrefEditor.putString(sharedPrefsKey + temp_user_input, temp_user_input);
-                    sharedPrefEditor.apply();
-//                    Log.d(TAG, "afterTextChanged: if sharedPrefs = " + sharedPreferences.getString(sharedPrefsKey + "Hgzuuh", "no gro"));
-//                    }
+
                 } else {
                     if (!itemList_text.isEmpty()) {
                         itemList_text.remove(0);
@@ -206,9 +188,8 @@ public class AddShopItemToCategory extends AppCompatActivity {
             }
         });
 
-        /**
-         * editText onTouchListener - triggers if voice button is clicked
-         */
+
+        //editText onTouchListener - triggers if voice button is clicked
         editText.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -297,6 +278,7 @@ public class AddShopItemToCategory extends AppCompatActivity {
 
     /**
      * Separates the string which is passed to the function and adds it to the categories list
+     *
      * @param input - Voice Input of the user
      */
     private void seperateSpokenWords(String input) {
@@ -328,7 +310,6 @@ public class AddShopItemToCategory extends AppCompatActivity {
     }
 
     /**
-     *
      * @param item - item to check if duplicates where found
      * @return separated String which is now concatenated for the Toast message
      */
@@ -353,6 +334,7 @@ public class AddShopItemToCategory extends AppCompatActivity {
 
     /**
      * Creates new item out of user input,
+     *
      * @param text - user text input
      */
     public void addtoRecyclerViewandgiveIcon(String text) {
@@ -390,7 +372,6 @@ public class AddShopItemToCategory extends AppCompatActivity {
     }
 
     /**
-     *
      * @param list - list in which duplicates will be searched
      * @param item - item which is searched in list
      * @return - returns if duplicates were found (true) or not (false)

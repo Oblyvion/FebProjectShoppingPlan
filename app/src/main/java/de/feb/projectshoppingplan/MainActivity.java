@@ -169,11 +169,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
 
-                if (!isMultiSelect) {
-                    //selectedIds = new ArrayList<>();
-                    isMultiSelect = true;
-                }
-
                 if (menuItem.toString().equals("Clear Categories!")) {
                     Log.d(TAG, "das ist das menu item: " + menuItem);
 
@@ -186,9 +181,6 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
-
-                            //lässt Kategorie-Erweiterungspfeile verschwinden
-//                        showCategoryNotExpandable();
 
                             clearAllCategories();
 
@@ -342,10 +334,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Delete all categories.
+     * delete all ShopItems from each category
      */
     private void clearAllCategories() {
         for (int i = 0; i < categories.size(); i++) {
+            for (int j = 0; j < categories.get(i).getItems().size(); j++) {
+                ViewHolderShopI.delete((ShopItem)categories.get(i).getItems().get(j));
+            }
             categories.get(i).getItems().clear();
         }
         adapter.notifyDataSetChanged();
@@ -385,6 +380,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Deletes all shared preferences with name myPrefs.
+     * these shared preferences are containing the whole shopping list with categories and shop items
      */
     public void delete() {
         this.getSharedPreferences("myPrefs", 0).edit().clear().apply();
