@@ -286,6 +286,7 @@ public class MainActivity extends AppCompatActivity {
                 // input setup
                 final EditText input = viewInflated.findViewById(R.id.input);
                 builder.setView(viewInflated);
+                builder.setTitle("Add new category:");
 
                 imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);

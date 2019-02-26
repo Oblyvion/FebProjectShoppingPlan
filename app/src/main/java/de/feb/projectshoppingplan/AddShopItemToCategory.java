@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -38,8 +39,8 @@ public class AddShopItemToCategory extends AppCompatActivity {
     String temp_user_input;
     EditText editText;
     RecyclerView recyclerView;
-    List<ShopItem> itemList_text;
-    List<ShopItem> itemList_voice;
+    ArrayList<ShopItem> itemList_text;
+    ArrayList<ShopItem> itemList_voice;
     ListElementAdapterAddShopItemToCategory adapter;
     String categoryName;
     ArrayList<Category> categories = new ArrayList<>();
@@ -48,6 +49,12 @@ public class AddShopItemToCategory extends AppCompatActivity {
     Activity AddShopItemToCategoryActivity = this;
     private final ArrayListUtils arrayListHelper = new ArrayListUtils(this);
 
+    /**
+     * Back button functionality gets defined
+     *
+     * @param item - Menu item which was clicked
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // handle arrow click here
@@ -100,21 +107,27 @@ public class AddShopItemToCategory extends AppCompatActivity {
         LinearLayoutManager LayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(LayoutManager);
 
+        /**
+         * Recognizes a click on an item
+         */
         recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getApplicationContext(), recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+                    /**
+                     * * Recognizes a click on an item
+                     */
                     @Override
                     public void onItemClick(View view, int position) {
                         //Toast.makeText(getApplicationContext(), "Hallo hier Item Click", Toast.LENGTH_LONG).show();
                         itemList_text.get(position).setChecked(!itemList_text.get(position).checked);
-                        Log.d(TAG, "onItemClick: findDuplicates = " + findDuplicates(itemList_text.get(position)));
+                        Log.d(TAG, "onItemClick: findDuplicates = " + findDuplicates(itemList_text, itemList_text.get(position)));
                         //add shopItem
-                        if (!findDuplicates(itemList_text.get(position)) && itemList_text.get(position).checked) {
+                        if (!findDuplicates(itemList_forMain ,itemList_text.get(position)) && itemList_text.get(position).checked) {
                             Toast.makeText(AddShopItemToCategoryActivity, itemList_text.get(position).name + " added", Toast.LENGTH_SHORT).show();
                             Log.d(TAG, "onItemClick: NO DUPLICATES WERE FOUND....");
                             itemList_text.get(position).setCheckmark();
                             itemList_forMain.add(itemList_text.get(position));
 
                             for (int i = 0; i < categories.size(); i++) {
-                                if(categories.get(i).getTitle().equals(categoryName)) {
+                                if (categories.get(i).getTitle().equals(categoryName)) {
                                     categories.get(i).getItems().clear();
                                     categories.get(i).getItems().addAll(itemList_forMain);
                                 }
@@ -122,17 +135,16 @@ public class AddShopItemToCategory extends AppCompatActivity {
                             arrayListHelper.saveArrayList(categories, "categories_arraylist");
 
                             mediaPlayer.start();
-                        }
-                        else {
+                        } else {
                             itemList_text.get(position).setCheckmark();
                             Toast.makeText(AddShopItemToCategoryActivity, "deleted!", Toast.LENGTH_SHORT).show();
                             for (int i = 0; i < itemList_forMain.size(); i++) {
-                                if(itemList_forMain.get(i).name.equals(itemList_text.get(position).name)) {
+                                if (itemList_forMain.get(i).name.equals(itemList_text.get(position).name)) {
                                     itemList_forMain.remove(i);
                                 }
                             }
                             for (int i = 0; i < categories.size(); i++) {
-                                if(categories.get(i).getTitle().equals(categoryName)) {
+                                if (categories.get(i).getTitle().equals(categoryName)) {
                                     categories.get(i).getItems().clear();
                                     categories.get(i).getItems().addAll(itemList_forMain);
                                 }
@@ -142,6 +154,9 @@ public class AddShopItemToCategory extends AppCompatActivity {
                         adapter.notifyDataSetChanged();
                     }
 
+                    /**
+                     * * Recognizes a long click on an item
+                     */
                     @Override
                     public void onLongItemClick(View view, int position) {
                         finish();
@@ -152,7 +167,11 @@ public class AddShopItemToCategory extends AppCompatActivity {
         //make editText respond directly when the activity starts
         editText.requestFocus();
 
+        /**
+         * Notifies if text changed
+         */
         editText.addTextChangedListener(new TextWatcher() {
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 //                Log.d(TAG, "onCreate: CharSequence TextWatcher = " + s);
@@ -187,13 +206,16 @@ public class AddShopItemToCategory extends AppCompatActivity {
             }
         });
 
+        /**
+         * editText onTouchListener - triggers if voice button is clicked
+         */
         editText.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 final int DRAWABLE_RIGHT = 2;
 
                 if (event.getAction() == MotionEvent.ACTION_UP) {
-                    if (event.getRawX() >= (editText.getRight() - 30 - 2*editText.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                    if (event.getRawX() >= (editText.getRight() - 30 - 2 * editText.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
                         Log.d(TAG, "Hallo hier click on voice button!");
                         promptSpeechInput();
                         return true;
@@ -204,6 +226,9 @@ public class AddShopItemToCategory extends AppCompatActivity {
         });
     }
 
+    /**
+     * Get the shop item list of the chosen category
+     */
     private void getShoppingListFromCat() {
         // search for category and get item list
         for (int i = 0; i < categories.size(); i++) {
@@ -219,12 +244,18 @@ public class AddShopItemToCategory extends AppCompatActivity {
         }
     }
 
+    /**
+     * Overrides onBackPressed(), so that the back button is working
+     */
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         finish();
     }
 
+    /**
+     * Opens speech input activity
+     */
     //initializing speech input
     private void promptSpeechInput() {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
@@ -264,8 +295,12 @@ public class AddShopItemToCategory extends AppCompatActivity {
         }
     }
 
+    /**
+     * Separates the string which is passed to the function and adds it to the categories list
+     * @param input - Voice Input of the user
+     */
     private void seperateSpokenWords(String input) {
-        String[] separated = input.split("( "+ getString(R.string.speech_input_separator) +" )");
+        String[] separated = input.split("( " + getString(R.string.speech_input_separator) + " )");
         String added = "";
 
         for (String aSeparated : separated) {
@@ -292,11 +327,16 @@ public class AddShopItemToCategory extends AppCompatActivity {
         Log.d(TAG, "Das ist die liste: " + this.itemList_voice);
     }
 
+    /**
+     *
+     * @param item - item to check if duplicates where found
+     * @return separated String which is now concatenated for the Toast message
+     */
     private String addVoiceItemsToList(ShopItem item) {
         String result = "";
 
-        if (!findDuplicates(item)) {
-            if(!itemList_voice.contains(item)) {
+        if (!findDuplicates(itemList_forMain, item)) {
+            if (!findDuplicates(itemList_voice, item)) {
                 this.itemList_voice.add(item);
             }
         }
@@ -311,6 +351,10 @@ public class AddShopItemToCategory extends AppCompatActivity {
         return result;
     }
 
+    /**
+     * Creates new item out of user input,
+     * @param text - user text input
+     */
     public void addtoRecyclerViewandgiveIcon(String text) {
         temp_user_input = text;
         Log.d(TAG, "TEMP USER INPUT 2: " + temp_user_input);
@@ -320,7 +364,7 @@ public class AddShopItemToCategory extends AppCompatActivity {
         item.setIcon();
         item.setCheckmark();
 
-        if (findDuplicates(item)) {
+        if (findDuplicates(itemList_forMain, item)) {
             item.setChecked(true);
             item.setCheckmark();
             showItemList(item);
@@ -329,14 +373,10 @@ public class AddShopItemToCategory extends AppCompatActivity {
         }
         showItemList(item);
 
-        //itemList_forMain.addAll(itemList_text);
-
-        adapter.notifyDataSetChanged();
-
     }
 
     /**
-     * Displays itemlist after text input.
+     * Adds items to itemList_text and Displays itemlist after text input.
      *
      * @param item ShopItem
      */
@@ -346,18 +386,21 @@ public class AddShopItemToCategory extends AppCompatActivity {
         } else {
             itemList_text.set(0, item);
         }
+        adapter.notifyDataSetChanged();
     }
 
-    //true heißt duplikat gefunden
-    //false nicht gefunden
-    public boolean findDuplicates(ShopItem item) {
-        Log.d(TAG, "findDuplicates: itemlist_forMain = " + itemList_forMain);
-        Log.d(TAG, "findDuplicates: categories = " + category.getItems());
-        for (int i = 0; i < category.getItems().size(); i++) {
-//            Log.d(TAG, "findDuplicates: itemlist_forMain ITEM = " + itemList_forMain.get(i).name);
-            if (itemList_forMain.get(i).name.equals(item.name))
+    /**
+     *
+     * @param list - list in which duplicates will be searched
+     * @param item - item which is searched in list
+     * @return - returns if duplicates were found (true) or not (false)
+     */
+    public boolean findDuplicates(ArrayList<ShopItem> list, ShopItem item) {
+        getShoppingListFromCat();
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).name.equals(item.name))
                 return true;
-            }
+        }
         return false;
     }
 }

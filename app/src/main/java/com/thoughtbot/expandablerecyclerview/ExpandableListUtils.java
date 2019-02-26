@@ -13,6 +13,8 @@ import java.util.Collections;
 
 import de.feb.projectshoppingplan.ArrayListUtils;
 import de.feb.projectshoppingplan.Category;
+import de.feb.projectshoppingplan.ShopItem;
+import de.feb.projectshoppingplan.ViewHolderShopI;
 
 public class ExpandableListUtils {
 
@@ -148,6 +150,7 @@ public class ExpandableListUtils {
             } else {
                 Log.d(TAG, "notifyItemRemoved: shopItem swiped and shopItem removed!");
                 //swiped SHOPITEM
+                ViewHolderShopI.delete((ShopItem)((Category) adapter.getGroups().get(groupPos)).getItems().get(shopItemPos));
                 ((Category) adapter.getGroups().get(groupPos)).getItems().remove(shopItemPos);
                 adapter.notifyItemRemoved(flatPos);
 
