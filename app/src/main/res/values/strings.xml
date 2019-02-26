@@ -19,7 +19,7 @@
     <string name="standardCat5">Convenience</string>
     <string name="speech_input_separator">and</string>
     <string name="speech_string_part1">You added:</string>
-    <string name="speech_string_part2">" to the category "</string>
+    <string name="speech_string_part2">E</string>
     <string name="speech_string_part3">!</string>
 
 </resources>

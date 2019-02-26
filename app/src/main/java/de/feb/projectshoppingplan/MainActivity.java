@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     //Recyclerview declaration
     RecyclerView recyclerView;
 
-    private final ArrayListUtils arrayListHelper = new ArrayListUtils(this);
+    private final ArrayListUtils arrayListHelper = new ArrayListUtils();
 
 
     private boolean isMultiSelect = false;
@@ -174,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
                     isMultiSelect = true;
                 }
 
-                if (menuItem.toString().equals("Clear Categories!")) {
+                if (menuItem.toString().equals(getResources().getString(R.string.menuitem_clear))) {
                     Log.d(TAG, "das ist das menu item: " + menuItem);
 
                     AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.this);
@@ -207,7 +207,7 @@ public class MainActivity extends AppCompatActivity {
 
                     builder.show();
                 }
-                if (menuItem.toString().equals("Sort Categories")) {
+                if (menuItem.toString().equals(getResources().getString(R.string.menuitem_sort))) {
                     Log.d("MENUItem", "Menu Item sort");
                     sortList();
                     arrayListHelper.saveArrayList(categories, "categories_arraylist");
@@ -283,6 +283,7 @@ public class MainActivity extends AppCompatActivity {
                 // input setup
                 final EditText input = viewInflated.findViewById(R.id.input);
                 builder.setView(viewInflated);
+                builder.setTitle("Add new category:");
 
                 //show keyboard
                 imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);

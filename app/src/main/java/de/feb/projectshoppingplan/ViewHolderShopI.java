@@ -14,12 +14,10 @@ import android.widget.TextView;
 
 import com.thoughtbot.expandablerecyclerview.viewholders.ChildViewHolder;
 
-import java.util.Random;
-
 import static android.content.Context.MODE_PRIVATE;
 
 
-class ViewHolderShopI extends ChildViewHolder {
+public class ViewHolderShopI extends ChildViewHolder {
 
     private ImageView imageViewShopI;
     private TextView textViewShopI;
@@ -27,24 +25,26 @@ class ViewHolderShopI extends ChildViewHolder {
     private ArrayAdapter<String> adapter;
     private View view;
     private boolean clicked = false;
-    //private int random;
     /**
      * Creates shopItem viewHolder.
      * @param view View
      */
     ViewHolderShopI(final View view) {
         super(view);
-        this.view = view;
 
         imageViewShopI = view.findViewById(R.id.imageViewShopItem);
         textViewShopI = view.findViewById(R.id.textViewShopItem);
         spinnerShopI = view.findViewById(R.id.spinnerShopItem);
 
+        this.view = view;
+
+        saveClicked("No");
+        saveSpinnerValue(true);
+
         view.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-
                 if (!clicked) {
                     textViewShopI.setPaintFlags(textViewShopI.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                     v.setBackground(ContextCompat.getDrawable(AppContext.getContext(), R.drawable.border));
@@ -60,9 +60,6 @@ class ViewHolderShopI extends ChildViewHolder {
                 }
             }
         });
-
-        //TODO REQUIRED? // Löscht eben die SharedPreferences zum Speichern von dem Spinner und ob es durchgestrichen ist oder nicht
-        //delete();
 
         //spinner dropDown list content array
         final String[] numberShopI = new String[100];
@@ -85,9 +82,8 @@ class ViewHolderShopI extends ChildViewHolder {
         imageViewShopI.setImageBitmap(shopItem.icon);
         spinnerShopI.setAdapter(adapter);
         String temp = this.getClicked();
-        //random = new Random().nextInt(100) + 20;
 
-        if (temp == null) {
+        if(temp == null) {
             temp = "No";
         }
         if (temp.equals("Yes")) {
@@ -112,7 +108,7 @@ class ViewHolderShopI extends ChildViewHolder {
             //saves spinner value
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                saveSpinnerValue();
+                saveSpinnerValue(false);
             }
 
             @Override
@@ -121,16 +117,20 @@ class ViewHolderShopI extends ChildViewHolder {
         });
     }
 
+    public static void delete(ShopItem item) {
+        AppContext.getContext().getSharedPreferences(item.name+"clicked", 0).edit().clear().apply();
+        AppContext.getContext().getSharedPreferences(item.name+"spinnervalue", 0).edit().clear().apply();
+    }
 
     private void saveClicked(String clickedYesNo) {
-        SharedPreferences sharedPref = spinnerShopI.getContext().getSharedPreferences(textViewShopI.getText().toString()+"clicked",MODE_PRIVATE);
+        SharedPreferences sharedPref = AppContext.getContext().getSharedPreferences(textViewShopI.getText().toString()+"clicked",MODE_PRIVATE);
         SharedPreferences.Editor prefEditor = sharedPref.edit();
         prefEditor.putString("ClickedYesNo", clickedYesNo);
         prefEditor.apply();
     }
 
     private String getClicked() {
-        SharedPreferences sharedPref = spinnerShopI.getContext().getSharedPreferences(textViewShopI.getText().toString()+"clicked",MODE_PRIVATE);
+        SharedPreferences sharedPref = AppContext.getContext().getSharedPreferences(textViewShopI.getText().toString()+"clicked",MODE_PRIVATE);
         return sharedPref.getString("ClickedYesNo",null);
     }
 
@@ -138,10 +138,16 @@ class ViewHolderShopI extends ChildViewHolder {
     /**
      * Saves spinner value.
      */
-    private void saveSpinnerValue() {
-        String userChoice = spinnerShopI.getSelectedItem().toString();
+    private void saveSpinnerValue(boolean newitem) {
+        String userChoice;
+        if(newitem) {
+            userChoice = "0";
+        }
+        else {
+            userChoice = spinnerShopI.getSelectedItem().toString();
+        }
         Log.d("hallo", "save: "+userChoice);
-        SharedPreferences sharedPref = spinnerShopI.getContext().getSharedPreferences(textViewShopI.getText().toString(),MODE_PRIVATE);
+        SharedPreferences sharedPref = AppContext.getContext().getSharedPreferences(textViewShopI.getText().toString()+"spinnervalue",MODE_PRIVATE);
         SharedPreferences.Editor prefEditor = sharedPref.edit();
         prefEditor.putString("userChoiceSpinner",userChoice);
         prefEditor.apply();
@@ -151,7 +157,7 @@ class ViewHolderShopI extends ChildViewHolder {
      * Gets spinner value.
      */
     private void getSpinnerValue() {
-        SharedPreferences sharedPref = spinnerShopI.getContext().getSharedPreferences(textViewShopI.getText().toString(),MODE_PRIVATE);
+        SharedPreferences sharedPref = AppContext.getContext().getSharedPreferences(textViewShopI.getText().toString()+"spinnervalue",MODE_PRIVATE);
         String spinnerValue = sharedPref.getString("userChoiceSpinner",null);
         if(spinnerValue != null) {
             // set the selected value of the spinner

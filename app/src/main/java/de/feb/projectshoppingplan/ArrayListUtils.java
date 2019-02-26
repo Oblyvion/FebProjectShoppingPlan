@@ -15,12 +15,10 @@ public class ArrayListUtils {
 
     //TAG logcat
     private final static String TAG = "MyActivity";
-    private Activity act;
     //Main Liste der Categories (enthält alle Categories und die dazu gehörigen ShopItem Listen)
     private ArrayList<Category> categories = new ArrayList<>();
 
-    public ArrayListUtils(Activity activity) {
-        this.act = activity;
+    public ArrayListUtils() {
     }
 
     /**
@@ -50,7 +48,7 @@ public class ArrayListUtils {
      * @param key String
      */
     public void saveArrayList(ArrayList<Category> list, String key) {
-        SharedPreferences prefs = act.getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
+        SharedPreferences prefs = AppContext.getContext().getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         Gson gson = new Gson();
         String json = gson.toJson(list);
@@ -68,7 +66,7 @@ public class ArrayListUtils {
         //Categories löschen bevor alles aus den Shared Preferences hinzugefügt wird
         categories.clear();
         //Shared Preferences abrufen
-        SharedPreferences prefs = act.getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
+        SharedPreferences prefs = AppContext.getContext().getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
         //Neues gson Objekt erzeugen
         Gson gson = new Gson();
         //Json string aus Shared Preferences abrufen
