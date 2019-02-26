@@ -71,50 +71,96 @@ public class ExpandableListUtils {
         if (typeFrom == 2 && typeTo == 2) {
 //            Log.d(TAG, "notifyItemMoved: CATEGORY MOVED");
 
+            Log.d(TAG, "notifyItemMoved: ");
+
             //move category expanded
             if (adapter.isGroupExpanded(flatPosFrom)) {
                 Log.d(TAG, "notifyItemMoved: EXPANDED group MOVE");
                 Collections.swap(adapter.getGroups(), groupIndexFrom, groupIndexTo);
 
                 //notifiy group moved
-                adapter.notifyItemMoved(flatPosFrom, --flatPosTo);
+                adapter.notifyItemMoved(flatPosFrom, flatPosTo);
 
+                Log.d(TAG, "notifyItemMoved: flatPos = " + flatPosFrom);
                 //notifiy shopItems of group moved
-                for (flatPosFrom += 1; flatPosFrom <= ((Category) adapter.getGroups().get(groupIndexFrom)).getItemCount(); flatPosFrom++) {
-                    adapter.notifyItemMoved(flatPosFrom, flatPosTo);
+                for (int fPosF = flatPosFrom + 1;
+                     fPosF <= ((Category) adapter.getGroups().get(groupIndexFrom)).getItemCount();
+                     fPosF++) {
+                    adapter.notifyItemMoved(fPosF, flatPosTo);
                 }
+                Log.d(TAG, "notifyItemMoved: flatPos = " + flatPosFrom);
+                Log.d(TAG, "notifyItemMoved: flatPos to = " + flatPosTo);
 
-                //group should be expanded after drag & drop
-                adapter.expandableList.expandedGroupIndexes[groupIndexFrom] = false;
-                adapter.expandableList.expandedGroupIndexes[groupIndexTo] = true;
+                Log.d(TAG, "notifyItemMoved: isExpanded = " + adapter.isGroupExpanded(flatPosFrom));
+                Log.d(TAG, "notifyItemMoved: isExpanded to = " + adapter.isGroupExpanded(flatPosTo));
 
+                //groupIndexTO is expanded as well
+                if (adapter.isGroupExpanded(flatPosTo)) {
+                    Log.d(TAG, "notifyItemMoved: HELLO");
+                    //expand the groups after swap
+                    adapter.expandableList.expandedGroupIndexes[groupIndexFrom] = true;
+                    adapter.expandableList.expandedGroupIndexes[groupIndexTo] = true;
+                } else {
+                    Log.d(TAG, "notifyItemMoved: JAAAAA");
+                    //group should be expanded after drag & drop
+                    adapter.expandableList.expandedGroupIndexes[groupIndexFrom] = false;
+                    adapter.expandableList.expandedGroupIndexes[groupIndexTo] = true;
+                }
                 adapter.notifyDataSetChanged();
                 return;
             }
 
-            //move group collapsed
+            //move category collapsed
             Log.d(TAG, "notifyItemMoved: COLLAPSED group MOVE");
             Collections.swap(adapter.getGroups(), groupIndexFrom, groupIndexTo);
-
-            //groupIndexTo is expanded
+            //groupIndexTO is expanded as well
             if (adapter.isGroupExpanded(flatPosTo)) {
-//                Log.d(TAG, "notifyItemMoved: groupTo is expanded = " + flatPosTo);
-                //expand the group after swap
+                Log.d(TAG, "notifyItemMoved: HELLO");
+                //expand the groups after swap
                 adapter.expandableList.expandedGroupIndexes[groupIndexFrom] = true;
                 adapter.expandableList.expandedGroupIndexes[groupIndexTo] = false;
             }
+//            else {
+//                Log.d(TAG, "notifyItemMoved: JAAAAA");
+//                //group should be expanded after drag & drop
+//                adapter.expandableList.expandedGroupIndexes[groupIndexFrom] = false;
+//                adapter.expandableList.expandedGroupIndexes[groupIndexTo] = false;
+//            }
+//            if (areAllGroupsCollapsed(adapter)) {
+////                Log.d(TAG, "notifyItemMoved: HALLLJOSADOFJOISAJOIFDSAJ");
+////                Collections.swap(adapter.getGroups(), groupIndexFrom, groupIndexTo);
+////                adapter.notifyItemMoved(flatPosFrom, flatPosTo);
+////            } else
+
+
             adapter.notifyDataSetChanged();
         } else
             //move shopItem inside current group
             if (typeFrom == 1 && typeTo == 1 && groupIndexFrom == groupIndexTo) {
                 Log.d(TAG, "notifyItemMoved: SHOPITEM MOVE");
                 Collections.swap(currentGroupFrom.getItems(), shopItemIndexFrom, shopItemIndexTo);
-            }
-            else {
+            } else {
                 Log.d(TAG, "notifyItemMoved: SHOPITEM MOVES INTO OTHER GROUP!");
                 adapter.notifyDataSetChanged();
             }
     }
+
+//    private static boolean areAllGroupsCollapsed(ExpandableRecyclerViewAdapter adapter) {
+//        int count = 0;
+//
+//        for (int i = 0; i < adapter.getGroups().size(); i++) {
+//            Log.d(TAG, "areAllGroupsCollapsed: BLAAAAA " + i);
+//            if (!adapter.expandableList.expandedGroupIndexes[i]) {
+//                count++;
+//            }
+//        }
+//
+//        Log.d(TAG, "areAllGroupsCollapsed: count = " + count);
+//        Log.d(TAG, "areAllGroupsCollapsed: adapter.getGroups().size() - 1 = " + (adapter.getGroups().size() - 1));
+//
+//        return count == adapter.getGroups().size();
+//
+//    }
 
     /**
      * Adapter notifies that item removed.
@@ -153,7 +199,7 @@ public class ExpandableListUtils {
             } else {
                 Log.d(TAG, "notifyItemRemoved: shopItem swiped and shopItem removed!");
                 //swiped SHOPITEM
-                ViewHolderShopI.delete((ShopItem)((Category) adapter.getGroups().get(groupPos)).getItems().get(shopItemPos));
+                ViewHolderShopI.delete((ShopItem) ((Category) adapter.getGroups().get(groupPos)).getItems().get(shopItemPos));
                 ((Category) adapter.getGroups().get(groupPos)).getItems().remove(shopItemPos);
                 adapter.notifyItemRemoved(flatPos);
 
@@ -171,7 +217,8 @@ public class ExpandableListUtils {
 
     /**
      * Adapter notifies that group is not clickable.
-     * @param adapter ExpandableRecyclerViewAdapter
+     *
+     * @param adapter      ExpandableRecyclerViewAdapter
      * @param flatPosGroup int
      * @return true: Group has children, thus group is clickable.
      * false: If group content size < 1 => group is empty and not clickable.
