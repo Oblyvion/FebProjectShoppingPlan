@@ -36,7 +36,7 @@ class LetterIconProvider {
     private final Bitmap mDefaultBitmap;
 
     /**
-     * Constructor for <code>LetterIconProvider</code>
+     * Constructor for LetterIconProvider
      *
      * @param context The {@link Context} to use
      */
@@ -73,7 +73,7 @@ class LetterIconProvider {
         if (round) {
             Paint paint = new Paint();
             paint.setStyle(Paint.Style.FILL);
-            //Entscheidet über die Farbe des runden Icons neben einem Produkt
+            //decides about the color of the circle of each item
             paint.setColor(pickColor(key));
             c.drawCircle(width/2, height/2 , width/2, paint);
         } else {

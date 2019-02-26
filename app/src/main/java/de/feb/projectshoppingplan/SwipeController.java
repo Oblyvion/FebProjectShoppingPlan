@@ -29,7 +29,6 @@ public class SwipeController extends Callback {
 
     @Override
     public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-        Log.d(TAG, "onSwiped: da passiert was");
         Log.d(TAG, "onSwiped: direction = " + direction);
 
         adapter.swipeItem(viewHolder.getAdapterPosition());

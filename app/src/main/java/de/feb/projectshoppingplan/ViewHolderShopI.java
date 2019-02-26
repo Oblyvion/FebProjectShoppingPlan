@@ -38,9 +38,7 @@ public class ViewHolderShopI extends ChildViewHolder {
 
         this.view = view;
 
-        saveClicked("No");
-        saveSpinnerValue(true);
-
+        //Shop item onClickListener, triggers if ShopItem was clicked
         view.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -74,8 +72,8 @@ public class ViewHolderShopI extends ChildViewHolder {
     }
 
     /**
-     * Builds shopItem itemView.
-     * @param shopItem ShopItem
+     * Binds shopItem to itemView.
+     * @param shopItem ShopItem which is going to be bound
      */
     void bind(ShopItem shopItem) {
         textViewShopI.setText(shopItem.name);
@@ -83,6 +81,7 @@ public class ViewHolderShopI extends ChildViewHolder {
         spinnerShopI.setAdapter(adapter);
         String temp = this.getClicked();
 
+        //decide if item should be displayed striked or normal
         if(temp == null) {
             temp = "No";
         }
@@ -117,11 +116,20 @@ public class ViewHolderShopI extends ChildViewHolder {
         });
     }
 
+    /**
+     * deletes the SharedPreferences of an item if this item was deleted
+     * @param item - item which was deleted from the categories list
+     *             - the SharedPreferences of this item are going to be deleted
+     */
     public static void delete(ShopItem item) {
         AppContext.getContext().getSharedPreferences(item.name+"clicked", 0).edit().clear().apply();
         AppContext.getContext().getSharedPreferences(item.name+"spinnervalue", 0).edit().clear().apply();
     }
 
+    /**
+     * Saves the value of each ShopItem if the view was clicked or not in SharedPreferences
+     * @param clickedYesNo -
+     */
     private void saveClicked(String clickedYesNo) {
         SharedPreferences sharedPref = AppContext.getContext().getSharedPreferences(textViewShopI.getText().toString()+"clicked",MODE_PRIVATE);
         SharedPreferences.Editor prefEditor = sharedPref.edit();
@@ -129,6 +137,10 @@ public class ViewHolderShopI extends ChildViewHolder {
         prefEditor.apply();
     }
 
+    /**
+     * gets SharedPreferences of each ShopItem if the view was clicked or not
+     * @return if view was clicked or not (loaded from SharedPreferences)
+     */
     private String getClicked() {
         SharedPreferences sharedPref = AppContext.getContext().getSharedPreferences(textViewShopI.getText().toString()+"clicked",MODE_PRIVATE);
         return sharedPref.getString("ClickedYesNo",null);
@@ -136,7 +148,7 @@ public class ViewHolderShopI extends ChildViewHolder {
 
 
     /**
-     * Saves spinner value.
+     * Saves spinner value of each ShopItem.
      */
     private void saveSpinnerValue(boolean newitem) {
         String userChoice;
@@ -154,7 +166,7 @@ public class ViewHolderShopI extends ChildViewHolder {
     }
 
     /**
-     * Gets spinner value.
+     * Gets spinner value of each ShopItem.
      */
     private void getSpinnerValue() {
         SharedPreferences sharedPref = AppContext.getContext().getSharedPreferences(textViewShopI.getText().toString()+"spinnervalue",MODE_PRIVATE);
