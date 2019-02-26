@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     //Recyclerview declaration
     RecyclerView recyclerView;
 
-    private final ArrayListUtils arrayListHelper = new ArrayListUtils(this);
+    private final ArrayListUtils arrayListHelper = new ArrayListUtils();
 
 
     private boolean isMultiSelect = false;

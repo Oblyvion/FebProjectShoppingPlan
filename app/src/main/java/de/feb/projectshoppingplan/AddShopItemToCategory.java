@@ -47,7 +47,7 @@ public class AddShopItemToCategory extends AppCompatActivity {
     ArrayList<ShopItem> itemList_forMain = new ArrayList<>();
     Category category;
     Activity AddShopItemToCategoryActivity = this;
-    private final ArrayListUtils arrayListHelper = new ArrayListUtils(this);
+    private final ArrayListUtils arrayListHelper = new ArrayListUtils();
 
     /**
      * Back button functionality gets defined

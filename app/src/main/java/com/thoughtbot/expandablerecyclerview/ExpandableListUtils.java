@@ -27,8 +27,7 @@ public class ExpandableListUtils {
      * @param view    View
      */
     public static void notifyGroupDataChanged(ExpandableRecyclerViewAdapter adapter, View view) {
-        Context context = view.getContext();
-        ArrayListUtils arrayListUtils = new ArrayListUtils((Activity) context);
+        ArrayListUtils arrayListUtils = new ArrayListUtils();
         Log.d(TAG, "Das ist Arraylist vor save: " + (ArrayList<Category>) adapter.getGroups());
         arrayListUtils.saveArrayList((ArrayList<Category>) adapter.getGroups(), "categories_arraylist");
         adapter.expandableList.expandedGroupIndexes = new boolean[adapter.getGroups().size()];
@@ -160,8 +159,7 @@ public class ExpandableListUtils {
                 }
             }
 
-        Context context = view.getContext();
-        ArrayListUtils arrayListUtils = new ArrayListUtils((Activity) context);
+        ArrayListUtils arrayListUtils = new ArrayListUtils();
         arrayListUtils.saveArrayList((ArrayList<Category>) adapter.getGroups(), "categories_arraylist");
         Log.d(TAG, "notifyItemRemoved: SAVE THIS =" + (ArrayList<Category>) adapter.getGroups());
 
