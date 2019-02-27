@@ -95,7 +95,7 @@ public class ExpandableListUtils {
                 }
                 //notify adapter
                 adapter.notifyDataSetChanged();
-                Log.d(TAG, "notifyItemMoved: expandableList = " + adapter.expandableList.);
+//                Log.d(TAG, "notifyItemMoved: expandableList = " + adapter.expandableList.);
 //                return;
             } else {
                 Log.d(TAG, "notifyItemMoved: COLLAPSED group MOVE");
