@@ -15,7 +15,10 @@ public class ShopItem implements Parcelable {
     private transient Activity activity;
     transient Drawable checkmark;
 
-
+    /**
+     * Contains all functions to build a item view for adding new shop item.
+     * @param name String for a new shopItem.
+     */
     ShopItem(String name) {
         this.name = name;
     }

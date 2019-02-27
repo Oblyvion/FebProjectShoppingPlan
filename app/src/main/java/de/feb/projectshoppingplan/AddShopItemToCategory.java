@@ -105,9 +105,7 @@ public class AddShopItemToCategory extends AppCompatActivity {
         LinearLayoutManager LayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(LayoutManager);
 
-        /**
-         * Recognizes a click on an item
-         */
+        //Recognizes a click on an item
         recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getApplicationContext(), recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
                     /**
                      * * Triggers: short click on an item, if item is not in list of category yet it will be added otherwise it is going to be deleted

@@ -14,6 +14,9 @@ public class ListElementAdapterAddShopItemToCategory extends RecyclerView.Adapte
 
     private List<ShopItem> itemList;
 
+    /**
+     * Contains all functions to build a item view for adding new shop item.
+     */
     class MyViewHolder extends RecyclerView.ViewHolder {
         TextView name;
         ImageView imageViewIcon, imageViewCheckMark;

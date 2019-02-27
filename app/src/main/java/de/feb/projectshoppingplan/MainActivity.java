@@ -155,8 +155,10 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
+        //creates controller and helper for swipe gesture implementation
         SwipeController swipeController = new SwipeController();
         ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeController);
+        //adds touchHelper to recyclerView
         itemTouchhelper.attachToRecyclerView(recyclerView);
 
         datachanged();

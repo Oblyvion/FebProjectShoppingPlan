@@ -8,6 +8,7 @@ import android.os.Handler;
 
 public class SplashScreen extends Activity {
 
+    //shows splash screen on startup
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
