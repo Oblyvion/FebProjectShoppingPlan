@@ -35,6 +35,7 @@ public class SwipeController extends Callback {
         Log.d(TAG, "onSwiped: direction = " + direction);
 
         adapter.swipeItem(viewHolder.getAdapterPosition());
+//        adapter.notifyDataSetChanged();   //TODO AUF JEDEN FALL LOESCHEN!!!
     }
 
     @Override

@@ -85,6 +85,8 @@ public class ExpandableListUtils {
                     adapter.notifyItemMoved(fPosF, flatPosTo);
                 }
 
+                Log.d(TAG, "notifyItemMoved: HUHUUUU");
+
                 //groupIndexTO is NOT expanded
                 if (!adapter.expandableList.expandedGroupIndexes[groupIndexTo]) {
                     //group should be expanded after drag & drop
@@ -93,21 +95,23 @@ public class ExpandableListUtils {
                 }
                 //notify adapter
                 adapter.notifyDataSetChanged();
-                return;
-            }
-//            Log.d(TAG, "notifyItemMoved: COLLAPSED group MOVE");
+                Log.d(TAG, "notifyItemMoved: expandableList = " + adapter.expandableList.);
+//                return;
+            } else {
+                Log.d(TAG, "notifyItemMoved: COLLAPSED group MOVE");
 
-            //swap category collapsed
-            Collections.swap(adapter.getGroups(), groupIndexFrom, groupIndexTo);
+                //swap category collapsed
+                Collections.swap(adapter.getGroups(), groupIndexFrom, groupIndexTo);
 
-            //groupIndexTO is expanded
-            if (adapter.isGroupExpanded(flatPosTo)) {
-                //expand the groups after swap
-                adapter.expandableList.expandedGroupIndexes[groupIndexFrom] = true;
-                adapter.expandableList.expandedGroupIndexes[groupIndexTo] = false;
-                adapter.notifyDataSetChanged();
-            }
+                //groupIndexTO is expanded
+                if (adapter.isGroupExpanded(flatPosTo)) {
+                    //expand the groups after swap
+                    adapter.expandableList.expandedGroupIndexes[groupIndexFrom] = true;
+                    adapter.expandableList.expandedGroupIndexes[groupIndexTo] = false;
+                    adapter.notifyDataSetChanged();
+                }
 //            adapter.notifyDataSetChanged();   //TODO LOESCHEN?
+            }
         } else
             //move shopItem inside current group
             if (typeFrom == 1 && typeTo == 1 && groupIndexFrom == groupIndexTo) {
@@ -136,8 +140,8 @@ public class ExpandableListUtils {
         int size = ((Category) adapter.getGroups().get(groupPos)).getItems().size();
 
         //swiped GROUP
-        if (shopItemPos == -1 && adapter.isGroupExpanded(flatPos)) {
-//            Log.d(TAG, "notifyItemRemoved: group swiped and group is expanded... " + adapter.isGroupExpanded(flatPos));
+        if (shopItemPos == -1 && adapter.isGroupExpanded(groupPos)) {
+            Log.d(TAG, "notifyItemRemoved: group swiped and group is expanded... " + adapter.isGroupExpanded(flatPos));
 
             //delete all children
             for (int i = size - 1; i >= 0; i--) {
@@ -176,7 +180,7 @@ public class ExpandableListUtils {
     /**
      * Adapter notifies that group is not clickable.
      *
-     * @param adapter ExpandableRecyclerViewAdapter in which the data should be changed.
+     * @param adapter      ExpandableRecyclerViewAdapter in which the data should be changed.
      * @param flatPosGroup int Flat position of layout.
      * @return true: Group has children, thus group is clickable.
      * false: If group content size < 1 => group is empty and not clickable.
@@ -197,6 +201,7 @@ public class ExpandableListUtils {
 
     /**
      * Adapter notifies that all groups are collapsed.
+     *
      * @param adapter ExpandableRecyclerViewAdapter in which the data should be changed.
      */
     public static void notifyCollapseAllGroups(ExpandableRecyclerViewAdapter adapter) {
