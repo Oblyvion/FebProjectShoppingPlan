@@ -1,14 +1,11 @@
 package com.thoughtbot.expandablerecyclerview;
 
-import android.app.Activity;
-import android.content.Context;
 import android.util.Log;
 import android.view.View;
 
 import com.thoughtbot.expandablerecyclerview.models.ExpandableListPosition;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 
 import de.feb.projectshoppingplan.ArrayListUtils;
@@ -23,13 +20,16 @@ public class ExpandableListUtils {
     /**
      * Adapter notifies that group added.
      *
-     * @param adapter ExpandableRecyclerViewAdapter
-     * @param view    View
+     * @param adapter ExpandableRecyclerViewAdapter in which the data should be changed.
+     * @param view    View in which should the adapter notifies its data.
      */
     public static void notifyGroupDataChanged(ExpandableRecyclerViewAdapter adapter, View view) {
         ArrayListUtils arrayListUtils = new ArrayListUtils();
-        Log.d(TAG, "Das ist Arraylist vor save: " + (ArrayList<Category>) adapter.getGroups());
+
+        //        Log.d(TAG, "Das ist Arraylist vor save: " + (ArrayList<Category>) adapter.getGroups());
         arrayListUtils.saveArrayList((ArrayList<Category>) adapter.getGroups(), "categories_arraylist");
+
+        //add new expandable group and collapse all existing groups
         adapter.expandableList.expandedGroupIndexes = new boolean[adapter.getGroups().size()];
         for (int i = 0; i < adapter.getGroups().size(); i++) {
             adapter.expandableList.expandedGroupIndexes[i] = false;
@@ -39,7 +39,7 @@ public class ExpandableListUtils {
     /**
      * Adapter notifies that item moved.
      *
-     * @param adapter     ExpandableRecyclerViewAdapter
+     * @param adapter     ExpandableRecyclerViewAdapter in which the data should be changed.
      * @param flatPosFrom int: Flat position of layout.
      * @param flatPosTo   int: Flat position of layout.
      */
@@ -87,17 +87,17 @@ public class ExpandableListUtils {
 
                 //groupIndexTO is NOT expanded
                 if (!adapter.expandableList.expandedGroupIndexes[groupIndexTo]) {
-                    Log.d(TAG, "notifyItemMoved: JAAAAA");
                     //group should be expanded after drag & drop
                     adapter.expandableList.expandedGroupIndexes[groupIndexFrom] = false;
                     adapter.expandableList.expandedGroupIndexes[groupIndexTo] = true;
                 }
+                //notify adapter
                 adapter.notifyDataSetChanged();
                 return;
             }
 //            Log.d(TAG, "notifyItemMoved: COLLAPSED group MOVE");
 
-            //move category collapsed
+            //swap category collapsed
             Collections.swap(adapter.getGroups(), groupIndexFrom, groupIndexTo);
 
             //groupIndexTO is expanded
@@ -107,14 +107,14 @@ public class ExpandableListUtils {
                 adapter.expandableList.expandedGroupIndexes[groupIndexTo] = false;
                 adapter.notifyDataSetChanged();
             }
-//            adapter.notifyDataSetChanged();
+//            adapter.notifyDataSetChanged();   //TODO LOESCHEN?
         } else
             //move shopItem inside current group
             if (typeFrom == 1 && typeTo == 1 && groupIndexFrom == groupIndexTo) {
-                Log.d(TAG, "notifyItemMoved: SHOPITEM MOVE");
+//                Log.d(TAG, "notifyItemMoved: SHOPITEM MOVE");
                 Collections.swap(currentGroupFrom.getItems(), shopItemIndexFrom, shopItemIndexTo);
             } else {
-                Log.d(TAG, "notifyItemMoved: SHOPITEM MOVES INTO OTHER GROUP!");
+                //shopItem moves into another group
                 adapter.notifyDataSetChanged();
             }
     }
@@ -122,16 +122,17 @@ public class ExpandableListUtils {
     /**
      * Adapter notifies that item removed.
      *
-     * @param adapter ExpandableRecyclerViewAdapter
-     * @param flatPos int
-     * @param view    View
+     * @param adapter ExpandableRecyclerViewAdapter in which the data should be changed.
+     * @param flatPos int Flat position of layout.
      */
-    public static void notifyItemRemoved(ExpandableRecyclerViewAdapter adapter, int flatPos, View view) {
+    public static void notifyItemRemoved(ExpandableRecyclerViewAdapter adapter, int flatPos) {
+        //TODO BUG FIXEN
         ExpandableListPosition itemPosition = adapter.expandableList.getUnflattenedPosition(flatPos);
 
         int groupPos = itemPosition.groupPos;
         int shopItemPos = itemPosition.childPos;
 
+        //number of categories
         int size = ((Category) adapter.getGroups().get(groupPos)).getItems().size();
 
         //swiped GROUP
@@ -166,17 +167,17 @@ public class ExpandableListUtils {
                 }
             }
 
+        //saves the new arrayList
         ArrayListUtils arrayListUtils = new ArrayListUtils();
         arrayListUtils.saveArrayList((ArrayList<Category>) adapter.getGroups(), "categories_arraylist");
-        Log.d(TAG, "notifyItemRemoved: SAVE THIS =" + (ArrayList<Category>) adapter.getGroups());
-
+//        Log.d(TAG, "notifyItemRemoved: SAVE THIS =" + (ArrayList<Category>) adapter.getGroups());
     }
 
     /**
      * Adapter notifies that group is not clickable.
      *
-     * @param adapter      ExpandableRecyclerViewAdapter
-     * @param flatPosGroup int
+     * @param adapter ExpandableRecyclerViewAdapter in which the data should be changed.
+     * @param flatPosGroup int Flat position of layout.
      * @return true: Group has children, thus group is clickable.
      * false: If group content size < 1 => group is empty and not clickable.
      */
@@ -187,13 +188,17 @@ public class ExpandableListUtils {
 
         //if group size < 1, than group is empty
         if (((Category) adapter.getGroups().get(groupPosition)).getItems().size() < 1) {
-            Log.d(TAG, "notifyGroupNotClickable: group < 1");
+//            Log.d(TAG, "notifyGroupNotClickable: group < 1");
             return false;
         }
         //group has child elements and is clickable
         return true;
     }
 
+    /**
+     * Adapter notifies that all groups are collapsed.
+     * @param adapter ExpandableRecyclerViewAdapter in which the data should be changed.
+     */
     public static void notifyCollapseAllGroups(ExpandableRecyclerViewAdapter adapter) {
         for (int i = 0; i < adapter.getGroups().size(); i++) {
             adapter.expandableList.expandedGroupIndexes[i] = false;

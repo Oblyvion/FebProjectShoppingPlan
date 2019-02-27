@@ -44,13 +44,14 @@ class ViewHolderCat extends GroupViewHolder implements View.OnClickListener {
         }
         else imageViewCatArrow.setImageDrawable(ContextCompat.getDrawable(imageViewCatArrow.getContext(), R.drawable.ic_keyboard_arrow_down_black_24dp));
 
+        //starts new intent to add a new category
         imageViewCatAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Log.d(TAG, "ViewHolderCat Click Add Button");
+//                Log.d(TAG, "ViewHolderCat Click Add Button");
                 Intent intent = new Intent(context, AddShopItemToCategory.class);
-                Log.d(TAG, "ViewHolderCat CategoryName: " + textViewCat.getText());
+//                Log.d(TAG, "ViewHolderCat CategoryName: " + textViewCat.getText());
                 intent.putExtra("category_name", textViewCat.getText());
                 context.startActivity(intent);
             }

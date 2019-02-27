@@ -90,7 +90,7 @@ public class ExpandableRecyclerViewAdapter extends com.thoughtbot.expandablerecy
      */
     void swipeItem(int flatPos) {
         Log.d(TAG, "swipeItem: SWIPE NOW!");
-        ExpandableListUtils.notifyItemRemoved(this, flatPos, view);
+        ExpandableListUtils.notifyItemRemoved(this, flatPos);
     }
 
     @Override
@@ -103,6 +103,9 @@ public class ExpandableRecyclerViewAdapter extends com.thoughtbot.expandablerecy
         return false;
     }
 
+    /**
+     * Sorts all categories alphabetically.
+     */
     void onSortCategories() {
         ExpandableListUtils.notifyCollapseAllGroups(this);
     }

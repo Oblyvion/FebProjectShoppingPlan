@@ -25,6 +25,7 @@ public class ViewHolderShopI extends ChildViewHolder {
     private ArrayAdapter<String> adapter;
     private View view;
     private boolean clicked = false;
+
     /**
      * Creates shopItem viewHolder.
      * @param view View

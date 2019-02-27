@@ -9,6 +9,9 @@ import android.util.Log;
 
 import static android.support.v7.widget.helper.ItemTouchHelper.*;
 
+/**
+ * Has all functions to handle swipe gestures.
+ */
 public class SwipeController extends Callback {
 
     //TAG logcat
