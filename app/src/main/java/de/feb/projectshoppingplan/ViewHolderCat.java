@@ -57,11 +57,17 @@ class ViewHolderCat extends GroupViewHolder implements View.OnClickListener {
         });
     }
 
+    /**
+     * expands the group
+     */
     @Override
     public void expand() {
         animateExpand();
     }
 
+    /**
+     * collapses the group
+     */
     @Override
     public void collapse() {
         animateCollapse();
