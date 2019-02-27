@@ -128,15 +128,15 @@ public class AddShopItemToCategory extends AppCompatActivity {
                                     categories.get(i).getItems().addAll(itemList_forMain);
                                 }
                             }
-
+                            arrayListHelper.saveArrayList(categories, "categories_arraylist");
                             mediaPlayer.start();
                         } else {
                             itemList_text.get(position).setCheckmark();
                             Toast.makeText(AddShopItemToCategoryActivity, "deleted!", Toast.LENGTH_SHORT).show();
                             for (int i = 0; i < itemList_forMain.size(); i++) {
                                 if (itemList_forMain.get(i).name.equals(itemList_text.get(position).name)) {
-                                    itemList_forMain.remove(i);
                                     ViewHolderShopI.delete(itemList_forMain.get(i));
+                                    itemList_forMain.remove(i);
                                 }
                             }
                             for (int i = 0; i < categories.size(); i++) {
@@ -145,8 +145,8 @@ public class AddShopItemToCategory extends AppCompatActivity {
                                     categories.get(i).getItems().addAll(itemList_forMain);
                                 }
                             }
+                            arrayListHelper.saveArrayList(categories, "categories_arraylist");
                         }
-                        arrayListHelper.saveArrayList(categories, "categories_arraylist");
                         adapter.notifyDataSetChanged();
                     }
 
