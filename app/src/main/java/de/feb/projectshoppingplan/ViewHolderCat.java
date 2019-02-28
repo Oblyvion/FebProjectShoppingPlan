@@ -38,7 +38,7 @@ class ViewHolderCat extends GroupViewHolder implements View.OnClickListener {
     void bind(final Category category) {
         textViewCat.setText(category.getTitle());
 
-//        Log.d("VIEWHOLDERCAT", "BIND: size: " + category.getItems().size());
+        Log.d("VIEWHOLDERCAT", "BIND: size: " + category.getItems().size());
         if (category.getItems().size() < 1) {
             imageViewCatArrow.setImageDrawable(ContextCompat.getDrawable(imageViewCatArrow.getContext(),R.drawable.leer));
         }

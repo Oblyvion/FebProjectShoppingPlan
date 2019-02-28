@@ -17,6 +17,9 @@ public class ExpandableListUtils {
 
     private static final String TAG = "LISTUTILS";
 
+    private static ArrayListUtils arrayListUtils = new ArrayListUtils();
+
+
     /**
      * Adapter notifies that group added.
      *
@@ -89,13 +92,17 @@ public class ExpandableListUtils {
 
                 //groupIndexTO is NOT expanded
                 if (!adapter.expandableList.expandedGroupIndexes[groupIndexTo]) {
+                    Log.d(TAG, "notifyItemMoved: EIJAJAJAJIE");
                     //group should be expanded after drag & drop
                     adapter.expandableList.expandedGroupIndexes[groupIndexFrom] = false;
                     adapter.expandableList.expandedGroupIndexes[groupIndexTo] = true;
                 }
                 //notify adapter
                 adapter.notifyDataSetChanged();
-//                Log.d(TAG, "notifyItemMoved: expandableList = " + adapter.expandableList.);
+                Log.d(TAG, "notifyItemMoved: groupIndexFrom = " + groupIndexFrom);
+                Log.d(TAG, "notifyItemMoved: groupIndex TO  = " + groupIndexTo);
+                Log.d(TAG, "notifyItemMoved: expandableList = " + adapter.expandableList.expandedGroupIndexes[groupIndexFrom]);
+                Log.d(TAG, "notifyItemMoved: expandableList TO = " + adapter.expandableList.expandedGroupIndexes[groupIndexTo]);
 //                return;
             } else {
                 Log.d(TAG, "notifyItemMoved: COLLAPSED group MOVE");
@@ -139,42 +146,53 @@ public class ExpandableListUtils {
         //number of categories
         int size = ((Category) adapter.getGroups().get(groupPos)).getItems().size();
 
-        //swiped GROUP
-        if (shopItemPos == -1 && adapter.isGroupExpanded(groupPos)) {
+        //swiped expanded GROUP
+        if (shopItemPos == -1) {
             Log.d(TAG, "notifyItemRemoved: group swiped and group is expanded... " + adapter.isGroupExpanded(flatPos));
 
-            //delete all children
-            for (int i = size - 1; i >= 0; i--) {
+            if (adapter.isGroupExpanded(flatPos)) {
+                //delete all children from last to first
+                for (int i = size - 1; i >= 0; i--) {
 //                Log.d(TAG, "notifyItemRemoved: shopitem removed " + i);
-                ((Category) adapter.getGroups().get(groupPos)).getItems().remove(i);
-                adapter.notifyItemRemoved(flatPos + i + 1);
-            }
-            //notify adapter
-            adapter.getGroups().remove(groupPos);
-            adapter.notifyItemRemoved(flatPos);
-        } else
-            //delete collapsed group
-            if (shopItemPos == -1 && !adapter.isGroupExpanded(flatPos)) {
-                Log.d(TAG, "notifyItemRemoved: swiped collapsed group...");
+                    ((Category) adapter.getGroups().get(groupPos)).getItems().remove(i);
+                    adapter.notifyItemRemoved(flatPos + i + 1);
+                }
+                //notify adapter
                 adapter.getGroups().remove(groupPos);
                 adapter.notifyItemRemoved(flatPos);
             } else {
-                Log.d(TAG, "notifyItemRemoved: shopItem swiped and shopItem removed!");
-                //swiped SHOPITEM
-                ViewHolderShopI.delete((ShopItem) ((Category) adapter.getGroups().get(groupPos)).getItems().get(shopItemPos));
-                ((Category) adapter.getGroups().get(groupPos)).getItems().remove(shopItemPos);
+                Log.d(TAG, "notifyItemRemoved: ARRAY IS MAYBE WRONG = " + adapter.getGroups());
+                //swiped collapsed group
+                Log.d(TAG, "notifyItemRemoved: swiped collapsed group...");
+                Log.d(TAG, "notifyItemRemoved: groupPos = " + groupPos);
+                Log.d(TAG, "notifyItemRemoved: group was deletet = " + adapter.getGroups().get(groupPos));
+                Log.d(TAG, "notifyItemRemoved: IS IT STILL WORKING?");
+                Log.d(TAG, "notifyItemRemoved: flatPos = " + flatPos);
+
+//                //delete all children from last to first
+//                for (int i = size - 1; i >= 0; i--) {
+//                Log.d(TAG, "notifyItemRemoved: shopitem removed " + i);
+//                    ((Category) adapter.getGroups().get(groupPos)).getItems().remove(i);
+//                    adapter.notifyItemRemoved(flatPos + i + 1);
+//                }
+
+                adapter.getGroups().remove(groupPos);
                 adapter.notifyItemRemoved(flatPos);
 
-                //group is empty
-                if (((Category) adapter.getGroups().get(groupPos)).getItems().size() < 1) {
-                    adapter.notifyDataSetChanged();
-                }
+//                adapter.notifyDataSetChanged();
             }
+        } else {
+            Log.d(TAG, "notifyItemRemoved: shopItem swiped and shopItem removed!");
+            //delete swiped SHOPITEM
+//                ViewHolderShopI.delete((ShopItem) ((Category) adapter.getGroups().get(groupPos)).getItems().get(shopItemPos));
+            ((Category) adapter.getGroups().get(groupPos)).getItems().remove(shopItemPos);
+            adapter.notifyItemRemoved(flatPos);
+        }
 
         //saves the new arrayList
-        ArrayListUtils arrayListUtils = new ArrayListUtils();
         arrayListUtils.saveArrayList((ArrayList<Category>) adapter.getGroups(), "categories_arraylist");
-//        Log.d(TAG, "notifyItemRemoved: SAVE THIS =" + (ArrayList<Category>) adapter.getGroups());
+        Log.d(TAG, "notifyItemRemoved: SAVE THIS =" + (ArrayList<Category>) adapter.getGroups());
+//        adapter.notifyDataSetChanged();
     }
 
     /**
@@ -185,7 +203,8 @@ public class ExpandableListUtils {
      * @return true: Group has children, thus group is clickable.
      * false: If group content size < 1 => group is empty and not clickable.
      */
-    public static boolean notifyGroupNotClickable(ExpandableRecyclerViewAdapter adapter, int flatPosGroup) {
+    public static boolean notifyGroupNotClickable(ExpandableRecyclerViewAdapter adapter,
+                                                  int flatPosGroup) {
         ExpandableListPosition groupPos = adapter.expandableList.getUnflattenedPosition(flatPosGroup);
         int groupPosition = groupPos.groupPos;
 //        Log.d(TAG, "notifyGroupNotClickable: groupPositio = " + groupPosition);

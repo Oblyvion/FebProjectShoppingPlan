@@ -34,8 +34,12 @@ public class SwipeController extends Callback {
     public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
         Log.d(TAG, "onSwiped: direction = " + direction);
 
+        Log.d(TAG, "onSwiped: adapter POSITION = " + viewHolder.getAdapterPosition());
         adapter.swipeItem(viewHolder.getAdapterPosition());
-//        adapter.notifyDataSetChanged();   //TODO AUF JEDEN FALL LOESCHEN!!!
+//        adapter.notifyDataSetChanged();
+        Log.d(TAG, "onSwiped: adapter POSITION AFTER SWIPE = " + viewHolder.getAdapterPosition());
+
+        Log.d(TAG, "onSwiped: LAST LOG ENTRY BEFORE CRASH");
     }
 
     @Override
