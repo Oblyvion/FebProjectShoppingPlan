@@ -14,7 +14,7 @@ import com.thoughtbot.expandablerecyclerview.viewholders.GroupViewHolder;
 import static android.view.animation.Animation.RELATIVE_TO_SELF;
 
 class ViewHolderCat extends GroupViewHolder implements View.OnClickListener {
-    private final static String TAG = "MyActivity";
+//    private final static String TAG = "MyActivity";
 
     private ImageView imageViewCatArrow;
     private TextView textViewCat;
