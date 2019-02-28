@@ -1,9 +1,7 @@
 package de.feb.projectshoppingplan;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
