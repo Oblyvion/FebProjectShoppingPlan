@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerViewMain);
 
         //developer is able to RESET ALL
-//        delete();
+        delete();
 
         loadSharedPreferences();
 
@@ -127,6 +127,7 @@ public class MainActivity extends AppCompatActivity {
              * @param toViewHolder ViewHolder where dropped to.
              * @return true: If items have equal types, than swap them.
              */
+            @SuppressWarnings("unchecked")
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder fromViewHolder, @NonNull RecyclerView.ViewHolder toViewHolder) {
 //                Log.d(TAG, "onMove: itemViewFROM TYPE = " + fromViewHolder.getItemViewType());
@@ -347,6 +348,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Adds standard categories to arrayList.
      */
+    @SuppressWarnings("unchecked")
     private void addStandardCats() {
         for (String STANDARD_CATEGORY : STANDARD_CATEGORIES) {
             ArrayList<ShopItem> list = new ArrayList<>();
@@ -396,11 +398,12 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Load shared preferences with name myPrefs.
      */
+    @SuppressWarnings("unchecked")
     private void loadSharedPreferences() {
         SharedPreferences prefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
         if (prefs.getString("categories_arraylist", null) != null) {
             categories.clear();
-            categories.addAll(arrayListHelper.loadArrayList("categories_arraylist"));
+            categories.addAll(arrayListHelper.loadArrayList());
             Log.d(TAG, "SharedPreferences JSON categories: " + categories, null);
             for (int i = 0; i < categories.size(); i++) {
                 ArrayList<ShopItem> shopItems;

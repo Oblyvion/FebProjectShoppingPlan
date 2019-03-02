@@ -30,8 +30,7 @@ public class ArrayListUtils {
         Type type = new TypeToken<ArrayList<ShopItem>>() {
         }.getType();
         //Log.d(TAG, "getListFromJson: JSON HIER: " + json);
-        ArrayList<ShopItem> shopis = gson.fromJson(json, type);
-        return shopis;
+        return gson.fromJson(json, type);
     }
 
     /**
@@ -52,10 +51,9 @@ public class ArrayListUtils {
     /**
      * Loads shared preferences with name myPrefs and gets Arraylist<Category>
      *
-     * @param key string which determines which SharedPreferences key will be loaded
      * @return ArrayList<Category>
      */
-    ArrayList<Category> loadArrayList(String key) {
+    ArrayList<Category> loadArrayList() {
         //Log.d(TAG, "Categories vor .clear(): "+categories+"\n");
         //Delete Categories before adding everything from Shared Preferences
         categories.clear();
@@ -64,7 +62,7 @@ public class ArrayListUtils {
         //create new Gson object
         Gson gson = new Gson();
         //get json string of Shared Preferences
-        String json = prefs.getString(key, null);
+        String json = prefs.getString("categories_arraylist", null);
         //specify type so that Gson knows which type Json should be converted to
         Type type = new TypeToken<ArrayList<Category>>() {
         }.getType();

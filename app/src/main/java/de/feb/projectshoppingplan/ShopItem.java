@@ -6,8 +6,11 @@ import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 
 public class ShopItem implements Parcelable {
+
+    private final String TAG = "ShopItem.class";
 
     public final String name;
     Bitmap icon;
@@ -76,4 +79,13 @@ public class ShopItem implements Parcelable {
     }
 
     void setChecked(boolean check) { this.checked = check; }
+
+//    boolean isEmpty() {
+//        Log.d(TAG, "isEmpty: name boolean = " + (this.name != null));
+//        return name != null;
+//    }
+
+//    public int getIndexPosition() {
+//        return
+//    }
 }

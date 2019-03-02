@@ -14,7 +14,7 @@ import com.thoughtbot.expandablerecyclerview.viewholders.GroupViewHolder;
 import static android.view.animation.Animation.RELATIVE_TO_SELF;
 
 class ViewHolderCat extends GroupViewHolder implements View.OnClickListener {
-//    private final static String TAG = "MyActivity";
+    private final static String TAG = "ViewHolderCat.class";
 
     private ImageView imageViewCatArrow;
     private TextView textViewCat;
@@ -38,7 +38,11 @@ class ViewHolderCat extends GroupViewHolder implements View.OnClickListener {
     void bind(final Category category) {
         textViewCat.setText(category.getTitle());
 
-        Log.d("VIEWHOLDERCAT", "BIND: size: " + category.getItems().size());
+        Log.d(TAG, "bind: category name = " + category.getTitle());
+
+        Log.d(TAG, "bind: viewHolder POSITION = " + this.getAdapterPosition());
+
+        Log.d(TAG, "BIND: size: " + category.getItems().size());
         if (category.getItems().size() < 1) {
             imageViewCatArrow.setImageDrawable(ContextCompat.getDrawable(imageViewCatArrow.getContext(),R.drawable.leer));
         }

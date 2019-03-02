@@ -10,6 +10,7 @@ public class Category extends ExpandableGroup {
      * @param title - String, title of the category
      * @param items - ArrayList<ShopItem>, ShopItem list of the category
      */
+    @SuppressWarnings("unchecked")
     Category(String title, ArrayList<ShopItem> items) {
         super(title, items);
     }

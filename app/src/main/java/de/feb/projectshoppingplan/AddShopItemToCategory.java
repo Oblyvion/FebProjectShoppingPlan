@@ -61,6 +61,7 @@ public class AddShopItemToCategory extends AppCompatActivity {
     }
 
     @SuppressLint("ClickableViewAccessibility")
+    @SuppressWarnings("unchecked")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,7 +83,7 @@ public class AddShopItemToCategory extends AppCompatActivity {
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
 
-        categories = arrayListHelper.loadArrayList("categories_arraylist");
+        categories = arrayListHelper.loadArrayList();
 
         Log.d(TAG, "Categories hier!!: " + categories);
 
@@ -111,6 +112,7 @@ public class AddShopItemToCategory extends AppCompatActivity {
                      * * Triggers: short click on an item, if item is not in list of category yet it will be added otherwise it is going to be deleted
                      *
                      */
+//                    @SuppressWarnings("SuspiciousListRemoveInLoop")
                     @Override
                     public void onItemClick(View view, int position) {
                         itemList_text.get(position).setChecked(!itemList_text.get(position).checked);
@@ -133,12 +135,21 @@ public class AddShopItemToCategory extends AppCompatActivity {
                         } else {
                             itemList_text.get(position).setCheckmark();
                             Toast.makeText(AddShopItemToCategoryActivity, "deleted!", Toast.LENGTH_SHORT).show();
-                            for (int i = 0; i < itemList_forMain.size(); i++) {
-                                if (itemList_forMain.get(i).name.equals(itemList_text.get(position).name)) {
-                                    ViewHolderShopI.delete(itemList_forMain.get(i));
-                                    itemList_forMain.remove(i);
+
+
+                            for (ShopItem shopItem : itemList_forMain) {
+                                if (shopItem.name != null && shopItem.name.equals(itemList_text.get(position).name)) {
+                                    ViewHolderShopI.delete(shopItem);
+                                    itemList_forMain.remove(shopItem);
                                 }
                             }
+
+//                            for (int i = 0; i < itemList_forMain.size(); i++) {
+//                                if (itemList_forMain.get(i).name.equals(itemList_text.get(position).name)) {
+//                                    ViewHolderShopI.delete(itemList_forMain.get(i));
+//                                    itemList_forMain.remove(i);
+//                                }
+//                            }
                             for (int i = 0; i < categories.size(); i++) {
                                 if (categories.get(i).getTitle().equals(categoryName)) {
                                     categories.get(i).getItems().clear();
@@ -283,6 +294,7 @@ public class AddShopItemToCategory extends AppCompatActivity {
      *
      * @param input - Voice Input of the user
      */
+    @SuppressWarnings("unchecked")
     private void seperateSpokenWords(String input) {
         String[] separated = input.split("( " + getString(R.string.speech_input_separator) + " )");
         String added = "";
@@ -300,7 +312,6 @@ public class AddShopItemToCategory extends AppCompatActivity {
             if (categories.get(i).getTitle().equals(categoryName)) {
                 categories.get(i).getItems().clear();
                 //categories.get(i).setItems(itemList_forMain);
-                //TODO Lösung für Warnung
                 categories.get(i).getItems().addAll(itemList_forMain);
                 Log.d(TAG, "Das ist die liste nachdem was geadded wurde: " + categories);
                 arrayListHelper.saveArrayList(categories, "categories_arraylist");

@@ -90,7 +90,11 @@ public class ExpandableRecyclerViewAdapter extends com.thoughtbot.expandablerecy
      */
     void swipeItem(int flatPos) {
         Log.d(TAG, "swipeItem: SWIPE NOW!");
+        Log.d(TAG, "swipeItem: swiped FLATPOS = " + flatPos);
         ExpandableListUtils.notifyItemRemoved(this, flatPos);
+        Log.d(TAG, "swipeItem: swiped FLATPOS AFTER = " + flatPos);
+        notifyItemRemoved(flatPos);
+        Log.d(TAG, "swipeItem: LAST HUHUUUUUUUUUUUUUUU");
     }
 
     @Override
@@ -115,7 +119,7 @@ public class ExpandableRecyclerViewAdapter extends com.thoughtbot.expandablerecy
      */
     void addNewGroup() {
 
-        ExpandableListUtils.notifyGroupDataChanged(this, view);
+        ExpandableListUtils.notifyGroupDataChanged(this);
         notifyDataSetChanged();
     }
 }

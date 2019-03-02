@@ -1,7 +1,6 @@
 package com.thoughtbot.expandablerecyclerview;
 
 import android.util.Log;
-import android.view.View;
 
 import com.thoughtbot.expandablerecyclerview.models.ExpandableListPosition;
 
@@ -10,8 +9,6 @@ import java.util.Collections;
 
 import de.feb.projectshoppingplan.ArrayListUtils;
 import de.feb.projectshoppingplan.Category;
-import de.feb.projectshoppingplan.ShopItem;
-import de.feb.projectshoppingplan.ViewHolderShopI;
 
 public class ExpandableListUtils {
 
@@ -24,9 +21,9 @@ public class ExpandableListUtils {
      * Adapter notifies that group added.
      *
      * @param adapter ExpandableRecyclerViewAdapter in which the data should be changed.
-     * @param view    View in which should the adapter notifies its data.
      */
-    public static void notifyGroupDataChanged(ExpandableRecyclerViewAdapter adapter, View view) {
+    @SuppressWarnings("unchecked")
+    public static void notifyGroupDataChanged(ExpandableRecyclerViewAdapter adapter) {
         ArrayListUtils arrayListUtils = new ArrayListUtils();
 
         //        Log.d(TAG, "Das ist Arraylist vor save: " + (ArrayList<Category>) adapter.getGroups());
@@ -50,8 +47,8 @@ public class ExpandableListUtils {
         ExpandableListPosition itemPositionFrom = adapter.expandableList.getUnflattenedPosition(flatPosFrom);
         ExpandableListPosition itemPositionTo = adapter.expandableList.getUnflattenedPosition(flatPosTo);
 
-//        Log.d(TAG, "notifyItemMoved: itemPositionFrom =   " + itemPositionFrom);
-//        Log.d(TAG, "notifyItemMoved: itemPositionTo =   " + itemPositionTo);
+        Log.d(TAG, "notifyItemMoved: itemPositionFrom =   " + itemPositionFrom);
+        Log.d(TAG, "notifyItemMoved: itemPositionTo =   " + itemPositionTo);
 
         int groupIndexFrom = itemPositionFrom.groupPos;
         int groupIndexTo = itemPositionTo.groupPos;
@@ -60,12 +57,12 @@ public class ExpandableListUtils {
         int typeFrom = itemPositionFrom.type;   //type: shopItem = 1; category = 2
         int typeTo = itemPositionTo.type;
 
-//        Log.d(TAG, "notifyItemMoved: groupIndexFrom = " + groupIndexFrom);
-//        Log.d(TAG, "notifyItemMoved: groupIndexTo = " + groupIndexTo);
-//        Log.d(TAG, "notifyItemMoved: shopItemIndexFrom = " + shopItemIndexFrom);
-//        Log.d(TAG, "notifyItemMoved: shopItemIndexTo = " + shopItemIndexTo);
-//        Log.d(TAG, "notifyItemMoved: typeFrom = " + typeFrom);
-//        Log.d(TAG, "notifyItemMoved: typeTo = " + typeTo);
+        Log.d(TAG, "notifyItemMoved: groupIndexFrom = " + groupIndexFrom);
+        Log.d(TAG, "notifyItemMoved: groupIndexTo = " + groupIndexTo);
+        Log.d(TAG, "notifyItemMoved: shopItemIndexFrom = " + shopItemIndexFrom);
+        Log.d(TAG, "notifyItemMoved: shopItemIndexTo = " + shopItemIndexTo);
+        Log.d(TAG, "notifyItemMoved: typeFrom = " + typeFrom);
+        Log.d(TAG, "notifyItemMoved: typeTo = " + typeTo);
 
         Category currentGroupFrom = (Category) adapter.getGroups().get(groupIndexFrom);
 
@@ -77,6 +74,12 @@ public class ExpandableListUtils {
             if (adapter.isGroupExpanded(flatPosFrom)) {
                 Log.d(TAG, "notifyItemMoved: EXPANDED group MOVE");
                 Collections.swap(adapter.getGroups(), groupIndexFrom, groupIndexTo);
+
+                Log.d(TAG, "notifyItemMoved: flatPosFrom = " + flatPosFrom);
+                Log.d(TAG, "notifyItemMoved: flatPosTo = " + flatPosTo);
+                Log.d(TAG, "notifyItemMoved: groupIndexFrom = " + groupIndexFrom);
+                Log.d(TAG, "notifyItemMoved: groupIndexTo = " + groupIndexTo);
+
 
                 //notifiy group moved
                 adapter.notifyItemMoved(flatPosFrom, flatPosTo);
@@ -127,6 +130,7 @@ public class ExpandableListUtils {
      * @param adapter ExpandableRecyclerViewAdapter in which the data should be changed.
      * @param flatPos int Flat position of layout.
      */
+    @SuppressWarnings("unchecked")
     public static void notifyItemRemoved(ExpandableRecyclerViewAdapter adapter, int flatPos) {
         ExpandableListPosition itemPosition = adapter.expandableList.getUnflattenedPosition(flatPos);
 
@@ -138,7 +142,7 @@ public class ExpandableListUtils {
 
         //swiped expanded GROUP
         if (shopItemPos == -1) {
-            Log.d(TAG, "notifyItemRemoved: group swiped and group is expanded... " + adapter.isGroupExpanded(flatPos));
+            Log.d(TAG, "notifyItemRemoved: group swiped and group is expanded??? " + adapter.isGroupExpanded(flatPos));
 
             if (adapter.isGroupExpanded(flatPos)) {
                 //delete all children from last to first
@@ -149,17 +153,18 @@ public class ExpandableListUtils {
                 }
                 //notify adapter
                 adapter.getGroups().remove(groupPos);
-                adapter.notifyItemRemoved(flatPos);
+//                adapter.notifyItemRemoved(flatPos);
             } else {
                 //swiped collapsed group
+                Log.d(TAG, "notifyItemRemoved: COOOOLLLLAAAPPPSED!!!!!!");
                 adapter.getGroups().remove(groupPos);
-                adapter.notifyItemRemoved(flatPos);
+//                adapter.notifyItemRemoved(flatPos);
             }
         } else {
-//            Log.d(TAG, "notifyItemRemoved: shopItem swiped and shopItem removed!");
+            Log.d(TAG, "notifyItemRemoved: shopItem swiped and shopItem removed!");
             //delete swiped SHOPITEM
             ((Category) adapter.getGroups().get(groupPos)).getItems().remove(shopItemPos);
-            adapter.notifyItemRemoved(flatPos);
+//            adapter.notifyItemRemoved(flatPos);
         }
 
         //saves the new arrayList
