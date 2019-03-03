@@ -73,23 +73,40 @@ public class ExpandableListUtils {
             //move category expanded
             if (adapter.isGroupExpanded(flatPosFrom)) {
                 Log.d(TAG, "notifyItemMoved: EXPANDED group MOVE");
-                Collections.swap(adapter.getGroups(), groupIndexFrom, groupIndexTo);
 
                 Log.d(TAG, "notifyItemMoved: flatPosFrom = " + flatPosFrom);
                 Log.d(TAG, "notifyItemMoved: flatPosTo = " + flatPosTo);
                 Log.d(TAG, "notifyItemMoved: groupIndexFrom = " + groupIndexFrom);
                 Log.d(TAG, "notifyItemMoved: groupIndexTo = " + groupIndexTo);
 
+                //notify group moved
+//                adapter.notifyItemMoved(flatPosFrom, flatPosTo);
 
-                //notifiy group moved
-                adapter.notifyItemMoved(flatPosFrom, flatPosTo);
+                int shopItemFlatPositionTo = groupIndexTo + 1;
 
-                //notifiy shopItems of group moved
-                for (int fPosF = flatPosFrom + 1;
-                     fPosF <= ((Category) adapter.getGroups().get(groupIndexFrom)).getItemCount();
-                     fPosF++) {
-                    adapter.notifyItemMoved(fPosF, flatPosTo);
+                //notify shopItems of group moved
+                /*
+                TODO FIX POSITION BUG!!!!
+                TODO PROBLEM: viewHolder do not recognize,
+                TODO that the swapped expanded group is expanded right now. SHOPITEM DISTURBS!
+                TODO if the swapped expanded group will collapsed, the viewHolder is correct and the
+                TODO app does not crash.
+                */
+                for (int shopItemFlatPositionFrom = flatPosFrom + 1;
+                     shopItemFlatPositionFrom < groupIndexTo + ((Category) adapter.getGroups().get(groupIndexFrom)).getItemCount();
+                     shopItemFlatPositionFrom++) {
+                    Log.d(TAG, "notifyItemMoved: flatposFROM = " + flatPosFrom);
+                    Log.d(TAG, "notifyItemMoved: shopItemFlatPositionFrom = " + shopItemFlatPositionFrom);
+                    Log.d(TAG, "notifyItemMoved: flatPosTO BEFORE INCREMENT = " + shopItemFlatPositionTo);
+                    adapter.notifyItemMoved(shopItemFlatPositionFrom, shopItemFlatPositionTo++);
+                    Log.d(TAG, "notifyItemMoved: flatPosTO AFTER INCREMENT = " + shopItemFlatPositionTo);
                 }
+                Log.d(TAG, "notifyItemMoved: FLATPOSTO AFTER FOR_LOOP = " + flatPosTo);
+
+                adapter.notifyItemMoved(groupIndexFrom, groupIndexTo);
+
+                Collections.swap(adapter.getGroups(), groupIndexFrom, groupIndexTo);
+//                adapter.notifyDataSetChanged();
 
                 //groupIndexTO is NOT expanded
                 if (!adapter.expandableList.expandedGroupIndexes[groupIndexTo]) {
@@ -98,7 +115,7 @@ public class ExpandableListUtils {
                     adapter.expandableList.expandedGroupIndexes[groupIndexTo] = true;
                 }
                 //notify adapter
-                adapter.notifyDataSetChanged();
+//                adapter.notifyDataSetChanged();
             } else {
                 Log.d(TAG, "notifyItemMoved: COLLAPSED group MOVE");
 
@@ -122,6 +139,7 @@ public class ExpandableListUtils {
                 //shopItem moves into another group
                 adapter.notifyDataSetChanged();
             }
+        Log.d(TAG, "notifyItemMoved: SAVE THIS =" + (ArrayList<Category>) adapter.getGroups());
     }
 
     /**
@@ -158,6 +176,7 @@ public class ExpandableListUtils {
                 //swiped collapsed group
                 Log.d(TAG, "notifyItemRemoved: COOOOLLLLAAAPPPSED!!!!!!");
                 adapter.getGroups().remove(groupPos);
+//                adapter.notifyDataSetChanged();
 //                adapter.notifyItemRemoved(flatPos);
             }
         } else {

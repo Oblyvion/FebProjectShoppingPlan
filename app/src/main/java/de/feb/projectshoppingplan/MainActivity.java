@@ -138,8 +138,8 @@ public class MainActivity extends AppCompatActivity {
                     return false;
                 }
 
-//                Log.d(TAG, "onMove: adapter POSITION FROM = " + fromViewHolder.getAdapterPosition());
-//                Log.d(TAG, "onMove: adapter POSITION TO = " + toViewHolder.getAdapterPosition());
+                Log.d(TAG, "onMove: adapter POSITION FROM = " + fromViewHolder.getAdapterPosition());
+                Log.d(TAG, "onMove: adapter POSITION TO = " + toViewHolder.getAdapterPosition());
 
                 //notifies adapter that items are moving
                 adapter.moveItem(fromViewHolder.getAdapterPosition(), toViewHolder.getAdapterPosition());

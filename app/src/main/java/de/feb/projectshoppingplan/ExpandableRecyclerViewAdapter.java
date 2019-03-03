@@ -80,8 +80,10 @@ public class ExpandableRecyclerViewAdapter extends com.thoughtbot.expandablerecy
      * @param flatPostTo int: Flat position of layout.
      */
     void moveItem(int flatPosFrom, int flatPostTo) {
+//        notifyItemMoved(flatPosFrom, flatPostTo);
         ExpandableListUtils.notifyItemMoved(this, flatPosFrom, flatPostTo);
-        notifyItemMoved(flatPosFrom, flatPostTo);
+        Log.d(TAG, "moveItem: flatPOSFROM = " + flatPosFrom);
+        Log.d(TAG, "moveItem: flatPOSTO = " + flatPostTo);
     }
 
     /**
@@ -91,9 +93,11 @@ public class ExpandableRecyclerViewAdapter extends com.thoughtbot.expandablerecy
     void swipeItem(int flatPos) {
         Log.d(TAG, "swipeItem: SWIPE NOW!");
         Log.d(TAG, "swipeItem: swiped FLATPOS = " + flatPos);
-        ExpandableListUtils.notifyItemRemoved(this, flatPos);
-        Log.d(TAG, "swipeItem: swiped FLATPOS AFTER = " + flatPos);
         notifyItemRemoved(flatPos);
+        ExpandableListUtils.notifyItemRemoved(this, flatPos);
+//        this.notifyDataSetChanged();
+        this.notifyItemChanged(flatPos);
+        Log.d(TAG, "swipeItem: swiped FLATPOS AFTER = " + flatPos);
         Log.d(TAG, "swipeItem: LAST HUHUUUUUUUUUUUUUUU");
     }
 
