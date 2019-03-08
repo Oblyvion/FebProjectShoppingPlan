@@ -115,9 +115,7 @@ public class MainActivity extends AppCompatActivity {
         ItemTouchHelper.Callback itemTouchHelperCallback = new ItemTouchHelper.Callback() {
             @Override
             public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
-//                Log.d(TAG, "getMovementFlags: GRAP ITEM...");
-                return makeFlag(ItemTouchHelper.ACTION_STATE_DRAG,
-                        ItemTouchHelper.DOWN | ItemTouchHelper.UP | ItemTouchHelper.START | ItemTouchHelper.END);
+                return makeMovementFlags(ItemTouchHelper.UP | ItemTouchHelper.DOWN, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
             }
 
             /**
@@ -152,15 +150,19 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                Log.d(TAG, "onSwiped: SWIIIIIIIIIIIIIIPE YEAHHHHHHHHHH AND DIRECTION I = " + direction);
+                Log.d(TAG, "onMove: adapter POSITION FROM = " + viewHolder.getAdapterPosition());
+
+                adapter.swipeItem(viewHolder.getAdapterPosition());
             }
         };
 
         //creates controller and helper for swipe gesture implementation
-        SwipeController swipeController = new SwipeController();
-        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeController);
-        //adds touchHelper to recyclerView
-        itemTouchhelper.attachToRecyclerView(recyclerView);
+//        SwipeController swipeController = new SwipeController();
+//        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeController);
+//        //adds touchHelper to recyclerView
+//        itemTouchhelper.attachToRecyclerView(recyclerView);
 
         datachanged();
 
@@ -338,7 +340,7 @@ public class MainActivity extends AppCompatActivity {
     private void clearAllCategories() {
         for (int i = 0; i < categories.size(); i++) {
             for (int j = 0; j < categories.get(i).getItems().size(); j++) {
-                ViewHolderShopI.delete((ShopItem)categories.get(i).getItems().get(j));
+                ViewHolderShopI.delete((ShopItem) categories.get(i).getItems().get(j));
             }
             categories.get(i).getItems().clear();
         }
@@ -390,7 +392,7 @@ public class MainActivity extends AppCompatActivity {
      * Adapter notifies data changes and show them.
      */
     public void datachanged() {
-        recyclerView.getRecycledViewPool().clear();
+//        recyclerView.getRecycledViewPool().clear();
         Log.d(TAG, "datachanged: adapter = " + adapter);
         adapter.notifyDataSetChanged();
     }

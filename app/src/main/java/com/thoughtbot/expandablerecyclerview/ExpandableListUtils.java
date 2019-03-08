@@ -2,10 +2,13 @@ package com.thoughtbot.expandablerecyclerview;
 
 import android.util.Log;
 
+import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup;
+import com.thoughtbot.expandablerecyclerview.models.ExpandableList;
 import com.thoughtbot.expandablerecyclerview.models.ExpandableListPosition;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import de.feb.projectshoppingplan.ArrayListUtils;
 import de.feb.projectshoppingplan.Category;
@@ -79,8 +82,7 @@ public class ExpandableListUtils {
                 Log.d(TAG, "notifyItemMoved: groupIndexFrom = " + groupIndexFrom);
                 Log.d(TAG, "notifyItemMoved: groupIndexTo = " + groupIndexTo);
 
-                //notify group moved
-//                adapter.notifyItemMoved(flatPosFrom, flatPosTo);
+                Collections.swap(adapter.getGroups(), groupIndexFrom, groupIndexTo);
 
                 int shopItemFlatPositionTo = groupIndexTo + 1;
 
@@ -91,28 +93,54 @@ public class ExpandableListUtils {
                 TODO that the swapped expanded group is expanded right now. SHOPITEM DISTURBS!
                 TODO if the swapped expanded group will collapsed, the viewHolder is correct and the
                 TODO app does not crash.
+
+                TODO NEW IMPRESSIONS
+                TODO WHEN SOME GROUP IS EXPANDED AND ANY OTHER GROUP ABOVE THIS EXPANDED GROUP WILL
+                TODO BE SWIPED TO DELETE: THE APP CRASH
+                TODO ERROR: viewHolderPOSITION is INVALID
+
+
                 */
-                for (int shopItemFlatPositionFrom = flatPosFrom + 1;
-                     shopItemFlatPositionFrom < groupIndexTo + ((Category) adapter.getGroups().get(groupIndexFrom)).getItemCount();
-                     shopItemFlatPositionFrom++) {
-                    Log.d(TAG, "notifyItemMoved: flatposFROM = " + flatPosFrom);
-                    Log.d(TAG, "notifyItemMoved: shopItemFlatPositionFrom = " + shopItemFlatPositionFrom);
-                    Log.d(TAG, "notifyItemMoved: flatPosTO BEFORE INCREMENT = " + shopItemFlatPositionTo);
-                    adapter.notifyItemMoved(shopItemFlatPositionFrom, shopItemFlatPositionTo++);
-                    Log.d(TAG, "notifyItemMoved: flatPosTO AFTER INCREMENT = " + shopItemFlatPositionTo);
-                }
+//                for (int shopItemFlatPositionFrom = flatPosFrom + 1;
+//                     shopItemFlatPositionFrom < groupIndexTo + ((Category) adapter.getGroups().get(groupIndexFrom)).getItemCount();
+//                     shopItemFlatPositionFrom++) {
+//                    Log.d(TAG, "notifyItemMoved: flatposFROM = " + flatPosFrom);
+//                    Log.d(TAG, "notifyItemMoved: shopItemFlatPositionFrom = " + shopItemFlatPositionFrom);
+//                    Log.d(TAG, "notifyItemMoved: flatPosTO BEFORE INCREMENT = " + shopItemFlatPositionTo);
+//                    adapter.notifyItemMoved(shopItemFlatPositionFrom, shopItemFlatPositionTo++);
+//                    Log.d(TAG, "notifyItemMoved: flatPosTO AFTER INCREMENT = " + shopItemFlatPositionTo);
+//                }
                 Log.d(TAG, "notifyItemMoved: FLATPOSTO AFTER FOR_LOOP = " + flatPosTo);
 
-                adapter.notifyItemMoved(groupIndexFrom, groupIndexTo);
-
-                Collections.swap(adapter.getGroups(), groupIndexFrom, groupIndexTo);
 //                adapter.notifyDataSetChanged();
+                //MOVE CATEGORY DOWN
+                if (flatPosFrom < flatPosTo) {
+                    Log.d(TAG, "notifyItemMoved: DOWN DOWN DOWN");
+                    Log.d(TAG, "notifyItemMoved: flat pos from = " + flatPosFrom);
+                    Log.d(TAG, "notifyItemMoved: flat pos to = " + flatPosTo);
+
+                    Log.d(TAG, "notifyItemMoved: ITEMCOUNT GROUP FROM = " + ((Category) adapter.getGroups().get(groupIndexTo)).getItemCount());
+                    adapter.notifyItemMoved(flatPosFrom, flatPosTo);
+//                    adapter.notifyItemRangeChanged(++flatPosFrom, ((Category) adapter.getGroups().get(groupIndexTo)).getItemCount());
+//                    adapter.notifyDataSetChanged();
+//                    adapter.expandableList.expandedGroupIndexes[groupIndexFrom] = false;
+
+                }
+                //MOVE CATEGORY UP
+                else {
+                    Log.d(TAG, "notifyItemMoved: UP UP UP");
+                    Log.d(TAG, "notifyItemMoved: from = " + flatPosFrom);
+                    Log.d(TAG, "notifyItemMoved: to = " + flatPosTo);
+                    adapter.notifyItemMoved(flatPosFrom, flatPosTo);
+
+                }
 
                 //groupIndexTO is NOT expanded
                 if (!adapter.expandableList.expandedGroupIndexes[groupIndexTo]) {
                     //group should be expanded after drag & drop
                     adapter.expandableList.expandedGroupIndexes[groupIndexFrom] = false;
                     adapter.expandableList.expandedGroupIndexes[groupIndexTo] = true;
+                    adapter.notifyDataSetChanged();
                 }
                 //notify adapter
 //                adapter.notifyDataSetChanged();
@@ -122,6 +150,7 @@ public class ExpandableListUtils {
                 //swap category collapsed
                 Collections.swap(adapter.getGroups(), groupIndexFrom, groupIndexTo);
 
+
                 //groupIndexTO is expanded
                 if (adapter.isGroupExpanded(flatPosTo)) {
                     //expand the groups after swap
@@ -129,8 +158,9 @@ public class ExpandableListUtils {
                     adapter.expandableList.expandedGroupIndexes[groupIndexTo] = false;
                     adapter.notifyDataSetChanged();
                 }
+                adapter.notifyItemMoved(flatPosFrom, flatPosTo);
             }
-        } else
+        } else {
             //move shopItem inside current group
             if (typeFrom == 1 && typeTo == 1 && groupIndexFrom == groupIndexTo) {
 //                Log.d(TAG, "notifyItemMoved: SHOPITEM MOVE");
@@ -139,7 +169,12 @@ public class ExpandableListUtils {
                 //shopItem moves into another group
                 adapter.notifyDataSetChanged();
             }
+            adapter.notifyItemMoved(flatPosFrom, flatPosTo);
+        }
         Log.d(TAG, "notifyItemMoved: SAVE THIS =" + (ArrayList<Category>) adapter.getGroups());
+        for (int i = 0; i < adapter.getGroups().size(); i++) {
+            Log.d(TAG, "notifyItemMoved: EXPANDABLE GROUP IS EXPANDED @ POSITION " + i + " = " + adapter.expandableList.expandedGroupIndexes[i]);
+        }
     }
 
     /**
@@ -165,7 +200,7 @@ public class ExpandableListUtils {
             if (adapter.isGroupExpanded(flatPos)) {
                 //delete all children from last to first
                 for (int i = size - 1; i >= 0; i--) {
-//                Log.d(TAG, "notifyItemRemoved: shopitem removed " + i);
+                    Log.d(TAG, "notifyItemRemoved: shopitem removed " + i);
                     ((Category) adapter.getGroups().get(groupPos)).getItems().remove(i);
                     adapter.notifyItemRemoved(flatPos + i + 1);
                 }
@@ -183,6 +218,7 @@ public class ExpandableListUtils {
             Log.d(TAG, "notifyItemRemoved: shopItem swiped and shopItem removed!");
             //delete swiped SHOPITEM
             ((Category) adapter.getGroups().get(groupPos)).getItems().remove(shopItemPos);
+//            adapter.notifyDataSetChanged();
 //            adapter.notifyItemRemoved(flatPos);
         }
 
@@ -206,7 +242,7 @@ public class ExpandableListUtils {
 //        Log.d(TAG, "notifyGroupNotClickable: groupPositio = " + groupPosition);
 
         //if group size < 1, than group is empty
-        return ((Category) adapter.getGroups().get(groupPosition)).getItems().size() >= 1;
+        return ((Category) adapter.getGroups().get(groupPosition)).getItems().size() < 1;
     }
 
     /**
