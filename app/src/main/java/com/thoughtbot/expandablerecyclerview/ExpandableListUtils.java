@@ -1,15 +1,14 @@
 package com.thoughtbot.expandablerecyclerview;
 
 import android.util.Log;
+import android.widget.Toast;
 
-import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup;
-import com.thoughtbot.expandablerecyclerview.models.ExpandableList;
 import com.thoughtbot.expandablerecyclerview.models.ExpandableListPosition;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
+import de.feb.projectshoppingplan.AppContext;
 import de.feb.projectshoppingplan.ArrayListUtils;
 import de.feb.projectshoppingplan.Category;
 
@@ -83,8 +82,6 @@ public class ExpandableListUtils {
                 Log.d(TAG, "notifyItemMoved: groupIndexTo = " + groupIndexTo);
 
                 Collections.swap(adapter.getGroups(), groupIndexFrom, groupIndexTo);
-
-                int shopItemFlatPositionTo = groupIndexTo + 1;
 
                 //notify shopItems of group moved
                 /*
@@ -166,12 +163,13 @@ public class ExpandableListUtils {
 //                Log.d(TAG, "notifyItemMoved: SHOPITEM MOVE");
                 Collections.swap(currentGroupFrom.getItems(), shopItemIndexFrom, shopItemIndexTo);
             } else {
-                //shopItem moves into another group
+                //prevent that shopItem moves into another group
                 adapter.notifyDataSetChanged();
+                Toast.makeText(AppContext.getContext(), "Do not move groceries into other categories!", Toast.LENGTH_LONG).show();
             }
             adapter.notifyItemMoved(flatPosFrom, flatPosTo);
         }
-        Log.d(TAG, "notifyItemMoved: SAVE THIS =" + (ArrayList<Category>) adapter.getGroups());
+        Log.d(TAG, "notifyItemMoved: SAVE THIS =" + adapter.getGroups());
         for (int i = 0; i < adapter.getGroups().size(); i++) {
             Log.d(TAG, "notifyItemMoved: EXPANDABLE GROUP IS EXPANDED @ POSITION " + i + " = " + adapter.expandableList.expandedGroupIndexes[i]);
         }
@@ -225,7 +223,7 @@ public class ExpandableListUtils {
         }
 
         //saves the new arrayList
-        arrayListUtils.saveArrayList((ArrayList<Category>) adapter.getGroups(), "categories_arraylist");
+//        arrayListUtils.saveArrayList((ArrayList<Category>) adapter.getGroups(), "categories_arraylist");
         Log.d(TAG, "notifyItemRemoved: SAVE THIS =" + (ArrayList<Category>) adapter.getGroups());
     }
 

@@ -13,7 +13,6 @@ import java.util.List;
 public class ExpandableRecyclerViewAdapter extends com.thoughtbot.expandablerecyclerview.ExpandableRecyclerViewAdapter<ViewHolderCat, ViewHolderShopI> {
 
     private static final String TAG = "RecyclerViewAdapter";
-    private View view;
 
     /**
      * Builds ExpandableRecyclerViewAdapter
@@ -29,12 +28,11 @@ public class ExpandableRecyclerViewAdapter extends com.thoughtbot.expandablerecy
      *
      * @param parent   - the viewgroup where the view will be inserted
      * @param viewType - viewType (Category or ShopItem)
-     * @return
+     * @return ViewHolderCat
      */
     @Override
     public ViewHolderCat onCreateGroupViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.category, parent, false);
-        this.view = v;
         return new ViewHolderCat(v);
     }
 
@@ -43,7 +41,7 @@ public class ExpandableRecyclerViewAdapter extends com.thoughtbot.expandablerecy
      *
      * @param parent   - the viewgroup where the view will be inserted
      * @param viewType - viewType (Category or ShopItem)
-     * @return
+     * @return ViewHolderShopI
      */
     @Override
     public ViewHolderShopI onCreateChildViewHolder(ViewGroup parent, int viewType) {
@@ -109,11 +107,24 @@ public class ExpandableRecyclerViewAdapter extends com.thoughtbot.expandablerecy
 //        this.expandableList.
         ExpandableListUtils.notifyItemRemoved(this, flatPos);
         this.notifyItemRemoved(flatPos);
+//        this.notifyItemRangeChanged(flatPos, getGroups().size());
+
+
 //        this.notifyDataSetChanged();
         Log.d(TAG, "swipeItem: swiped FLATPOS AFTER = " + flatPos);
         Log.d(TAG, "swipeItem: LAST HUHUUUUUUUUUUUUUUU");
 //        this.notifyItemChanged(flatPos);
 //        this.notifyDataSetChanged();
+    }
+
+    void restoreItem(int flatPos) {
+
+        //restore Category
+        if (expandableList.getUnflattenedPosition(flatPos).type == 2) {
+            //restore from sharedPreferences
+            this.notifyItemInserted(flatPos);
+            this.notifyDataSetChanged();
+        }
     }
 
     @Override
@@ -123,8 +134,13 @@ public class ExpandableRecyclerViewAdapter extends com.thoughtbot.expandablerecy
             Log.d(TAG, "onGroupClick: flat pos = " + flatPos);
             Log.d(TAG, "onGroupClick: itemCount of clicked group = " + getGroups().get(expandableList.getUnflattenedPosition(flatPos).groupPos).getItemCount());
 //            this.notifyItemRangeInserted(++flatPos, getGroups().get(expandableList.getUnflattenedPosition(flatPos).groupPos).getItemCount());
+//            this.notifyItemRangeChanged(flatPos, getGroups().get(expandableList.getUnflattenedPosition(flatPos).groupPos).getItemCount());
 //            this.notifyItemChanged(++flatPos);
 //            this.notifyDataSetChanged();
+//            this.notif
+
+//            this.notifyItemRangeChanged(flatPos, getGroups().size());
+
             return super.onGroupClick(flatPos);
         }
         return false;

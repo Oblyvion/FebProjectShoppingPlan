@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        // drag and drop
+        // drag & drop and swipe
         ItemTouchHelper.Callback itemTouchHelperCallback = new ItemTouchHelper.Callback() {
             @Override
             public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
@@ -150,15 +150,48 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+            public void onSwiped(@NonNull final RecyclerView.ViewHolder viewHolder, int direction) {
                 Log.d(TAG, "onSwiped: SWIIIIIIIIIIIIIIPE YEAHHHHHHHHHH AND DIRECTION I = " + direction);
                 Log.d(TAG, "onMove: adapter POSITION FROM = " + viewHolder.getAdapterPosition());
 
-                adapter.swipeItem(viewHolder.getAdapterPosition());
+//                adapter.swipeItem(viewHolder.getAdapterPosition());
+
+                AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.this);
+                builder.setTitle("Do you really want to remove it?");
+                LayoutInflater.from(MainActivity.this).inflate(R.layout.alert_dialog, (ViewGroup) findViewById(android.R.id.content), false);
+
+//                adapter.saveItem(viewHolder.getAdapterPosition());
+
+                // button setup
+                builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+
+                        adapter.swipeItem(viewHolder.getAdapterPosition());
+
+                        //Save der Liste nachdem alle categories gecleared wurden
+                        arrayListHelper.saveArrayList(categories, "categories_arraylist");
+
+
+                    }
+                });
+                builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+
+                        adapter.restoreItem(viewHolder.getAdapterPosition());
+
+                        dialog.cancel();
+                    }
+                });
+
+                builder.show();
             }
         };
 
-        //creates controller and helper for swipe gesture implementation
+//creates controller and helper for swipe gesture implementation
 //        SwipeController swipeController = new SwipeController();
 //        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeController);
 //        //adds touchHelper to recyclerView
@@ -273,7 +306,7 @@ public class MainActivity extends AppCompatActivity {
                 AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.this);
                 View viewInflated = LayoutInflater.from(MainActivity.this).inflate(R.layout.alert_dialog, (ViewGroup) findViewById(android.R.id.content), false);
 
-                // input setup
+// input setup
                 final EditText input = viewInflated.findViewById(R.id.input);
                 builder.setView(viewInflated);
                 builder.setTitle(R.string.DialogTitleNewCat);
