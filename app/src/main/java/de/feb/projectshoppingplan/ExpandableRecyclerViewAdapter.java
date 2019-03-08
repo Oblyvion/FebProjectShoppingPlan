@@ -17,6 +17,7 @@ public class ExpandableRecyclerViewAdapter extends com.thoughtbot.expandablerecy
 
     /**
      * Builds ExpandableRecyclerViewAdapter
+     *
      * @param groups - all categories (expandable groups)
      */
     ExpandableRecyclerViewAdapter(List<? extends ExpandableGroup> groups) {
@@ -25,7 +26,8 @@ public class ExpandableRecyclerViewAdapter extends com.thoughtbot.expandablerecy
 
     /**
      * creates the ViewHolderCat
-     * @param parent - the viewgroup where the view will be inserted
+     *
+     * @param parent   - the viewgroup where the view will be inserted
      * @param viewType - viewType (Category or ShopItem)
      * @return
      */
@@ -38,7 +40,8 @@ public class ExpandableRecyclerViewAdapter extends com.thoughtbot.expandablerecy
 
     /**
      * creates the ViewHolderShopI
-     * @param parent - the viewgroup where the view will be inserted
+     *
+     * @param parent   - the viewgroup where the view will be inserted
      * @param viewType - viewType (Category or ShopItem)
      * @return
      */
@@ -50,9 +53,10 @@ public class ExpandableRecyclerViewAdapter extends com.thoughtbot.expandablerecy
 
     /**
      * binds Category to the View
-     * @param holder - which ViewHolder will be used to bind data to
+     *
+     * @param holder       - which ViewHolder will be used to bind data to
      * @param flatPosition - the flat position (index in the list)
-     * @param group - which group will be binded
+     * @param group        - which group will be binded
      */
     @Override
     public void onBindGroupViewHolder(ViewHolderCat holder, int flatPosition, ExpandableGroup group) {
@@ -62,11 +66,11 @@ public class ExpandableRecyclerViewAdapter extends com.thoughtbot.expandablerecy
 
     /**
      * binds ShopItem to the View
-     * @param holder - which ViewHolder will be used to bind data to
-     * @param flatPosition - the raw index in the list at which to bind the child
-     * @param group - to call getItems() and get all shop items
-     * @param childIndex - the real index of the child in its own ShopItem list of its category
      *
+     * @param holder       - which ViewHolder will be used to bind data to
+     * @param flatPosition - the raw index in the list at which to bind the child
+     * @param group        - to call getItems() and get all shop items
+     * @param childIndex   - the real index of the child in its own ShopItem list of its category
      */
     @Override
     public void onBindChildViewHolder(final ViewHolderShopI holder, int flatPosition, ExpandableGroup group, int childIndex) {
@@ -76,8 +80,9 @@ public class ExpandableRecyclerViewAdapter extends com.thoughtbot.expandablerecy
 
     /**
      * Moves the item from position A to position B.
+     *
      * @param flatPosFrom int: Flat position of layout.
-     * @param flatPostTo int: Flat position of layout.
+     * @param flatPostTo  int: Flat position of layout.
      */
     void moveItem(int flatPosFrom, int flatPostTo) {
 //        notifyItemMoved(flatPosFrom, flatPostTo);
@@ -88,6 +93,7 @@ public class ExpandableRecyclerViewAdapter extends com.thoughtbot.expandablerecy
 
     /**
      * Swipes one item to the left and right side as well.
+     *
      * @param flatPos int: Flat position of layout.
      */
     void swipeItem(int flatPos) {
@@ -116,10 +122,11 @@ public class ExpandableRecyclerViewAdapter extends com.thoughtbot.expandablerecy
         if (!ExpandableListUtils.notifyGroupNotClickable(this, flatPos)) {
             Log.d(TAG, "onGroupClick: flat pos = " + flatPos);
             Log.d(TAG, "onGroupClick: itemCount of clicked group = " + getGroups().get(expandableList.getUnflattenedPosition(flatPos).groupPos).getItemCount());
-//            this.notifyItemRangeChanged(flatPos, getGroups().get(expandableList.getUnflattenedPosition(flatPos).groupPos).getItemCount());
+//            this.notifyItemRangeInserted(++flatPos, getGroups().get(expandableList.getUnflattenedPosition(flatPos).groupPos).getItemCount());
+//            this.notifyItemChanged(++flatPos);
+//            this.notifyDataSetChanged();
             return super.onGroupClick(flatPos);
         }
-//        this.notifyItemChanged(flatPos);
         return false;
     }
 

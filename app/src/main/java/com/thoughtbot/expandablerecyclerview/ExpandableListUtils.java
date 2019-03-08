@@ -209,17 +209,19 @@ public class ExpandableListUtils {
 //                adapter.notifyItemRemoved(flatPos);
             } else {
                 //swiped collapsed group
-                Log.d(TAG, "notifyItemRemoved: COOOOLLLLAAAPPPSED!!!!!!");
+                Log.d(TAG, "notifyItemRemoved: GROUP IS COOOOLLLLAAAPPPSED!!!!!!");
                 adapter.getGroups().remove(groupPos);
-//                adapter.notifyDataSetChanged();
-//                adapter.notifyItemRemoved(flatPos);
             }
         } else {
             Log.d(TAG, "notifyItemRemoved: shopItem swiped and shopItem removed!");
             //delete swiped SHOPITEM
             ((Category) adapter.getGroups().get(groupPos)).getItems().remove(shopItemPos);
-//            adapter.notifyDataSetChanged();
-//            adapter.notifyItemRemoved(flatPos);
+
+            //if last item removed, do not show expandable group arrow
+            if (((Category) adapter.getGroups().get(groupPos)).getItems().size() < 1) {
+                adapter.expandableList.expandedGroupIndexes[groupPos] = false;
+                adapter.notifyItemChanged(--flatPos);
+            }
         }
 
         //saves the new arrayList
@@ -242,7 +244,13 @@ public class ExpandableListUtils {
 //        Log.d(TAG, "notifyGroupNotClickable: groupPositio = " + groupPosition);
 
         //if group size < 1, than group is empty
+//        if (((Category) adapter.getGroups().get(groupPosition)).getItems().size() < 1) {
+//            adapter.expandableList.expandedGroupIndexes[groupPosition] = false;
+//            adapter.notifyItemChanged(flatPosGroup);
+//            return true;
+//        }
         return ((Category) adapter.getGroups().get(groupPosition)).getItems().size() < 1;
+//        return false;
     }
 
     /**
