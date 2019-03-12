@@ -138,6 +138,11 @@ public class ExpandableListUtils {
                     adapter.expandableList.expandedGroupIndexes[groupIndexFrom] = false;
                     adapter.expandableList.expandedGroupIndexes[groupIndexTo] = true;
                     adapter.notifyDataSetChanged();
+//                    adapter.notifyItemChanged(flatPosFrom);
+//                    adapter.notifyItemChanged(flatPosTo);
+//                    adapter.notifyItemRangeChanged(flatPosTo, ((Category) adapter.getGroups().get(groupIndexTo)).getItemCount());
+
+                    Log.d(TAG, "notifyItemMoved: ITEMCOUNT = " + ((Category) adapter.getGroups().get(groupIndexTo)).getItemCount());
                 }
                 //notify adapter
 //                adapter.notifyDataSetChanged();
@@ -183,6 +188,8 @@ public class ExpandableListUtils {
      */
     @SuppressWarnings("unchecked")
     public static void notifyItemRemoved(ExpandableRecyclerViewAdapter adapter, int flatPos) {
+        Log.d(TAG, "notifyItemRemoved: BEFORE SWIPE ACTIONS SAVE THIS =" + (ArrayList<Category>) adapter.getGroups());
+
         ExpandableListPosition itemPosition = adapter.expandableList.getUnflattenedPosition(flatPos);
 
         int groupPos = itemPosition.groupPos;
@@ -198,13 +205,12 @@ public class ExpandableListUtils {
             if (adapter.isGroupExpanded(flatPos)) {
                 //delete all children from last to first
                 for (int i = size - 1; i >= 0; i--) {
-                    Log.d(TAG, "notifyItemRemoved: shopitem removed " + i);
+                    Log.d(TAG, "notifyItemRemoved: shopItem removed " + i);
                     ((Category) adapter.getGroups().get(groupPos)).getItems().remove(i);
                     adapter.notifyItemRemoved(flatPos + i + 1);
                 }
                 //notify adapter
                 adapter.getGroups().remove(groupPos);
-//                adapter.notifyItemRemoved(flatPos);
             } else {
                 //swiped collapsed group
                 Log.d(TAG, "notifyItemRemoved: GROUP IS COOOOLLLLAAAPPPSED!!!!!!");
@@ -224,7 +230,7 @@ public class ExpandableListUtils {
 
         //saves the new arrayList
 //        arrayListUtils.saveArrayList((ArrayList<Category>) adapter.getGroups(), "categories_arraylist");
-        Log.d(TAG, "notifyItemRemoved: SAVE THIS =" + (ArrayList<Category>) adapter.getGroups());
+        Log.d(TAG, "notifyItemRemoved: AFTER SWIPE ACTIONS SAVE THIS =" + (ArrayList<Category>) adapter.getGroups());
     }
 
     /**

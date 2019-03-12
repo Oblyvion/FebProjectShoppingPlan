@@ -95,30 +95,27 @@ public class ExpandableRecyclerViewAdapter extends com.thoughtbot.expandablerecy
      * @param flatPos int: Flat position of layout.
      */
     void swipeItem(int flatPos) {
-        Log.d(TAG, "swipeItem: blubsadfjdsalfjdsalkfsafdljfdsalkjfdlkjfds;ljfds;l");
         Log.d(TAG, "swipeItem: SWIPE NOW!");
         Log.d(TAG, "swipeItem: swiped FLATPOS = " + flatPos);
-//        this.notifyDataSetChanged();
 
-        //first check expanded group index and save these in an array
-        //second expand the groups again with the array
-        //third remove the item
-
-//        this.expandableList.
+        //FIXME DES HAB ICH :)
         ExpandableListUtils.notifyItemRemoved(this, flatPos);
-        this.notifyItemRemoved(flatPos);
+        this.notifyDataSetChanged();
+
+        //if category deleted, look next group is expanded, then let group expanded
+        if (this.isGroupExpanded(flatPos)) {
+            Log.d(TAG, "swipeItem: group is expanded :)");
+        }
+
+//        this.notifyItemRemoved(flatPos);
+//        this.notifyItemChanged(flatPos);
 //        this.notifyItemRangeChanged(flatPos, getGroups().size());
 
-
-//        this.notifyDataSetChanged();
         Log.d(TAG, "swipeItem: swiped FLATPOS AFTER = " + flatPos);
         Log.d(TAG, "swipeItem: LAST HUHUUUUUUUUUUUUUUU");
-//        this.notifyItemChanged(flatPos);
-//        this.notifyDataSetChanged();
     }
 
     void restoreItem(int flatPos) {
-
         //restore Category
         if (expandableList.getUnflattenedPosition(flatPos).type == 2) {
             //restore from sharedPreferences
@@ -127,11 +124,11 @@ public class ExpandableRecyclerViewAdapter extends com.thoughtbot.expandablerecy
         }
     }
 
+    //TODO recyclerview does not recognize the positions of the first items when a group was moved and is expanded
     @Override
     public boolean onGroupClick(int flatPos) {
         Log.d(TAG, "onGroupClick: GROUP CLICKED!!! @ flatPOSITION " + flatPos);
         if (!ExpandableListUtils.notifyGroupNotClickable(this, flatPos)) {
-            Log.d(TAG, "onGroupClick: flat pos = " + flatPos);
             Log.d(TAG, "onGroupClick: itemCount of clicked group = " + getGroups().get(expandableList.getUnflattenedPosition(flatPos).groupPos).getItemCount());
 //            this.notifyItemRangeInserted(++flatPos, getGroups().get(expandableList.getUnflattenedPosition(flatPos).groupPos).getItemCount());
 //            this.notifyItemRangeChanged(flatPos, getGroups().get(expandableList.getUnflattenedPosition(flatPos).groupPos).getItemCount());
@@ -140,6 +137,9 @@ public class ExpandableRecyclerViewAdapter extends com.thoughtbot.expandablerecy
 //            this.notif
 
 //            this.notifyItemRangeChanged(flatPos, getGroups().size());
+
+            Log.d(TAG, "onGroupClick: IS THIS GROUP " + flatPos + " IS EXPANDED? = " + this.isGroupExpanded(flatPos));
+            Log.d(TAG, "onGroupClick: GROUP POSITION IN ARRAY = " + expandableList.getUnflattenedPosition(flatPos).groupPos);
 
             return super.onGroupClick(flatPos);
         }
