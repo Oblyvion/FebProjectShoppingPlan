@@ -103,9 +103,9 @@ public class ExpandableRecyclerViewAdapter extends com.thoughtbot.expandablerecy
         this.notifyDataSetChanged();
 
         //if category deleted, look next group is expanded, then let group expanded
-        if (this.isGroupExpanded(flatPos)) {
-            Log.d(TAG, "swipeItem: group is expanded :)");
-        }
+//        if (this.isGroupExpanded(flatPos)) {
+//            Log.d(TAG, "swipeItem: group is expanded :)");
+//        }
 
 //        this.notifyItemRemoved(flatPos);
 //        this.notifyItemChanged(flatPos);
