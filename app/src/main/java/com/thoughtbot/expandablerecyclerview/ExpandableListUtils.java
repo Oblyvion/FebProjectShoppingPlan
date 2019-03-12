@@ -83,21 +83,10 @@ public class ExpandableListUtils {
 
                 Collections.swap(adapter.getGroups(), groupIndexFrom, groupIndexTo);
 
+                //TODO SWAP EXPANDED GROUPS WITHOUT SETDATACHANGED
+                //TODO move collapse group and expand group again
+
                 //notify shopItems of group moved
-                /*
-                TODO FIX POSITION BUG!!!!
-                TODO PROBLEM: viewHolder do not recognize,
-                TODO that the swapped expanded group is expanded right now. SHOPITEM DISTURBS!
-                TODO if the swapped expanded group will collapsed, the viewHolder is correct and the
-                TODO app does not crash.
-
-                TODO NEW IMPRESSIONS
-                TODO WHEN SOME GROUP IS EXPANDED AND ANY OTHER GROUP ABOVE THIS EXPANDED GROUP WILL
-                TODO BE SWIPED TO DELETE: THE APP CRASH
-                TODO ERROR: viewHolderPOSITION is INVALID
-
-
-                */
 //                for (int shopItemFlatPositionFrom = flatPosFrom + 1;
 //                     shopItemFlatPositionFrom < groupIndexTo + ((Category) adapter.getGroups().get(groupIndexFrom)).getItemCount();
 //                     shopItemFlatPositionFrom++) {
@@ -118,10 +107,6 @@ public class ExpandableListUtils {
 
                     Log.d(TAG, "notifyItemMoved: ITEMCOUNT GROUP FROM = " + ((Category) adapter.getGroups().get(groupIndexTo)).getItemCount());
                     adapter.notifyItemMoved(flatPosFrom, flatPosTo);
-//                    adapter.notifyItemRangeChanged(++flatPosFrom, ((Category) adapter.getGroups().get(groupIndexTo)).getItemCount());
-//                    adapter.notifyDataSetChanged();
-//                    adapter.expandableList.expandedGroupIndexes[groupIndexFrom] = false;
-
                 }
                 //MOVE CATEGORY UP
                 else {
@@ -138,14 +123,11 @@ public class ExpandableListUtils {
                     adapter.expandableList.expandedGroupIndexes[groupIndexFrom] = false;
                     adapter.expandableList.expandedGroupIndexes[groupIndexTo] = true;
                     adapter.notifyDataSetChanged();
-//                    adapter.notifyItemChanged(flatPosFrom);
-//                    adapter.notifyItemChanged(flatPosTo);
-//                    adapter.notifyItemRangeChanged(flatPosTo, ((Category) adapter.getGroups().get(groupIndexTo)).getItemCount());
 
                     Log.d(TAG, "notifyItemMoved: ITEMCOUNT = " + ((Category) adapter.getGroups().get(groupIndexTo)).getItemCount());
-                }
+                } else
                 //notify adapter
-//                adapter.notifyDataSetChanged();
+                adapter.notifyDataSetChanged();
             } else {
                 Log.d(TAG, "notifyItemMoved: COLLAPSED group MOVE");
 
