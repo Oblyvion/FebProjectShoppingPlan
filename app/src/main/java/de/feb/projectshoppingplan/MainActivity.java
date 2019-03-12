@@ -2,8 +2,10 @@ package de.feb.projectshoppingplan;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
@@ -150,17 +152,30 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onSwiped(@NonNull final RecyclerView.ViewHolder viewHolder, int direction) {
-                Log.d(TAG, "onSwiped: SWIIIIIIIIIIIIIIPE YEAHHHHHHHHHH AND DIRECTION I = " + direction);
-                Log.d(TAG, "onMove: adapter POSITION FROM = " + viewHolder.getAdapterPosition());
+            public void onMoved(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
+                                int fromPos, RecyclerView.ViewHolder target, int toPos, int x, int y) {
+                Log.d(TAG, "onMoved: ON MOOVEEEEDDDDDDDDDDDDDDDDDDDDDDD");
 
-//                adapter.swipeItem(viewHolder.getAdapterPosition());
+                //TODO optical feedback after items swapped
+                //highlight on
+                viewHolder.itemView.setSelected(true);
+                new Handler().postDelayed(new Runnable() {
+                    //executes after timeout
+                    @Override
+                    public void run() {
+                    }
+                }, 500);
+                //highlight off
+                viewHolder.itemView.setSelected(false);
+            }
+
+            @Override
+            public void onSwiped(@NonNull final RecyclerView.ViewHolder viewHolder, int direction) {
+                Log.d(TAG, "onMove: adapter POSITION FROM = " + viewHolder.getAdapterPosition());
 
                 AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.this);
                 builder.setTitle("Do you really want to remove it?");
                 LayoutInflater.from(MainActivity.this).inflate(R.layout.alert_dialog, (ViewGroup) findViewById(android.R.id.content), false);
-
-//                adapter.saveItem(viewHolder.getAdapterPosition());
 
                 // button setup
                 builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -179,7 +194,6 @@ public class MainActivity extends AppCompatActivity {
                 builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
 
                         adapter.restoreItem(viewHolder.getAdapterPosition());
 

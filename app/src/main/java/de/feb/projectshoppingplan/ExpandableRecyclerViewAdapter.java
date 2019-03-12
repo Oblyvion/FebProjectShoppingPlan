@@ -103,9 +103,9 @@ public class ExpandableRecyclerViewAdapter extends com.thoughtbot.expandablerecy
         this.notifyDataSetChanged();
 
         //if category deleted, look next group is expanded, then let group expanded
-        if (this.isGroupExpanded(flatPos)) {
+//        if (this.isGroupExpanded(flatPos)) {
             Log.d(TAG, "swipeItem: group is expanded :)");
-        }
+//        }
 
 //        this.notifyItemRemoved(flatPos);
 //        this.notifyItemChanged(flatPos);
@@ -117,11 +117,11 @@ public class ExpandableRecyclerViewAdapter extends com.thoughtbot.expandablerecy
 
     void restoreItem(int flatPos) {
         //restore Category
-        if (expandableList.getUnflattenedPosition(flatPos).type == 2) {
+//        if (expandableList.getUnflattenedPosition(flatPos).type == 2) {
             //restore from sharedPreferences
             this.notifyItemInserted(flatPos);
             this.notifyDataSetChanged();
-        }
+//        }
     }
 
     //TODO recyclerview does not recognize the positions of the first items when a group was moved and is expanded
