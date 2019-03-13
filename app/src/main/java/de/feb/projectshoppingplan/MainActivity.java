@@ -155,18 +155,19 @@ public class MainActivity extends AppCompatActivity {
             public void onMoved(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
                                 int fromPos, RecyclerView.ViewHolder target, int toPos, int x, int y) {
                 Log.d(TAG, "onMoved: ON MOOVEEEEDDDDDDDDDDDDDDDDDDDDDDD");
-
-                //TODO optical feedback after items swapped
-                //highlight on
-                viewHolder.itemView.setSelected(true);
-                new Handler().postDelayed(new Runnable() {
-                    //executes after timeout
-                    @Override
-                    public void run() {
-                    }
-                }, 500);
-                //highlight off
-                viewHolder.itemView.setSelected(false);
+//
+//                //TODO try: optical feedback after items swapped. Do recyclerView have any highlighting
+//                //TODO when item is selected???
+//                //highlight on
+//                viewHolder.itemView.setSelected(true);
+//                new Handler().postDelayed(new Runnable() {
+//                    //executes after timeout
+//                    @Override
+//                    public void run() {
+//                    }
+//                }, 500);
+//                //highlight off
+//                viewHolder.itemView.setSelected(false);
             }
 
             @Override

@@ -59,6 +59,7 @@ public class ExpandableRecyclerViewAdapter extends com.thoughtbot.expandablerecy
     @Override
     public void onBindGroupViewHolder(ViewHolderCat holder, int flatPosition, ExpandableGroup group) {
         final Category category = (Category) group;
+        holder.itemView.setSelected(true);
         holder.bind(category);
     }
 

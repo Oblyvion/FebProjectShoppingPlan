@@ -85,6 +85,9 @@ public class ExpandableListUtils {
 
                 //TODO SWAP EXPANDED GROUPS WITHOUT SETDATACHANGED
                 //TODO move collapse group and expand group again
+                //collapse dragged group
+//                adapter.expandableList.expandedGroupIndexes[groupIndexFrom] = false;
+
 
                 //notify shopItems of group moved
 //                for (int shopItemFlatPositionFrom = flatPosFrom + 1;
@@ -100,22 +103,7 @@ public class ExpandableListUtils {
 
 //                adapter.notifyDataSetChanged();
                 //MOVE CATEGORY DOWN
-                if (flatPosFrom < flatPosTo) {
-                    Log.d(TAG, "notifyItemMoved: DOWN DOWN DOWN");
-                    Log.d(TAG, "notifyItemMoved: flat pos from = " + flatPosFrom);
-                    Log.d(TAG, "notifyItemMoved: flat pos to = " + flatPosTo);
-
-                    Log.d(TAG, "notifyItemMoved: ITEMCOUNT GROUP FROM = " + ((Category) adapter.getGroups().get(groupIndexTo)).getItemCount());
-                    adapter.notifyItemMoved(flatPosFrom, flatPosTo);
-                }
-                //MOVE CATEGORY UP
-                else {
-                    Log.d(TAG, "notifyItemMoved: UP UP UP");
-                    Log.d(TAG, "notifyItemMoved: from = " + flatPosFrom);
-                    Log.d(TAG, "notifyItemMoved: to = " + flatPosTo);
-                    adapter.notifyItemMoved(flatPosFrom, flatPosTo);
-
-                }
+                adapter.notifyItemMoved(flatPosFrom, flatPosTo);
 
                 //groupIndexTO is NOT expanded
                 if (!adapter.expandableList.expandedGroupIndexes[groupIndexTo]) {
@@ -126,8 +114,8 @@ public class ExpandableListUtils {
 
                     Log.d(TAG, "notifyItemMoved: ITEMCOUNT = " + ((Category) adapter.getGroups().get(groupIndexTo)).getItemCount());
                 } else
-                //notify adapter
-                adapter.notifyDataSetChanged();
+                    //notify adapter
+                    adapter.notifyDataSetChanged();
             } else {
                 Log.d(TAG, "notifyItemMoved: COLLAPSED group MOVE");
 
@@ -191,8 +179,11 @@ public class ExpandableListUtils {
                     ((Category) adapter.getGroups().get(groupPos)).getItems().remove(i);
                     adapter.notifyItemRemoved(flatPos + i + 1);
                 }
-                //notify adapter
+                //notify adapter that group is removed
                 adapter.getGroups().remove(groupPos);
+                //notify adapter that group is collapsed
+                adapter.expandableList.expandedGroupIndexes[groupPos] = false;
+                adapter.notifyItemChanged(flatPos);
             } else {
                 //swiped collapsed group
                 Log.d(TAG, "notifyItemRemoved: GROUP IS COOOOLLLLAAAPPPSED!!!!!!");
