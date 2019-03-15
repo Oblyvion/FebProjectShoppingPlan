@@ -21,10 +21,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -38,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     final static String TAG = "MyActivity";
     //Recyclerview declaration
     RecyclerView recyclerView;
+    LinearLayout listView;
 
     private final ArrayListUtils arrayListHelper = new ArrayListUtils();
 
@@ -90,11 +96,38 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         Log.d(TAG, "MainActivity: On Create");
 
+        listView = findViewById(R.id.linLayoutHorizontalList);
+
         //finden recycler view
         recyclerView = findViewById(R.id.recyclerViewMain);
 
         //developer is able to RESET ALL
         delete();
+
+
+        Button listBttn = new Button(this);
+        //insert listBttn into horizontalList
+//        listBttn.setText();
+        listView.addView(listBttn);
+
+
+        Log.d(TAG, "onCreate: LISTVIEW CREATED");
+        listBttn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "onClick: HORIZONTAL LISTVIEW BUTTON CLICKED");
+                Toast.makeText(getApplicationContext(), "This is HORIZONTAL List BUTTON", Toast.LENGTH_LONG).show();
+                arrayListHelper.loadArrayList();
+            }
+        });
+        //TODO create horizontal listView
+//        listView.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View view, MotionEvent motionEvent) {
+//                Toast.makeText(getApplicationContext(), "This is HORIZONTAL LISTVIEW", Toast.LENGTH_LONG).show();
+//                return false;
+//            }
+//        });
 
         loadSharedPreferences();
 

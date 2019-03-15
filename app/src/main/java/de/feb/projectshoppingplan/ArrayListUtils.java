@@ -15,9 +15,14 @@ public class ArrayListUtils {
 //    private final static String TAG = "MyActivity";
     //Main list of Categories (contains all Categories and the corresponding ShopItem lists)
     private ArrayList<Category> categories = new ArrayList<>();
+    private String nameCat;
 
     public ArrayListUtils() {
     }
+
+//    public void setName(String name) {
+//        this.nameCat = name;
+//    }
 
     /**
      * Convert json string to ArrayList<ShopItem>.
@@ -62,7 +67,7 @@ public class ArrayListUtils {
         //create new Gson object
         Gson gson = new Gson();
         //get json string of Shared Preferences
-        String json = prefs.getString("categories_arraylist", null);
+        String json = prefs.getString("categories_arraylist", null);    //TODO change String name for list x
         //specify type so that Gson knows which type Json should be converted to
         Type type = new TypeToken<ArrayList<Category>>() {
         }.getType();
