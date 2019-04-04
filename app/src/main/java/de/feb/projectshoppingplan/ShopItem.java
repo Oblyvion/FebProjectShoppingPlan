@@ -1,11 +1,16 @@
 package de.feb.projectshoppingplan;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.graphics.drawable.VectorDrawableCompat;
 import android.support.v4.content.ContextCompat;
+import android.widget.ImageView;
 
 public class ShopItem implements Parcelable {
 
@@ -15,7 +20,7 @@ public class ShopItem implements Parcelable {
     Bitmap icon;
     Boolean checked = false;
     private transient Activity activity;
-    transient Drawable checkmark;
+    transient ImageView checkmark;
 
     /**
      * Contains all functions to build a item view for adding new shop item.
@@ -70,11 +75,12 @@ public class ShopItem implements Parcelable {
         parcel.writeString(name);
     }
 
-    void setCheckmark() {
+    int getCheckmarkId() {
         if (this.checked) {
-            this.checkmark = ContextCompat.getDrawable(AppContext.getContext(), R.drawable.ic_check_box_black_24dp);
+
+           return this.activity.getResources().getIdentifier("de.feb.projectshoppingplan:drawable/ic_check_box_black_24dp", null, null);
         }
-        else this.checkmark = ContextCompat.getDrawable(AppContext.getContext(),R.drawable.ic_check_box_outline_blank_black_24dp);
+        else return this.activity.getResources().getIdentifier("de.feb.projectshoppingplan:drawable/ic_check_box_outline_blank_black_24dp", null, null);
     }
 
     void setChecked(boolean check) { this.checked = check; }

@@ -47,7 +47,8 @@ public class ListElementAdapterAddShopItemToCategory extends RecyclerView.Adapte
         ShopItem shopItem = itemList.get(position);
         holder.name.setText(shopItem.name);
         holder.imageViewIcon.setImageBitmap(shopItem.getIcon());
-        holder.imageViewCheckMark.setImageDrawable(shopItem.checkmark);
+        holder.imageViewCheckMark.setImageResource(shopItem.getCheckmarkId());
+//                setImageDrawable(shopItem.checkmark);
     }
 
     @Override

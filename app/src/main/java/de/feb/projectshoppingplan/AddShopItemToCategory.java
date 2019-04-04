@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -34,6 +35,7 @@ public class AddShopItemToCategory extends AppCompatActivity {
 
     String temp_user_input;
     EditText editText;
+    ImageButton imageButton;
     RecyclerView recyclerView;
     ArrayList<ShopItem> itemList_text;
     ArrayList<ShopItem> itemList_voice;
@@ -94,6 +96,11 @@ public class AddShopItemToCategory extends AppCompatActivity {
         EditText editor = new EditText(this);
         editor.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
 
+        //TODO add resource microphone to edittext
+        imageButton = findViewById(R.id.bttn_editText_microphone);
+        int id = getResources().getIdentifier("de.feb.projectshoppingplan:drawable/ic_keyboard_voice_black_24dp", null, null);
+        imageButton.setImageResource(id);
+
         recyclerView = findViewById(R.id.recyclerView);
 
         itemList_text = new ArrayList<>();
@@ -121,7 +128,7 @@ public class AddShopItemToCategory extends AppCompatActivity {
                         if (!findDuplicates(itemList_forMain, itemList_text.get(position)) && itemList_text.get(position).checked) {
                             Toast.makeText(AddShopItemToCategoryActivity, itemList_text.get(position).name + " added", Toast.LENGTH_SHORT).show();
                             Log.d(TAG, "onItemClick: NO DUPLICATES WERE FOUND....");
-                            itemList_text.get(position).setCheckmark();
+                            itemList_text.get(position).getCheckmarkId();
                             itemList_forMain.add(itemList_text.get(position));
 
                             for (int i = 0; i < categories.size(); i++) {
@@ -133,7 +140,7 @@ public class AddShopItemToCategory extends AppCompatActivity {
                             arrayListHelper.saveArrayList(categories, "categories_arraylist");
                             mediaPlayer.start();
                         } else {
-                            itemList_text.get(position).setCheckmark();
+                            itemList_text.get(position).getCheckmarkId();
                             Toast.makeText(AddShopItemToCategoryActivity, "deleted!", Toast.LENGTH_SHORT).show();
 
 
@@ -202,20 +209,20 @@ public class AddShopItemToCategory extends AppCompatActivity {
         });
 
 
-        //editText onTouchListener - triggers if voice button is clicked
-        editText.setOnTouchListener(new View.OnTouchListener() {
+        //imageButton onTouchListener - triggers if voice button is clicked
+        imageButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 final int DRAWABLE_RIGHT = 2;
 
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    if (event.getRawX() >= (editText.getRight() - 30 - 2 * editText.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+//                if (event.getAction() == MotionEvent.ACTION_UP) {
+//                    if (event.getRawX() >= (editText.getRight() - 30 - 2 * editText.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
                         Log.d(TAG, "Hallo hier click on voice button!");
                         promptSpeechInput();
                         return true;
-                    }
-                }
-                return false;
+//                    }
+//                }
+//                return false;
             }
         });
     }
@@ -357,11 +364,11 @@ public class AddShopItemToCategory extends AppCompatActivity {
         ShopItem item = new ShopItem(temp_user_input);
         item.setActivity(this);
         item.setIcon();
-        item.setCheckmark();
+        item.getCheckmarkId();
 
         if (findDuplicates(itemList_forMain, item)) {
             item.setChecked(true);
-            item.setCheckmark();
+            item.getCheckmarkId();
             showItemList(item);
             adapter.notifyDataSetChanged();
             return;
