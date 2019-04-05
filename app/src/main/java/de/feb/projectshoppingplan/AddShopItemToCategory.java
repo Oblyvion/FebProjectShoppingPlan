@@ -98,8 +98,8 @@ public class AddShopItemToCategory extends AppCompatActivity {
 
         //TODO add resource microphone to edittext
         imageButton = findViewById(R.id.bttn_editText_microphone);
-        int id = getResources().getIdentifier("de.feb.projectshoppingplan:drawable/ic_keyboard_voice_black_24dp", null, null);
-        imageButton.setImageResource(id);
+        int idVoiceSymbol = getResources().getIdentifier("de.feb.projectshoppingplan:drawable/ic_keyboard_voice_black_24dp", null, null);
+        imageButton.setImageResource(idVoiceSymbol);
 
         recyclerView = findViewById(R.id.recyclerView);
 

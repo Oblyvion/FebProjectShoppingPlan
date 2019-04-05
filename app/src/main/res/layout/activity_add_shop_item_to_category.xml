@@ -26,18 +26,14 @@
                 android:id="@+id/editText_newShopItem"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:drawablePadding="20dp"
-                android:ems="10"
                 android:hint="@string/hint_editText_AddNewShopItemToCategory"
 
                 android:imeOptions="actionDone"
                 android:inputType="textCapSentences"
                 android:paddingLeft="15dp"
                 android:paddingRight="30dp"
-                tools:layout_editor_absoluteX="16dp"
-                android:paddingEnd="30dp"
                 android:paddingStart="15dp"
+                android:paddingEnd="30dp"
                 android:textSize="18sp"
                 android:autofillHints="ShopItem" />
         </android.support.design.widget.TextInputLayout>
@@ -47,7 +43,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="end"
             android:layout_margin="10dp"
-            android:padding="20dp"/>
+            android:background="@null"/>
     </FrameLayout>
 
 
