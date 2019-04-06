@@ -148,9 +148,9 @@ public class ExpandableRecyclerViewAdapter extends com.thoughtbot.expandablerecy
     }
 
     /**
-     * Sorts all categories alphabetically.
+     * Collapse all categories.
      */
-    void onSortCategories() {
+    void onCollapseCategories() {
         ExpandableListUtils.notifyCollapseAllGroups(this);
     }
 

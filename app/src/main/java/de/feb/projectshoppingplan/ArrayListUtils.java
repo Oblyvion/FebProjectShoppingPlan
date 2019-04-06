@@ -11,11 +11,12 @@ import java.util.ArrayList;
 
 public class ArrayListUtils {
 
-    //TAG logcat
-//    private final static String TAG = "MyActivity";
-    //Main list of Categories (contains all Categories and the corresponding ShopItem lists)
-    private ArrayList<Category> categories = new ArrayList<>();
-    private String nameCat;
+//    private final static String TAG = "ArrayListUtils";
+
+    //List of something
+    private ArrayList<Category> list = new ArrayList<>();
+
+    //    private String nameCat;
 
     public ArrayListUtils() {
     }
@@ -59,9 +60,9 @@ public class ArrayListUtils {
      * @return ArrayList<Category>
      */
     ArrayList<Category> loadArrayList() {
-        //Log.d(TAG, "Categories vor .clear(): "+categories+"\n");
-        //Delete Categories before adding everything from Shared Preferences
-        categories.clear();
+        //Log.d(TAG, "list vor .clear(): "+list+"\n");
+        //Delete list before adding everything from Shared Preferences
+        list.clear();
         //get Shared Preferences myPrefs
         SharedPreferences prefs = AppContext.getContext().getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
         //create new Gson object
@@ -71,9 +72,9 @@ public class ArrayListUtils {
         //specify type so that Gson knows which type Json should be converted to
         Type type = new TypeToken<ArrayList<Category>>() {
         }.getType();
-        //add the Json string converted to an ArrayList<Category> to the categories list
-        categories = gson.fromJson(json, type);
-        //Log.d(TAG, "DIE CATEGORY LIST IN LOAD: "+categories);
-        return categories;
+        //add the Json string converted to an ArrayList<Category> to the list list
+        list = gson.fromJson(json, type);
+        //Log.d(TAG, "DIE CATEGORY LIST IN LOAD: "+list);
+        return list;
     }
 }

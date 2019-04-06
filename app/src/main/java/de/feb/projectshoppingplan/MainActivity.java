@@ -105,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
         delete();
 
 
+        // TODO open first list
         Button listBttn = new Button(this);
         //insert listBttn into horizontalList
 //        listBttn.setText();
@@ -265,6 +266,8 @@ public class MainActivity extends AppCompatActivity {
                             dialog.dismiss();
 
                             clearAllCategories();
+
+                            adapter.onCollapseCategories();
 
                             //Save der Liste nachdem alle categories gecleared wurden
                             arrayListHelper.saveArrayList(categories, "categories_arraylist");
@@ -458,7 +461,7 @@ public class MainActivity extends AppCompatActivity {
                 return catLeft.getTitle().compareTo(catRight.getTitle());
             }
         });
-        adapter.onSortCategories();
+        adapter.onCollapseCategories();
     }
 
     /**
