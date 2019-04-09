@@ -8,4 +8,9 @@
     android:layout_marginRight="0dp"
     android:background="@color/colorPrimaryDark"
     android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+    <ImageButton
+        android:id="@+id/imageBttnAddNewList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="Add new list" />
 </android.support.v7.widget.Toolbar>

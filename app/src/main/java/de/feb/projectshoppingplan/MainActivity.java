@@ -27,6 +27,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -42,8 +43,12 @@ public class MainActivity extends AppCompatActivity {
     //TAG logcat
     final static String TAG = "MyActivity";
     //Recyclerview declaration
-    RecyclerView recyclerView;
-    LinearLayout listView;
+
+    private Toolbar toolbar;
+    private LinearLayout linLayoutAllCreatedLists;
+    private RecyclerView recyclerView;
+    private ImageButton imgBttnCreateNewList;
+
 
     private final ArrayListUtils arrayListHelper = new ArrayListUtils();
 
@@ -92,24 +97,102 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         Log.d(TAG, "MainActivity: On Create");
 
-        listView = findViewById(R.id.linLayoutHorizontalList);
+        //image button to create a new list
+        imgBttnCreateNewList = findViewById(R.id.imageBttnAddNewList);
+
+        //linear layout for all created lists of the user
+        linLayoutAllCreatedLists = findViewById(R.id.linLayoutHorizontalList);
 
         //finden recycler view
         recyclerView = findViewById(R.id.recyclerViewMain);
 
         //developer is able to RESET ALL
-        delete();
+//        delete();
+
+
+        int idImgAddCategory = getResources().getIdentifier("de.feb.projectshoppingplan:drawable/add_category_black", null, null);
+        imgBttnCreateNewList.setBackgroundResource(idImgAddCategory);
+        //ask for list name and adds the new list to linLayoutAllCreatedLists
+        //the toolbar header should be overrode with the list name
+        imgBttnCreateNewList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(), "YEAHIIIIIII", Toast.LENGTH_LONG).show();
+                //create dialog
+                AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.this);
+                View viewInflated = LayoutInflater.from(MainActivity.this).inflate(R.layout.alert_dialog, (ViewGroup) findViewById(android.R.id.content), false);
+
+                // input setup
+                final EditText input = viewInflated.findViewById(R.id.input);
+                input.setHint(R.string.hintEditTextNewList);
+                builder.setView(viewInflated);
+                builder.setTitle(R.string.DialogTitleNewCat);
+
+                //show keyboard
+                imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+
+                builder.setCancelable(false);
+
+                // button setup
+                builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+
+                        //create new main list
+//                        ArrayList<ShopItem> list = new ArrayList<>();
+//
+//                        String temp = input.getText().toString();
+//                        int help = 0;
+//                        for (int i = 0; i < categories.size(); i++) {
+//                            if (categories.get(i).getTitle().equals(temp)) {
+//                                while (categories.get(i).getTitle().equals(temp)) {
+//                                    help++;
+//                                    temp = input.getText().toString() + "(" + help + ")";
+//                                }
+//                            }
+//                        }
+//
+//                        //newCat erstellen mit Name und Liste
+//                        Category newCat = new Category(temp, list);
+//
+//                        //Zur Liste der categories hinzufügen
+//                        categories.add(newCat);
+//
+//                        //dafür sorgen das der adapter die neue category auch anzeigt
+//                        adapter.addNewGroup();
+//
+//                        datachanged();
+//
+//                        //saves arrayList categories after added new category group
+//                        arrayListHelper.saveArrayList(categories, "categories_arraylist");
+//
+//                        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+                    }
+                });
+                builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Log.d(TAG, "onClick: 3: NEGATIVE BUTTON");
+                        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+                        dialog.cancel();
+                    }
+                });
+                builder.show();
+            }
+        });
 
 
         // TODO open first list
         Button listBttn = new Button(this);
         //insert listBttn into horizontalList
 //        listBttn.setText();
-        listView.addView(listBttn);
+        linLayoutAllCreatedLists.addView(listBttn);
 
 
         Log.d(TAG, "onCreate: LISTVIEW CREATED");
@@ -121,14 +204,6 @@ public class MainActivity extends AppCompatActivity {
                 arrayListHelper.loadArrayList();
             }
         });
-        //TODO create horizontal listView
-//        listView.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View view, MotionEvent motionEvent) {
-//                Toast.makeText(getApplicationContext(), "This is HORIZONTAL LISTVIEW", Toast.LENGTH_LONG).show();
-//                return false;
-//            }
-//        });
 
         loadSharedPreferences();
 
@@ -155,7 +230,6 @@ public class MainActivity extends AppCompatActivity {
             }
 
             /**
-             *
              * @param recyclerView The current recycler view.
              * @param fromViewHolder ViewHolder which is dragged.
              * @param toViewHolder ViewHolder where dropped to.
@@ -286,9 +360,35 @@ public class MainActivity extends AppCompatActivity {
                 }
                 if (menuItem.toString().equals(getResources().getString(R.string.menuitem_sort))) {
                     Log.d("MENUItem", "Menu Item sort");
-                    sortList();
-                    arrayListHelper.saveArrayList(categories, "categories_arraylist");
-                    datachanged();
+                    AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.this);
+                    builder.setTitle("Sort all categories alphabetically?");
+                    LayoutInflater.from(MainActivity.this).inflate(R.layout.alert_dialog, (ViewGroup) findViewById(android.R.id.content), false);
+
+                    // button setup
+                    builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+
+                            sortList();
+
+//                            adapter.onCollapseCategories();
+                            datachanged();
+
+                            //Save der Liste nachdem alle categories gecleared wurden
+                            arrayListHelper.saveArrayList(categories, "categories_arraylist");
+
+
+                        }
+                    });
+                    builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+
+                    builder.show();
                 }
 
                 if (menuItem.toString().equals("Intro Screen ON/OFF")) {
@@ -359,6 +459,7 @@ public class MainActivity extends AppCompatActivity {
 
 // input setup
                 final EditText input = viewInflated.findViewById(R.id.input);
+                input.setHint(R.string.hintEditTextNewCat);
                 builder.setView(viewInflated);
                 builder.setTitle(R.string.DialogTitleNewCat);
 

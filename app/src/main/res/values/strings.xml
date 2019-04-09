@@ -25,5 +25,6 @@
     <string name="BuilderTitleOff">Do you want to set intro screen OFF?</string>
     <string name="DialogTitleNewCat">Add a new category:</string>
     <string name="hintEditTextNewCat">1. letter should be capital for better sorting.</string>
+    <string name="hintEditTextNewList">Name of new list</string>
 
 </resources>
