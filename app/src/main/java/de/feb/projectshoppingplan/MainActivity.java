@@ -53,6 +53,8 @@ public class MainActivity extends AppCompatActivity {
     //main list (obtain all categories with their shopItems)
     public ArrayList<Category> categories = new ArrayList<>();
 
+    private static String LIST_0 = null;
+
     //shared preferences key
     private String key;
 
@@ -102,7 +104,11 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         Log.d(TAG, "MainActivity: On Create");
 
+
         key = getString(R.string.list0_key);
+//        SharedPreferences prefs = getSharedPreferences("myPrefs" + key, Context.MODE_PRIVATE);
+
+        Log.d(TAG, "onCreate: KEY = " + key);
 
         //image button to create a new list
         imgBttnCreateNewList = findViewById(R.id.imageBttnAddNewList);
@@ -117,15 +123,16 @@ public class MainActivity extends AppCompatActivity {
 //        delete();
 
 //        toolbar.setTitle("LIST 0");
+        setTitle(key);
 
         int idImgAddCategory = getResources().getIdentifier("de.feb.projectshoppingplan:drawable/add_category_black", null, null);
         imgBttnCreateNewList.setBackgroundResource(idImgAddCategory);
+
         //ask for list name and adds the new list to linLayoutAllCreatedLists
-        //the toolbar header should be overrode with the list name
         imgBttnCreateNewList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "YEAHIIIIIII", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "LIST BUTTON 1 OF 2: " + key, Toast.LENGTH_SHORT).show();
                 //create dialog
                 AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.this);
                 View viewInflated = LayoutInflater.from(MainActivity.this).inflate(R.layout.alert_dialog, (ViewGroup) findViewById(android.R.id.content), false);
@@ -157,10 +164,12 @@ public class MainActivity extends AppCompatActivity {
 
 
                         //TODO REPLACE KEY
-                        key = getString(R.string.list1_key);
+                        key = input.getText().toString();
+
+
                         SharedPreferences prefs = getSharedPreferences("myPrefs" + key, Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = prefs.edit();
-                        editor.putString(key, getString(R.string.list1_key)).apply();
+                        editor.putString(key, getString(R.string.list0_key)).apply();
 
                         //TODO SAVE NEW MAIN LIST IN SHARED PREFERENCES
                         arrayListHelper.saveArrayList(categories, key);
@@ -172,18 +181,19 @@ public class MainActivity extends AppCompatActivity {
 
                         datachanged();
 
-                        Button listBttn = new Button(getApplicationContext());
-                        linLayoutAllCreatedLists.addView(listBttn);
-                        listBttn.setOnClickListener(new View.OnClickListener() {
+                        Button listBttn1 = new Button(getApplicationContext());
+                        linLayoutAllCreatedLists.addView(listBttn1);
+                        listBttn1.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Toast.makeText(getApplicationContext(), "This is LIST 1 of 2", Toast.LENGTH_SHORT).show();
-                                arrayListHelper.loadArrayList(getString(R.string.list1_key));
-                                key = getString(R.string.list1_key);
+//                                key =
+                                Toast.makeText(getApplicationContext(), "This is the current list 2 of 2: " + key, Toast.LENGTH_SHORT).show();
+                                arrayListHelper.loadArrayList(key);
+//                                key = getString(R.string.list1_key);
                                 loadSharedPreferences();
                                 datachanged();
                                 adapter.onSwitchLists(key);
-                                toolbar.setTitle("LIST 1");
+                                toolbar.setTitle(key);
                             }
                         });
 
@@ -204,29 +214,29 @@ public class MainActivity extends AppCompatActivity {
 
 
         // TODO open first list
-        Button listBttn = new Button(this);
-        //insert listBttn into horizontalList
-//        listBttn.setText();
-        linLayoutAllCreatedLists.addView(listBttn);
+        Button listBttn0 = new Button(this);
+        //insert listBttn0 into horizontalList
+//        listBttn0.setText();
+        linLayoutAllCreatedLists.addView(listBttn0);
 
-        Log.d(TAG, "onCreate: LISTVIEW CREATED");
-        listBttn.setOnClickListener(new View.OnClickListener() {
+        listBttn0.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "onClick: HORIZONTAL LISTVIEW BUTTON CLICKED");
-                Toast.makeText(getApplicationContext(), "This is LIST 0", Toast.LENGTH_SHORT).show();
-                key = getString(R.string.list0_key);
+
+                if (LIST_0 == null)
+                    LIST_0 = getString(R.string.list0_key);
+                key = LIST_0;
+
+                Toast.makeText(getApplicationContext(), "This is LIST 1 of 2: " + key, Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "onClick: key = " + key);
+
+                // load standard list 0
                 arrayListHelper.loadArrayList(key);
                 loadSharedPreferences();
                 datachanged();
-                toolbar.setTitle("LIST 0");
-
-                Log.d(TAG, "onClick: EXPANDABLERECYCLERVIEWADAPTER GROUP = " + adapter.getGroups());
-                Log.d(TAG, "onClick: GROUP.SIZE = " + adapter.getGroups().size());
                 adapter.onSwitchLists(key);
-                Log.d(TAG, "onClick: EXPANDABLERECYCLERVIEWADAPTER SIZE = " + adapter.getItemCount());
-
-                //TODO WHAT WILL HAPPEN AFTER THIS? adapter.getItemCount() IS WRONG
+                toolbar.setTitle(key);
             }
         });
 
@@ -613,9 +623,10 @@ public class MainActivity extends AppCompatActivity {
      * Adapter notifies data changes and show them.
      */
     public void datachanged() {
-//        recyclerView.getRecycledViewPool().clear();
+        recyclerView.getRecycledViewPool().clear();
         Log.d(TAG, "datachanged: adapter = " + adapter);
         adapter.notifyDataSetChanged();
+        adapter.onSwitchLists(key);
     }
 
     /**
@@ -623,6 +634,12 @@ public class MainActivity extends AppCompatActivity {
      */
     @SuppressWarnings("unchecked")
     private void loadSharedPreferences() {
+
+        Log.d(TAG, "loadSharedPreferences: KEY = " + key);
+        if (key == null)
+            key = getString(R.string.list0_key);
+        Log.d(TAG, "loadSharedPreferences: KEY = " + key);
+
         SharedPreferences prefs = getSharedPreferences("myPrefs" + key, Context.MODE_PRIVATE);
         if (prefs.getString(key, null) != null) {
             categories.clear();
@@ -662,7 +679,7 @@ public class MainActivity extends AppCompatActivity {
 //
 
             Log.d(TAG, "loadSharedPreferences: HALLLLOOO EEEEEELSSSSSSEEEEEE");
-            
+
 //            key = prefs.getString("key", getString(R.string.list0_key));
 //
 //            Log.d(TAG, "loadSharedPreferences: KEY ============= " + key);

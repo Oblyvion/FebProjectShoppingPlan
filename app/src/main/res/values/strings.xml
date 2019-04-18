@@ -28,7 +28,7 @@
     <string name="DialogTitleNewList">Add a new list:</string>
     <string name="hintEditTextNewList">Name of new list</string>
 
-    <string name="list0_key" translatable="false">categories_arraylist</string>
+    <string name="list0_key" translatable="false">1. List</string>
     <string name="list1_key" translatable="false">key_categories_arrayList1</string>
     <string name="list2_key" translatable="false">key_categories_arrayList2</string>
 
