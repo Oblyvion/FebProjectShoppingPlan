@@ -24,10 +24,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_weight="60"
+        android:text="Category"
         android:textAlignment="center"
         android:textSize="20sp"
-        android:text="Category"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
 
     <ImageView
         android:id="@+id/imageViewAddCategory"

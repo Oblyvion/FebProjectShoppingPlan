@@ -3,8 +3,10 @@ package de.feb.projectshoppingplan;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
 
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.speech.RecognizerIntent;
 import android.support.v7.app.AppCompatActivity;
@@ -30,7 +32,7 @@ import java.util.Locale;
 
 public class AddShopItemToCategory extends AppCompatActivity {
 
-    private final static String TAG = "MyActivity";
+    private final static String TAG = "AddShopItem";
     private final int REQ_CODE_SPEECH_INPUT = 100;
 
     String temp_user_input;
@@ -69,6 +71,9 @@ public class AddShopItemToCategory extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_shop_item_to_category);
 
+//        SharedPreferences prefs = getApplicationContext().getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
+        final String key = getApplicationContext().getString(R.string.list0_key);
+//        Log.d(TAG, "onCreate: --------->>>> KEY ----------<<<<<< = " + key);
 
         //create music player with free sound "service_bell" from source: http://soundbible.com/2218-Service-Bell-Help.html
         final MediaPlayer mediaPlayer = MediaPlayer.create(AddShopItemToCategory.this, R.raw.service_bell_daniel_simion);
@@ -85,7 +90,7 @@ public class AddShopItemToCategory extends AppCompatActivity {
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
 
-        categories = arrayListHelper.loadArrayList();
+        categories = arrayListHelper.loadArrayList(key);
 
         Log.d(TAG, "Categories hier!!: " + categories);
 
@@ -137,7 +142,7 @@ public class AddShopItemToCategory extends AppCompatActivity {
                                     categories.get(i).getItems().addAll(itemList_forMain);
                                 }
                             }
-                            arrayListHelper.saveArrayList(categories, "categories_arraylist");
+                            arrayListHelper.saveArrayList(categories, key);
                             mediaPlayer.start();
                         } else {
                             itemList_text.get(position).getCheckmarkId();
@@ -163,7 +168,7 @@ public class AddShopItemToCategory extends AppCompatActivity {
                                     categories.get(i).getItems().addAll(itemList_forMain);
                                 }
                             }
-                            arrayListHelper.saveArrayList(categories, "categories_arraylist");
+                            arrayListHelper.saveArrayList(categories, key);
                         }
                         adapter.notifyDataSetChanged();
                     }

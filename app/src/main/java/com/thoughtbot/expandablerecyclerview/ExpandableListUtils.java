@@ -25,15 +25,17 @@ public class ExpandableListUtils {
      * @param adapter ExpandableRecyclerViewAdapter in which the data should be changed.
      */
     @SuppressWarnings("unchecked")
-    public static void notifyGroupDataChanged(ExpandableRecyclerViewAdapter adapter) {
-        ArrayListUtils arrayListUtils = new ArrayListUtils();
+    public static void notifyGroupDataChanged(ExpandableRecyclerViewAdapter adapter, String key) {
 
-        //        Log.d(TAG, "Das ist Arraylist vor save: " + (ArrayList<Category>) adapter.getGroups());
-        arrayListUtils.saveArrayList((ArrayList<Category>) adapter.getGroups(), "categories_arraylist");
+        Log.d(TAG, "Das ist Arraylist vor save: " + (ArrayList<Category>) adapter.getGroups());
+        arrayListUtils.saveArrayList((ArrayList<Category>) adapter.getGroups(), key);
+
+        Log.d(TAG, "notifyGroupDataChanged: [adapter.getGroups().size()] = " + adapter.getGroups().size());
 
         //add new expandable group and collapse all existing groups
         adapter.expandableList.expandedGroupIndexes = new boolean[adapter.getGroups().size()];
         for (int i = 0; i < adapter.getGroups().size(); i++) {
+            Log.d(TAG, "notifyGroupDataChanged: GET GROUP " + i + " = " + adapter.getGroups().get(i));
             adapter.expandableList.expandedGroupIndexes[i] = false;
         }
     }
@@ -84,7 +86,7 @@ public class ExpandableListUtils {
                 Collections.swap(adapter.getGroups(), groupIndexFrom, groupIndexTo);
 
                 //TODO SWAP EXPANDED GROUPS WITHOUT SETDATACHANGED
-                //TODO move collapse group and expand group again
+                //TODO TRY: move collapse group and expand group after swap
                 //collapse dragged group
 //                adapter.expandableList.expandedGroupIndexes[groupIndexFrom] = false;
 
@@ -102,7 +104,7 @@ public class ExpandableListUtils {
                 Log.d(TAG, "notifyItemMoved: FLATPOSTO AFTER FOR_LOOP = " + flatPosTo);
 
 //                adapter.notifyDataSetChanged();
-                //MOVE CATEGORY DOWN
+                //MOVE CATEGORY
                 adapter.notifyItemMoved(flatPosFrom, flatPosTo);
 
                 //groupIndexTO is NOT expanded

@@ -27,4 +27,5 @@
     <string name="DialogTitleNewCat">Neue Kategorie hinzufügen:</string>
     <string name="hintEditTextNewCat">Besseres sortieren - Großbuchstabe am Anfang benutzen</string>
     <string name="hintEditTextNewList">Name der neuen Liste</string>
+    <string name="DialogTitleNewList">Neue Liste erstellen:</string>
 </resources>

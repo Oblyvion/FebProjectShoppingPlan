@@ -2,10 +2,8 @@ package de.feb.projectshoppingplan;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
@@ -52,14 +50,17 @@ public class MainActivity extends AppCompatActivity {
 
     private final ArrayListUtils arrayListHelper = new ArrayListUtils();
 
-    //Categories
+    //main list (obtain all categories with their shopItems)
+    public ArrayList<Category> categories = new ArrayList<>();
+
+    //shared preferences key
+    private String key;
+
     final String[] STANDARD_CATEGORIES = {AppContext.getContext().getString(R.string.standardCat0), AppContext.getContext().getString(R.string.standardCat1),
             AppContext.getContext().getString(R.string.standardCat2), AppContext.getContext().getString(R.string.standardCat3), AppContext.getContext().getString(R.string.standardCat4), AppContext.getContext().getString(R.string.standardCat5)};
 
     ExpandableRecyclerViewAdapter adapter;
 
-    //Main Liste der Categories (enthält alle Categories und die dazu gehörigen ShopItem Listen)
-    public ArrayList<Category> categories = new ArrayList<>();
 
     private InputMethodManager imm;
 
@@ -101,6 +102,8 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         Log.d(TAG, "MainActivity: On Create");
 
+        key = getString(R.string.list0_key);
+
         //image button to create a new list
         imgBttnCreateNewList = findViewById(R.id.imageBttnAddNewList);
 
@@ -113,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
         //developer is able to RESET ALL
 //        delete();
 
+//        toolbar.setTitle("LIST 0");
 
         int idImgAddCategory = getResources().getIdentifier("de.feb.projectshoppingplan:drawable/add_category_black", null, null);
         imgBttnCreateNewList.setBackgroundResource(idImgAddCategory);
@@ -121,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
         imgBttnCreateNewList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "YEAHIIIIIII", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "YEAHIIIIIII", Toast.LENGTH_SHORT).show();
                 //create dialog
                 AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.this);
                 View viewInflated = LayoutInflater.from(MainActivity.this).inflate(R.layout.alert_dialog, (ViewGroup) findViewById(android.R.id.content), false);
@@ -130,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
                 final EditText input = viewInflated.findViewById(R.id.input);
                 input.setHint(R.string.hintEditTextNewList);
                 builder.setView(viewInflated);
-                builder.setTitle(R.string.DialogTitleNewCat);
+                builder.setTitle(R.string.DialogTitleNewList);
 
                 //show keyboard
                 imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -144,35 +148,46 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
 
-                        //create new main list
-//                        ArrayList<ShopItem> list = new ArrayList<>();
-//
-//                        String temp = input.getText().toString();
-//                        int help = 0;
-//                        for (int i = 0; i < categories.size(); i++) {
-//                            if (categories.get(i).getTitle().equals(temp)) {
-//                                while (categories.get(i).getTitle().equals(temp)) {
-//                                    help++;
-//                                    temp = input.getText().toString() + "(" + help + ")";
-//                                }
-//                            }
-//                        }
-//
-//                        //newCat erstellen mit Name und Liste
-//                        Category newCat = new Category(temp, list);
-//
-//                        //Zur Liste der categories hinzufügen
-//                        categories.add(newCat);
-//
-//                        //dafür sorgen das der adapter die neue category auch anzeigt
-//                        adapter.addNewGroup();
-//
-//                        datachanged();
-//
-//                        //saves arrayList categories after added new category group
-//                        arrayListHelper.saveArrayList(categories, "categories_arraylist");
-//
-//                        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+                        Log.d(TAG, "onClick: KEYYYY =      " + key);
+                        //TODO SAVE CURRENT MAIN LIST IN SHARED PREFERENCES
+                        arrayListHelper.saveArrayList(categories, key);
+
+                        //TODO CLEAR CURRENT MAIN LIST
+                        categories.clear();
+
+
+                        //TODO REPLACE KEY
+                        key = getString(R.string.list1_key);
+                        SharedPreferences prefs = getSharedPreferences("myPrefs" + key, Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = prefs.edit();
+                        editor.putString(key, getString(R.string.list1_key)).apply();
+
+                        //TODO SAVE NEW MAIN LIST IN SHARED PREFERENCES
+                        arrayListHelper.saveArrayList(categories, key);
+
+                        //TODO CHANGE TOOLBAR HEADER TO NEW MAIN LIST NAME
+                        //TODO SAVE INPUT TEXT INTO SHARED PREFERENCES
+                        toolbar.setTitle(input.getText());
+
+
+                        datachanged();
+
+                        Button listBttn = new Button(getApplicationContext());
+                        linLayoutAllCreatedLists.addView(listBttn);
+                        listBttn.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Toast.makeText(getApplicationContext(), "This is LIST 1 of 2", Toast.LENGTH_SHORT).show();
+                                arrayListHelper.loadArrayList(getString(R.string.list1_key));
+                                key = getString(R.string.list1_key);
+                                loadSharedPreferences();
+                                datachanged();
+                                adapter.onSwitchLists(key);
+                                toolbar.setTitle("LIST 1");
+                            }
+                        });
+
+                        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
                     }
                 });
                 builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -194,18 +209,28 @@ public class MainActivity extends AppCompatActivity {
 //        listBttn.setText();
         linLayoutAllCreatedLists.addView(listBttn);
 
-
         Log.d(TAG, "onCreate: LISTVIEW CREATED");
         listBttn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "onClick: HORIZONTAL LISTVIEW BUTTON CLICKED");
-                Toast.makeText(getApplicationContext(), "This is HORIZONTAL List BUTTON", Toast.LENGTH_LONG).show();
-                arrayListHelper.loadArrayList();
+                Toast.makeText(getApplicationContext(), "This is LIST 0", Toast.LENGTH_SHORT).show();
+                key = getString(R.string.list0_key);
+                arrayListHelper.loadArrayList(key);
+                loadSharedPreferences();
+                datachanged();
+                toolbar.setTitle("LIST 0");
+
+                Log.d(TAG, "onClick: EXPANDABLERECYCLERVIEWADAPTER GROUP = " + adapter.getGroups());
+                Log.d(TAG, "onClick: GROUP.SIZE = " + adapter.getGroups().size());
+                adapter.onSwitchLists(key);
+                Log.d(TAG, "onClick: EXPANDABLERECYCLERVIEWADAPTER SIZE = " + adapter.getItemCount());
+
+                //TODO WHAT WILL HAPPEN AFTER THIS? adapter.getItemCount() IS WRONG
             }
         });
 
-        loadSharedPreferences();
+//        loadSharedPreferences();
 
         if (categories.isEmpty()) {
             addStandardCats();
@@ -215,8 +240,10 @@ public class MainActivity extends AppCompatActivity {
         //Kann erst hier gemacht werden, da in categories was drin sein muss
         adapter = new ExpandableRecyclerViewAdapter(categories);
 
+        loadSharedPreferences();
+
         //Soll man machen wenn man weiß das sich die recyclerview elemente nicht ändern (also bezogen auf größe immer gleich bleibend)
-        recyclerView.setHasFixedSize(true);
+//        recyclerView.setHasFixedSize(true);
 
         //Linearlayout dem recycleview mitgeben soll man so machen damits besser angezeigt wird
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -254,7 +281,7 @@ public class MainActivity extends AppCompatActivity {
 
                 //saves changes after drag & drop
                 categories = (ArrayList<Category>) adapter.getGroups();
-                arrayListHelper.saveArrayList(categories, "categories_arraylist");
+                arrayListHelper.saveArrayList(categories, key);
 
                 return true;
             }
@@ -295,7 +322,7 @@ public class MainActivity extends AppCompatActivity {
                         adapter.swipeItem(viewHolder.getAdapterPosition());
 
                         //Save der Liste nachdem alle categories gecleared wurden
-                        arrayListHelper.saveArrayList(categories, "categories_arraylist");
+                        arrayListHelper.saveArrayList(categories, key);
 
 
                     }
@@ -344,7 +371,7 @@ public class MainActivity extends AppCompatActivity {
                             adapter.onCollapseCategories();
 
                             //Save der Liste nachdem alle categories gecleared wurden
-                            arrayListHelper.saveArrayList(categories, "categories_arraylist");
+                            arrayListHelper.saveArrayList(categories, key);
 
 
                         }
@@ -372,11 +399,11 @@ public class MainActivity extends AppCompatActivity {
 
                             sortList();
 
-//                            adapter.onCollapseCategories();
+                            adapter.onCollapseCategories();
                             datachanged();
 
-                            //Save der Liste nachdem alle categories gecleared wurden
-                            arrayListHelper.saveArrayList(categories, "categories_arraylist");
+                            //Save der Liste nachdem alle categories sortiert wurden
+                            arrayListHelper.saveArrayList(categories, key);
 
 
                         }
@@ -393,7 +420,7 @@ public class MainActivity extends AppCompatActivity {
 
                 if (menuItem.toString().equals("Intro Screen ON/OFF")) {
 
-                    SharedPreferences prefs = recyclerView.getContext().getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
+                    SharedPreferences prefs = recyclerView.getContext().getSharedPreferences("myPrefs" + key, Context.MODE_PRIVATE);
 
                     Log.d(TAG, "onMenuItemClick: sharedPrefs = " + prefs);
 
@@ -411,7 +438,7 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
-                            SharedPreferences prefs = recyclerView.getContext().getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
+                            SharedPreferences prefs = recyclerView.getContext().getSharedPreferences("myPrefs" + key, Context.MODE_PRIVATE);
                             SharedPreferences.Editor editor = prefs.edit();
 
                             if (prefs.getInt("splashTimeOut", 1500) != 1500)
@@ -439,7 +466,7 @@ public class MainActivity extends AppCompatActivity {
         itemTouchHelper.attachToRecyclerView(recyclerView);
 
         //saves arrayList categories
-        arrayListHelper.saveArrayList(categories, "categories_arraylist");
+        arrayListHelper.saveArrayList(categories, key);
 
         //set adapter to recyclerView
         recyclerView.setAdapter(adapter);
@@ -457,7 +484,7 @@ public class MainActivity extends AppCompatActivity {
                 AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.this);
                 View viewInflated = LayoutInflater.from(MainActivity.this).inflate(R.layout.alert_dialog, (ViewGroup) findViewById(android.R.id.content), false);
 
-// input setup
+                // input setup
                 final EditText input = viewInflated.findViewById(R.id.input);
                 input.setHint(R.string.hintEditTextNewCat);
                 builder.setView(viewInflated);
@@ -480,6 +507,10 @@ public class MainActivity extends AppCompatActivity {
 
                         String temp = input.getText().toString();
                         int help = 0;
+
+
+                        //TODO
+
                         for (int i = 0; i < categories.size(); i++) {
                             if (categories.get(i).getTitle().equals(temp)) {
                                 while (categories.get(i).getTitle().equals(temp)) {
@@ -496,12 +527,17 @@ public class MainActivity extends AppCompatActivity {
                         categories.add(newCat);
 
                         //dafür sorgen das der adapter die neue category auch anzeigt
-                        adapter.addNewGroup();
+                        adapter.addNewGroup(key);
 
-                        datachanged();
+//                        datachanged();
+
+                        Log.d(TAG, "onClick FLOATINGBUTTON: KEYYYYYY = " + key);
+
+                        Log.d(TAG, "onClick: ARRAY LIST BEFORE SAVING IN FLOATINGBUTTON = " + categories);
 
                         //saves arrayList categories after added new category group
-                        arrayListHelper.saveArrayList(categories, "categories_arraylist");
+                        arrayListHelper.saveArrayList(categories, key);
+                        datachanged();
 
                         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
                     }
@@ -570,7 +606,7 @@ public class MainActivity extends AppCompatActivity {
      * these shared preferences are containing the whole shopping list with categories and shop items
      */
     public void delete() {
-        this.getSharedPreferences("myPrefs", 0).edit().clear().apply();
+        this.getSharedPreferences("myPrefs" + key, 0).edit().clear().apply();
     }
 
     /**
@@ -587,12 +623,25 @@ public class MainActivity extends AppCompatActivity {
      */
     @SuppressWarnings("unchecked")
     private void loadSharedPreferences() {
-        SharedPreferences prefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
-        if (prefs.getString("categories_arraylist", null) != null) {
+        SharedPreferences prefs = getSharedPreferences("myPrefs" + key, Context.MODE_PRIVATE);
+        if (prefs.getString(key, null) != null) {
             categories.clear();
-            categories.addAll(arrayListHelper.loadArrayList());
-            Log.d(TAG, "SharedPreferences JSON categories: " + categories, null);
+
+
+            Log.d(TAG, "loadSharedPreferences: KEYYYYYYYYY =============  " + key);
+
+            Log.d(TAG, "loadSharedPreferences: WHAT DO YOU ADD = " + arrayListHelper.loadArrayList(key));
+
+            categories.addAll(arrayListHelper.loadArrayList(key));
+
+            Log.d(TAG, "loadSharedPreferences: SIIIIIIIZE = " + categories.size());
+            Log.d(TAG, "loadSharedPreferences: ADAPTER SIIIIIIZE = " + adapter.getGroups().size());
+
+            Log.d(TAG, "SharedPreferences JSON categories: " + categories);
             for (int i = 0; i < categories.size(); i++) {
+
+                Log.d(TAG, "loadSharedPreferences: HALLOOOOOOO");
+
                 ArrayList<ShopItem> shopItems;
                 //Log.d(TAG, "LOAD shop item lists: "+categories.get(i).getItems());
                 //shopItems = (ArrayList<ShopItem>) categories.get(i).getItems();
@@ -607,6 +656,18 @@ public class MainActivity extends AppCompatActivity {
                 categories.get(i).getItems().clear();
                 categories.get(i).getItems().addAll(shopItems);
             }
+        } else {
+//            SharedPreferences.Editor editor = prefs.edit();
+//            editor.putString("key", getString(R.string.list0_key)).apply();
+//
+
+            Log.d(TAG, "loadSharedPreferences: HALLLLOOO EEEEEELSSSSSSEEEEEE");
+            
+//            key = prefs.getString("key", getString(R.string.list0_key));
+//
+//            Log.d(TAG, "loadSharedPreferences: KEY ============= " + key);
+
+//            loadSharedPreferences();
         }
     }
 }
