@@ -142,11 +142,19 @@ public class MainActivity extends AppCompatActivity {
                         SharedPreferences prefsListNames = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = prefsListNames.edit();
 
-                        listName0 = input.getText().toString();
-                        editor.putString("listName0", listName0);
+                        if (key.equals(LIST_0)) {
+                            listName0 = input.getText().toString();
+                            editor.putString("listName0", listName0).apply();
 
-                        //change toolbar title
-                        toolbar.setTitle(listName0);
+                            //change toolbar title
+                            toolbar.setTitle(listName0);
+                        } else {
+                            listName1 = input.getText().toString();
+                            editor.putString("listName1", listName1).apply();
+
+                            //change toolbar title
+                            toolbar.setTitle(listName1);
+                        }
                         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
                     }
                 });
@@ -213,16 +221,19 @@ public class MainActivity extends AppCompatActivity {
         //set standard list
         LIST_0 = getString(R.string.list0_key);
         //TODO SET COSTUME STANDARD LIST NAME --> Try it out...
+
+        //save list name 0
+        SharedPreferences prefsListNames = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
+        listName0 = prefsListNames.getString("listName0", null);
+
         if (listName0 == null) {
-            //save list name 0
-            SharedPreferences prefsListNames = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
+
             SharedPreferences.Editor editor = prefsListNames.edit();
+
             editor.putString("listName0", LIST_0).apply();
 
-            //get list name 0
+            //set list name 0
             listName0 = prefsListNames.getString("listName0", null);
-
-
         }
 
         //set second list
@@ -258,7 +269,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerViewMain);
 
         //developer is able to RESET ALL
-        delete();
+//        delete();
 
 //        toolbar.setTitle("LIST 0");
         setTitle(listName0);
