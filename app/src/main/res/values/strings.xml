@@ -36,5 +36,7 @@
     <string name="categoriesSort">Sort all categories alphabetically?</string>
     <string name="introOnOff">Intro Screen ON/OFF</string>
     <string name="exampleGrocery">EXAMPLE GROCERY</string>
+    <string name="newListNameTitle">Change the list name:</string>
+    <string name="newListNameHint">Type in new name</string>
 
 </resources>

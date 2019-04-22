@@ -33,4 +33,6 @@
     <string name="BuilderTitleOn">Startbildschirm EIN-schalten?</string>
     <string name="BuilderTitleOff">Startbildschirm AUS-schalten?</string>
     <string name="introOnOff">Startbildschirm EIN/AUS</string>
+    <string name="newListNameTitle">Ändere den Listen Namen:</string>
+    <string name="newListNameHint">Tippe neuen Namen ein</string>
 </resources>

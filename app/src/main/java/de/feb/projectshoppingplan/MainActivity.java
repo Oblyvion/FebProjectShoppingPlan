@@ -123,9 +123,9 @@ public class MainActivity extends AppCompatActivity {
 
                 // input setup
                 final EditText input = viewInflated.findViewById(R.id.input);
-                input.setHint("Change your list name");
+                input.setHint(getString(R.string.newListNameHint));
                 builder.setView(viewInflated);
-                builder.setTitle("New list name:");
+                builder.setTitle(R.string.newListNameTitle);
 
                 //show keyboard
                 imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
