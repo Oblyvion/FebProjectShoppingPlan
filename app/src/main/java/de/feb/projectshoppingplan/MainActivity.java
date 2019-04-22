@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
     //Recyclerview declaration
     private RecyclerView recyclerView;
 
+    private Button listBttn0;
     private Button listBttn1;
 
     private final ArrayListUtils arrayListHelper = new ArrayListUtils();
@@ -55,11 +56,16 @@ public class MainActivity extends AppCompatActivity {
     //main list (obtain all categories with their shopItems)
     public ArrayList<Category> categories = new ArrayList<>();
 
-    private static String LIST_0 = null;
-    private static String LIST_1 = null;
+    //shared preferences saved lists
+    private String LIST_0 = null;
+    private String LIST_1 = null;
 
-    //shared preferences key
-    private static String key;
+    //shared preferences list names
+    private String listName0 = null;
+    private String listName1 = null;
+
+    //shared preferences current list
+    public static String key;
 
     final String[] STANDARD_CATEGORIES = {AppContext.getContext().getString(R.string.standardCat0), AppContext.getContext().getString(R.string.standardCat1),
             AppContext.getContext().getString(R.string.standardCat2), AppContext.getContext().getString(R.string.standardCat3), AppContext.getContext().getString(R.string.standardCat4), AppContext.getContext().getString(R.string.standardCat5)};
@@ -105,33 +111,157 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        toolbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: HEYYYYYYYYYYYJOJOJO");
+
+                //create dialog
+                AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.this);
+                View viewInflated = LayoutInflater.from(MainActivity.this).inflate(R.layout.alert_dialog,
+                        (ViewGroup) findViewById(android.R.id.content), false);
+
+                // input setup
+                final EditText input = viewInflated.findViewById(R.id.input);
+                input.setHint("Change your list name");
+                builder.setView(viewInflated);
+                builder.setTitle("New list name:");
+
+                //show keyboard
+                imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+
+                builder.setCancelable(false);
+
+                // button setup
+                builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+
+                        SharedPreferences prefsListNames = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = prefsListNames.edit();
+
+                        listName0 = input.getText().toString();
+                        editor.putString("listName0", listName0);
+
+                        //change toolbar title
+                        toolbar.setTitle(listName0);
+                        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+                    }
+                });
+                builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Log.d(TAG, "onClick: 3: NEGATIVE BUTTON");
+                        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+                        dialog.cancel();
+                    }
+                });
+                builder.show();
+            }
+        });
+
+
         Log.d(TAG, "MainActivity: On Create");
 
+        //linear layout for all created lists of the user
+        linLayoutAllCreatedLists = findViewById(R.id.linLayoutHorizontalList);
 
-        key = getString(R.string.list0_key);
-//        SharedPreferences prefs = getSharedPreferences("myPrefs" + key, Context.MODE_PRIVATE);
+        //insert listBttn0 into horizontalList
+        listBttn0 = new Button(this);
+        linLayoutAllCreatedLists.addView(listBttn0);
+//        listBttn0.setText();
+        listBttn0.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "onClick: HORIZONTAL LISTVIEW BUTTON CLICKED");
+
+                Log.d(TAG, "onClick: LIST_0 INIT");
+                key = LIST_0;
+
+                Toast.makeText(getApplicationContext(), "This is LIST 1 of 2: " + listName0, Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "onClick: key = " + key);
+
+                // load standard list 0
+                arrayListHelper.loadArrayList(key);
+                loadSharedPreferences();
+                datachanged();
+                adapter.onSwitchLists(key);
+                toolbar.setTitle(listName0);
+            }
+        });
+
+        //insert listBttn1 into horizontalList and set invisible
+        listBttn1 = new Button(this);
+        linLayoutAllCreatedLists.addView(listBttn1);
+        listBttn1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                key = LIST_1;
+                Toast.makeText(getApplicationContext(), "This is the current list 2 of 2: " + listName1, Toast.LENGTH_SHORT).show();
+                arrayListHelper.loadArrayList(key);
+                loadSharedPreferences();
+                datachanged();
+                adapter.onSwitchLists(key);
+                toolbar.setTitle(listName1);
+            }
+        });
+        listBttn1.setVisibility(View.INVISIBLE);
+
+        //set standard list
+        LIST_0 = getString(R.string.list0_key);
+        //TODO SET COSTUME STANDARD LIST NAME --> Try it out...
+        if (listName0 == null) {
+            //save list name 0
+            SharedPreferences prefsListNames = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = prefsListNames.edit();
+            editor.putString("listName0", LIST_0).apply();
+
+            //get list name 0
+            listName0 = prefsListNames.getString("listName0", null);
+
+
+        }
+
+        //set second list
+        LIST_1 = getString(R.string.list1_key);
+
+        //set current list
+        key = LIST_0;
+
+        //set second list name
+        if (listName1 == null) {
+            SharedPreferences prefs = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
+            Log.d(TAG, "onCreate: GET SHARED PREFS FOR LIST_1 = " + prefs.getString("listName1", null));
+            listName1 = prefs.getString("listName1", null);
+            if (listName1 != null) {
+                Log.d(TAG, "onCreate: FUUUUUUUUCK");
+
+                listBttn1.setVisibility(View.VISIBLE);
+            }
+        }
+
 
         Log.d(TAG, "onCreate: KEY = " + key);
 
         //image button to create a new list
         imgBttnCreateNewList = findViewById(R.id.imageBttnAddNewList);
 
-        //linear layout for all created lists of the user
-        linLayoutAllCreatedLists = findViewById(R.id.linLayoutHorizontalList);
-
-        listBttn1 = new Button(this);
-        linLayoutAllCreatedLists.addView(listBttn1);
-        listBttn1.setVisibility(View.GONE);
+//        listBttn1 = new Button(this);
+//        linLayoutAllCreatedLists.addView(listBttn1);
+//        listBttn1.setVisibility(View.INVISIBLE);
 
 
         //finden recycler view
         recyclerView = findViewById(R.id.recyclerViewMain);
 
         //developer is able to RESET ALL
-//        delete();
+        delete();
 
 //        toolbar.setTitle("LIST 0");
-        setTitle(key);
+        setTitle(listName0);
 
         int idImgAddCategory = getResources().getIdentifier("de.feb.projectshoppingplan:drawable/add_category_black", null, null);
         imgBttnCreateNewList.setBackgroundResource(idImgAddCategory);
@@ -140,10 +270,12 @@ public class MainActivity extends AppCompatActivity {
         imgBttnCreateNewList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "LIST BUTTON 1 OF 2: " + key, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "LIST BUTTON 1 OF 2: "
+                        + key, Toast.LENGTH_SHORT).show();
                 //create dialog
                 AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.this);
-                View viewInflated = LayoutInflater.from(MainActivity.this).inflate(R.layout.alert_dialog, (ViewGroup) findViewById(android.R.id.content), false);
+                View viewInflated = LayoutInflater.from(MainActivity.this).inflate(R.layout.alert_dialog,
+                        (ViewGroup) findViewById(android.R.id.content), false);
 
                 // input setup
                 final EditText input = viewInflated.findViewById(R.id.input);
@@ -172,43 +304,55 @@ public class MainActivity extends AppCompatActivity {
 
 
                         //TODO REPLACE KEY
-                        key = input.getText().toString();
-                        LIST_1 = key;
+                        key = LIST_1;
+
+                        //set list name 2
+                        listName1 = input.getText().toString();
 
 
-                        SharedPreferences prefs = getSharedPreferences("myPrefs" + key, Context.MODE_PRIVATE);
+                        //shared preferences for list names
+                        SharedPreferences prefsListName = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editorListName = prefsListName.edit();
+
+                        //TODO SAVE LIST NAME IN SHARED PREFERENCES
+                        editorListName.putString("listName1", listName1).apply();
+
+
+                        //shared preferences for saving lists
+                        SharedPreferences prefs = getSharedPreferences("myPrefs" + LIST_0, Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = prefs.edit();
 
                         Log.d(TAG, "onClick: KEY = " + key);
-                        editor.putString(key, getString(R.string.list0_key)).apply();
+                        //save list 2 in shared preferences
+                        editor.putString(key, null).apply();
 
                         //TODO SAVE NEW MAIN LIST IN SHARED PREFERENCES
                         arrayListHelper.saveArrayList(categories, key);
 
                         //TODO CHANGE TOOLBAR HEADER TITLE TO NEW MAIN LIST NAME
                         //TODO SAVE INPUT TEXT INTO SHARED PREFERENCES
-                        toolbar.setTitle(key);
+                        toolbar.setTitle(listName1);
 
 
                         datachanged();
 
+//                        listBttn1 = new Button(getApplicationContext());
+//                        linLayoutAllCreatedLists.addView(listBttn1);
+
                         listBttn1.setVisibility(View.VISIBLE);
-                        listBttn1.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-
-                                //TODO GET KEY FROM SHARED PREFERENCES
-
-                                key = LIST_1;
-                                Toast.makeText(getApplicationContext(), "This is the current list 2 of 2: " + key, Toast.LENGTH_SHORT).show();
-                                arrayListHelper.loadArrayList(key);
-//                                key = getString(R.string.list1_key);
-                                loadSharedPreferences();
-                                datachanged();
-                                adapter.onSwitchLists(key);
-                                toolbar.setTitle(key);
-                            }
-                        });
+//                        listBttn1.setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//
+//                                key = LIST_1;
+//                                Toast.makeText(getApplicationContext(), "This is the current list 2 of 2: " + listName1, Toast.LENGTH_SHORT).show();
+//                                arrayListHelper.loadArrayList(key);
+//                                loadSharedPreferences();
+//                                datachanged();
+//                                adapter.onSwitchLists(key);
+//                                toolbar.setTitle(listName1);
+//                            }
+//                        });
 
                         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
                     }
@@ -226,33 +370,34 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        // TODO open first list
-        Button listBttn0 = new Button(this);
-        //insert listBttn0 into horizontalList
-//        listBttn0.setText();
-        linLayoutAllCreatedLists.addView(listBttn0);
-
-        listBttn0.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d(TAG, "onClick: HORIZONTAL LISTVIEW BUTTON CLICKED");
-
-                if (LIST_0 == null)
-                    Log.d(TAG, "onClick: LIST_0 INIT");
-                    LIST_0 = getString(R.string.list0_key);
-                key = LIST_0;
-
-                Toast.makeText(getApplicationContext(), "This is LIST 1 of 2: " + key, Toast.LENGTH_SHORT).show();
-                Log.d(TAG, "onClick: key = " + key);
-
-                // load standard list 0
-                arrayListHelper.loadArrayList(key);
-                loadSharedPreferences();
-                datachanged();
-                adapter.onSwitchLists(key);
-                toolbar.setTitle(key);
-            }
-        });
+//        Button listBttn0 = new Button(this);
+//        //insert listBttn0 into horizontalList
+////        listBttn0.setText();
+//        linLayoutAllCreatedLists.addView(listBttn0);
+//
+//        listBttn0.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Log.d(TAG, "onClick: HORIZONTAL LISTVIEW BUTTON CLICKED");
+//
+//                Log.d(TAG, "onClick: LIST_0 INIT");
+//                key = LIST_0;
+//
+//
+//                //shared preferences for list names
+//                SharedPreferences prefsListName = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
+//
+//                Toast.makeText(getApplicationContext(), "This is LIST 1 of 2: " + key, Toast.LENGTH_SHORT).show();
+//                Log.d(TAG, "onClick: key = " + key);
+//
+//                // load standard list 0
+//                arrayListHelper.loadArrayList(key);
+//                loadSharedPreferences();
+//                datachanged();
+//                adapter.onSwitchLists(key);
+//                toolbar.setTitle(listName0);
+//            }
+//        });
 
 //        loadSharedPreferences();
 
@@ -444,7 +589,7 @@ public class MainActivity extends AppCompatActivity {
 
                 if (menuItem.toString().equals(getString(R.string.introOnOff))) {
 
-                    SharedPreferences prefs = getSharedPreferences("myPrefs" + getString(R.string.list0_key), Context.MODE_PRIVATE);
+                    SharedPreferences prefs = getSharedPreferences("myPrefs" + LIST_0, Context.MODE_PRIVATE);
 
                     AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.this);
                     //intro screen is off
@@ -465,7 +610,7 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
-                            SharedPreferences prefs = getSharedPreferences("myPrefs" + key, Context.MODE_PRIVATE);
+                            SharedPreferences prefs = getSharedPreferences("myPrefs" + LIST_0, Context.MODE_PRIVATE);
                             SharedPreferences.Editor editor = prefs.edit();
 
                             if (prefs.getInt("splashTimeOut", 1500) != 1500)
@@ -633,7 +778,8 @@ public class MainActivity extends AppCompatActivity {
      * these shared preferences are containing the whole shopping list with categories and shop items
      */
     public void delete() {
-        this.getSharedPreferences("myPrefs" + key, 0).edit().clear().apply();
+        this.getSharedPreferences("myPrefs" + LIST_0, 0).edit().clear().apply();
+        this.getSharedPreferences("myPrefs", 0).edit().clear().apply();
     }
 
     /**
@@ -653,8 +799,9 @@ public class MainActivity extends AppCompatActivity {
     private void loadSharedPreferences() {
 
         Log.d(TAG, "loadSharedPreferences: KEY = " + key);
-        if (key == null)
-            key = getString(R.string.list0_key);
+        //TODO should be working
+//        if (key == null)
+//            key = LIST_0;
         Log.d(TAG, "loadSharedPreferences: KEY = " + key);
 
         SharedPreferences prefs = getSharedPreferences("myPrefs" + key, Context.MODE_PRIVATE);

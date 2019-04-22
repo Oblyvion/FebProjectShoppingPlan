@@ -74,7 +74,7 @@ public class AddShopItemToCategory extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_shop_item_to_category);
 
-        key = getApplicationContext().getString(R.string.list0_key);
+        key = MainActivity.key;
 
 //        SharedPreferences prefs = getApplicationContext().getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
 //        final String key = getApplicationContext().getString(R.string.list0_key);
