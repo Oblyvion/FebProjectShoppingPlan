@@ -1,18 +1,12 @@
 seprate words by comma
 
-addNewListButton
 save more lists, up to 5
     syntax could be: list + nameOfList
 
-view createNewList with edittext "List Name" & (List Symbol)
-    edittext should write content into toolbar text directly
-    back button
+share lists via whatsapp/email
 
-share lists via whattsapp/email
-    compare all lists before sharing one, due to overriding effects
-
-opportunity to send a message to developer for debuging
-    view with email, name and motivation text
+opportunity to send a message to developer for debugging
+    view: with email, name and motivation text
 
 delete every space behind category name when creating new category
 

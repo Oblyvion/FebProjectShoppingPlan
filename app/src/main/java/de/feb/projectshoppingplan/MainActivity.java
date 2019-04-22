@@ -183,13 +183,11 @@ public class MainActivity extends AppCompatActivity {
         listBttn0.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(TAG, "onClick: HORIZONTAL LISTVIEW BUTTON CLICKED");
+                Toast.makeText(getApplicationContext(), "This is LIST 1 of 2: " + listName0, Toast.LENGTH_SHORT).show();
 
-                Log.d(TAG, "onClick: LIST_0 INIT");
                 key = LIST_0;
 
-                Toast.makeText(getApplicationContext(), "This is LIST 1 of 2: " + listName0, Toast.LENGTH_SHORT).show();
-                Log.d(TAG, "onClick: key = " + key);
+//                Log.d(TAG, "onClick: key = " + key);
 
                 // load standard list 0
                 arrayListHelper.loadArrayList(key);
@@ -206,9 +204,9 @@ public class MainActivity extends AppCompatActivity {
         listBttn1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Toast.makeText(getApplicationContext(), "This is LIST 2 of 2: " + listName1, Toast.LENGTH_SHORT).show();
 
                 key = LIST_1;
-                Toast.makeText(getApplicationContext(), "This is the current list 2 of 2: " + listName1, Toast.LENGTH_SHORT).show();
                 arrayListHelper.loadArrayList(key);
                 loadSharedPreferences();
                 datachanged();
@@ -220,7 +218,6 @@ public class MainActivity extends AppCompatActivity {
 
         //set standard list
         LIST_0 = getString(R.string.list0_key);
-        //TODO SET COSTUME STANDARD LIST NAME --> Try it out...
 
         //save list name 0
         SharedPreferences prefsListNames = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
@@ -281,76 +278,78 @@ public class MainActivity extends AppCompatActivity {
         imgBttnCreateNewList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "LIST BUTTON 1 OF 2: "
-                        + key, Toast.LENGTH_SHORT).show();
-                //create dialog
-                AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.this);
-                View viewInflated = LayoutInflater.from(MainActivity.this).inflate(R.layout.alert_dialog,
-                        (ViewGroup) findViewById(android.R.id.content), false);
 
-                // input setup
-                final EditText input = viewInflated.findViewById(R.id.input);
-                input.setHint(R.string.hintEditTextNewList);
-                builder.setView(viewInflated);
-                builder.setTitle(R.string.DialogTitleNewList);
-
-                //show keyboard
-                imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-
-                builder.setCancelable(false);
-
-                // button setup
-                builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-
-                        Log.d(TAG, "onClick: KEYYYY =      " + key);
-                        //TODO SAVE CURRENT MAIN LIST IN SHARED PREFERENCES
-                        arrayListHelper.saveArrayList(categories, key);
-
-                        //TODO CLEAR CURRENT MAIN LIST
-                        categories.clear();
+                if (listName1 == null) {
 
 
-                        //TODO REPLACE KEY
-                        key = LIST_1;
+                    //create dialog
+                    AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.this);
+                    View viewInflated = LayoutInflater.from(MainActivity.this).inflate(R.layout.alert_dialog,
+                            (ViewGroup) findViewById(android.R.id.content), false);
 
-                        //set list name 2
-                        listName1 = input.getText().toString();
+                    // input setup
+                    final EditText input = viewInflated.findViewById(R.id.input);
+                    input.setHint(R.string.hintEditTextNewList);
+                    builder.setView(viewInflated);
+                    builder.setTitle(R.string.DialogTitleNewList);
+
+                    //show keyboard
+                    imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+
+                    builder.setCancelable(false);
+
+                    // button setup
+                    builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+
+                            Log.d(TAG, "onClick: KEYYYY =      " + key);
+                            //TODO SAVE CURRENT MAIN LIST IN SHARED PREFERENCES
+                            arrayListHelper.saveArrayList(categories, key);
+
+                            //TODO CLEAR CURRENT MAIN LIST
+                            categories.clear();
 
 
-                        //shared preferences for list names
-                        SharedPreferences prefsListName = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editorListName = prefsListName.edit();
+                            //TODO REPLACE KEY
+                            key = LIST_1;
 
-                        //TODO SAVE LIST NAME IN SHARED PREFERENCES
-                        editorListName.putString("listName1", listName1).apply();
-
-
-                        //shared preferences for saving lists
-                        SharedPreferences prefs = getSharedPreferences("myPrefs" + LIST_0, Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = prefs.edit();
-
-                        Log.d(TAG, "onClick: KEY = " + key);
-                        //save list 2 in shared preferences
-                        editor.putString(key, null).apply();
-
-                        //TODO SAVE NEW MAIN LIST IN SHARED PREFERENCES
-                        arrayListHelper.saveArrayList(categories, key);
-
-                        //TODO CHANGE TOOLBAR HEADER TITLE TO NEW MAIN LIST NAME
-                        //TODO SAVE INPUT TEXT INTO SHARED PREFERENCES
-                        toolbar.setTitle(listName1);
+                            //set list name 2
+                            listName1 = input.getText().toString();
 
 
-                        datachanged();
+                            //shared preferences for list names
+                            SharedPreferences prefsListName = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editorListName = prefsListName.edit();
+
+                            //TODO SAVE LIST NAME IN SHARED PREFERENCES
+                            editorListName.putString("listName1", listName1).apply();
+
+
+                            //shared preferences for saving lists
+                            SharedPreferences prefs = getSharedPreferences("myPrefs" + LIST_0, Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editor = prefs.edit();
+
+                            Log.d(TAG, "onClick: KEY = " + key);
+                            //save list 2 in shared preferences
+                            editor.putString(key, null).apply();
+
+                            //TODO SAVE NEW MAIN LIST IN SHARED PREFERENCES
+                            arrayListHelper.saveArrayList(categories, key);
+
+                            //TODO CHANGE TOOLBAR HEADER TITLE TO NEW MAIN LIST NAME
+                            //TODO SAVE INPUT TEXT INTO SHARED PREFERENCES
+                            toolbar.setTitle(listName1);
+
+
+                            datachanged();
 
 //                        listBttn1 = new Button(getApplicationContext());
 //                        linLayoutAllCreatedLists.addView(listBttn1);
 
-                        listBttn1.setVisibility(View.VISIBLE);
+                            listBttn1.setVisibility(View.VISIBLE);
 //                        listBttn1.setOnClickListener(new View.OnClickListener() {
 //                            @Override
 //                            public void onClick(View v) {
@@ -365,18 +364,21 @@ public class MainActivity extends AppCompatActivity {
 //                            }
 //                        });
 
-                        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-                    }
-                });
-                builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Log.d(TAG, "onClick: 3: NEGATIVE BUTTON");
-                        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-                        dialog.cancel();
-                    }
-                });
-                builder.show();
+                            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+                        }
+                    });
+                    builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Log.d(TAG, "onClick: 3: NEGATIVE BUTTON");
+                            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+                            dialog.cancel();
+                        }
+                    });
+                    builder.show();
+                } else
+                    Toast.makeText(getApplicationContext(), "Maximal list count reached!" + listName1, Toast.LENGTH_LONG).show();
+
             }
         });
 
