@@ -49,6 +49,9 @@ public class AddShopItemToCategory extends AppCompatActivity {
     Activity AddShopItemToCategoryActivity = this;
     private final ArrayListUtils arrayListHelper = new ArrayListUtils();
 
+    private String key;
+
+
     /**
      * Back button functionality gets defined
      *
@@ -71,8 +74,10 @@ public class AddShopItemToCategory extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_shop_item_to_category);
 
+        key = getApplicationContext().getString(R.string.list0_key);
+
 //        SharedPreferences prefs = getApplicationContext().getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
-        final String key = getApplicationContext().getString(R.string.list0_key);
+//        final String key = getApplicationContext().getString(R.string.list0_key);
 //        Log.d(TAG, "onCreate: --------->>>> KEY ----------<<<<<< = " + key);
 
         //create music player with free sound "service_bell" from source: http://soundbible.com/2218-Service-Bell-Help.html
@@ -101,7 +106,6 @@ public class AddShopItemToCategory extends AppCompatActivity {
         EditText editor = new EditText(this);
         editor.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
 
-        //TODO add resource microphone to edittext
         imageButton = findViewById(R.id.bttn_editText_microphone);
         int idVoiceSymbol = getResources().getIdentifier("de.feb.projectshoppingplan:drawable/ic_keyboard_voice_black_24dp", null, null);
         imageButton.setImageResource(idVoiceSymbol);
@@ -214,22 +218,37 @@ public class AddShopItemToCategory extends AppCompatActivity {
         });
 
 
-        //imageButton onTouchListener - triggers if voice button is clicked
-        imageButton.setOnTouchListener(new View.OnTouchListener() {
+        imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
+            public void onClick(View v) {
                 final int DRAWABLE_RIGHT = 2;
 
 //                if (event.getAction() == MotionEvent.ACTION_UP) {
 //                    if (event.getRawX() >= (editText.getRight() - 30 - 2 * editText.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
-                        Log.d(TAG, "Hallo hier click on voice button!");
-                        promptSpeechInput();
-                        return true;
+                Log.d(TAG, "Hallo hier click on voice button!");
+                promptSpeechInput();
 //                    }
 //                }
-//                return false;
+//
             }
         });
+
+        //imageButton onTouchListener - triggers if voice button is clicked
+//        imageButton.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                final int DRAWABLE_RIGHT = 2;
+//
+////                if (event.getAction() == MotionEvent.ACTION_UP) {
+////                    if (event.getRawX() >= (editText.getRight() - 30 - 2 * editText.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+//                        Log.d(TAG, "Hallo hier click on voice button!");
+//                        promptSpeechInput();
+//                        return true;
+////                    }
+////                }
+////                return false;
+//            }
+//        });
     }
 
     /**
@@ -271,6 +290,7 @@ public class AddShopItemToCategory extends AppCompatActivity {
         intent.putExtra(RecognizerIntent.EXTRA_PROMPT,
                 getString(R.string.speech_prompt));
         try {
+            Log.d(TAG, "promptSpeechInput: SPEECH INPUT STARTED!");
             startActivityForResult(intent, REQ_CODE_SPEECH_INPUT);
         } catch (ActivityNotFoundException a) {
             Toast.makeText(getApplicationContext(),
@@ -326,7 +346,7 @@ public class AddShopItemToCategory extends AppCompatActivity {
                 //categories.get(i).setItems(itemList_forMain);
                 categories.get(i).getItems().addAll(itemList_forMain);
                 Log.d(TAG, "Das ist die liste nachdem was geadded wurde: " + categories);
-                arrayListHelper.saveArrayList(categories, "categories_arraylist");
+                arrayListHelper.saveArrayList(categories, key);
             }
         }
 

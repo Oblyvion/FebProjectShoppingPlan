@@ -17,7 +17,7 @@
 
     <item
         android:orderInCategory="100"
-        android:title="Intro Screen ON/OFF"
+        android:title="@string/introOnOff"
         app:showAsAction="never" />
 
 </menu>

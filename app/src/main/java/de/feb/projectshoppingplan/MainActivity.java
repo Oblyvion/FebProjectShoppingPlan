@@ -19,7 +19,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -27,7 +26,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -40,13 +38,17 @@ public class MainActivity extends AppCompatActivity {
 
     //TAG logcat
     final static String TAG = "MyActivity";
-    //Recyclerview declaration
+
 
     private Toolbar toolbar;
+
     private LinearLayout linLayoutAllCreatedLists;
-    private RecyclerView recyclerView;
     private ImageButton imgBttnCreateNewList;
 
+    //Recyclerview declaration
+    private RecyclerView recyclerView;
+
+    private Button listBttn1;
 
     private final ArrayListUtils arrayListHelper = new ArrayListUtils();
 
@@ -54,9 +56,10 @@ public class MainActivity extends AppCompatActivity {
     public ArrayList<Category> categories = new ArrayList<>();
 
     private static String LIST_0 = null;
+    private static String LIST_1 = null;
 
     //shared preferences key
-    private String key;
+    private static String key;
 
     final String[] STANDARD_CATEGORIES = {AppContext.getContext().getString(R.string.standardCat0), AppContext.getContext().getString(R.string.standardCat1),
             AppContext.getContext().getString(R.string.standardCat2), AppContext.getContext().getString(R.string.standardCat3), AppContext.getContext().getString(R.string.standardCat4), AppContext.getContext().getString(R.string.standardCat5)};
@@ -116,6 +119,11 @@ public class MainActivity extends AppCompatActivity {
         //linear layout for all created lists of the user
         linLayoutAllCreatedLists = findViewById(R.id.linLayoutHorizontalList);
 
+        listBttn1 = new Button(this);
+        linLayoutAllCreatedLists.addView(listBttn1);
+        listBttn1.setVisibility(View.GONE);
+
+
         //finden recycler view
         recyclerView = findViewById(R.id.recyclerViewMain);
 
@@ -165,28 +173,33 @@ public class MainActivity extends AppCompatActivity {
 
                         //TODO REPLACE KEY
                         key = input.getText().toString();
+                        LIST_1 = key;
 
 
                         SharedPreferences prefs = getSharedPreferences("myPrefs" + key, Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = prefs.edit();
+
+                        Log.d(TAG, "onClick: KEY = " + key);
                         editor.putString(key, getString(R.string.list0_key)).apply();
 
                         //TODO SAVE NEW MAIN LIST IN SHARED PREFERENCES
                         arrayListHelper.saveArrayList(categories, key);
 
-                        //TODO CHANGE TOOLBAR HEADER TO NEW MAIN LIST NAME
+                        //TODO CHANGE TOOLBAR HEADER TITLE TO NEW MAIN LIST NAME
                         //TODO SAVE INPUT TEXT INTO SHARED PREFERENCES
-                        toolbar.setTitle(input.getText());
+                        toolbar.setTitle(key);
 
 
                         datachanged();
 
-                        Button listBttn1 = new Button(getApplicationContext());
-                        linLayoutAllCreatedLists.addView(listBttn1);
+                        listBttn1.setVisibility(View.VISIBLE);
                         listBttn1.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-//                                key =
+
+                                //TODO GET KEY FROM SHARED PREFERENCES
+
+                                key = LIST_1;
                                 Toast.makeText(getApplicationContext(), "This is the current list 2 of 2: " + key, Toast.LENGTH_SHORT).show();
                                 arrayListHelper.loadArrayList(key);
 //                                key = getString(R.string.list1_key);
@@ -225,6 +238,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "onClick: HORIZONTAL LISTVIEW BUTTON CLICKED");
 
                 if (LIST_0 == null)
+                    Log.d(TAG, "onClick: LIST_0 INIT");
                     LIST_0 = getString(R.string.list0_key);
                 key = LIST_0;
 
@@ -320,7 +334,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "onMove: adapter POSITION FROM = " + viewHolder.getAdapterPosition());
 
                 AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.this);
-                builder.setTitle("Do you really want to remove it?");
+                builder.setTitle(R.string.removeItem);
                 LayoutInflater.from(MainActivity.this).inflate(R.layout.alert_dialog, (ViewGroup) findViewById(android.R.id.content), false);
 
                 // button setup
@@ -367,7 +381,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.d(TAG, "das ist das menu item: " + menuItem);
 
                     AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.this);
-                    builder.setTitle("Remove all items from each category?");
+                    builder.setTitle(R.string.removeAllItems);
                     LayoutInflater.from(MainActivity.this).inflate(R.layout.alert_dialog, (ViewGroup) findViewById(android.R.id.content), false);
 
                     // button setup
@@ -398,7 +412,7 @@ public class MainActivity extends AppCompatActivity {
                 if (menuItem.toString().equals(getResources().getString(R.string.menuitem_sort))) {
                     Log.d("MENUItem", "Menu Item sort");
                     AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.this);
-                    builder.setTitle("Sort all categories alphabetically?");
+                    builder.setTitle(getString(R.string.categoriesSort));
                     LayoutInflater.from(MainActivity.this).inflate(R.layout.alert_dialog, (ViewGroup) findViewById(android.R.id.content), false);
 
                     // button setup
@@ -428,18 +442,21 @@ public class MainActivity extends AppCompatActivity {
                     builder.show();
                 }
 
-                if (menuItem.toString().equals("Intro Screen ON/OFF")) {
+                if (menuItem.toString().equals(getString(R.string.introOnOff))) {
 
-                    SharedPreferences prefs = recyclerView.getContext().getSharedPreferences("myPrefs" + key, Context.MODE_PRIVATE);
-
-                    Log.d(TAG, "onMenuItemClick: sharedPrefs = " + prefs);
+                    SharedPreferences prefs = getSharedPreferences("myPrefs" + getString(R.string.list0_key), Context.MODE_PRIVATE);
 
                     AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(MainActivity.this);
                     //intro screen is off
                     if (prefs.getInt("splashTimeOut", 1500) != 1500) {
 
+                        Log.d(TAG, "onMenuItemClick: SPLASH TIME OUT OOOOON!");
                         builder.setTitle(R.string.BuilderTitleOn);
-                    } else builder.setTitle(R.string.BuilderTitleOff);
+                    } else {
+                        Log.d(TAG, "onMenuItemClick: SPLASH TIME OUT OOOOOFFFFF!");
+
+                        builder.setTitle(R.string.BuilderTitleOff);
+                    }
 
                     LayoutInflater.from(MainActivity.this).inflate(R.layout.alert_dialog, (ViewGroup) findViewById(android.R.id.content), false);
 
@@ -448,7 +465,7 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();
-                            SharedPreferences prefs = recyclerView.getContext().getSharedPreferences("myPrefs" + key, Context.MODE_PRIVATE);
+                            SharedPreferences prefs = getSharedPreferences("myPrefs" + key, Context.MODE_PRIVATE);
                             SharedPreferences.Editor editor = prefs.edit();
 
                             if (prefs.getInt("splashTimeOut", 1500) != 1500)
@@ -590,7 +607,7 @@ public class MainActivity extends AppCompatActivity {
 //            Log.d(TAG, "addStandardCats: cats = " + categories);
         }
 
-        ShopItem shopItem = new ShopItem("EXAMPLE GROCERY");
+        ShopItem shopItem = new ShopItem(getString(R.string.exampleGrocery));
         shopItem.setActivity(this);
         shopItem.setIcon();
 

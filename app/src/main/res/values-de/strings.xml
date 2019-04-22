@@ -2,9 +2,9 @@
 <resources>
     <string name="app_name">Shopping Plan</string>
     <string name="imageView_logo">Cooles Logo</string>
-    <string name="hint_editText_AddNewShopItemToCategory">Text eingeben oder Sprache benutzen</string>
+    <string name="hint_editText_AddNewShopItemToCategory">Lebensmittel eingeben oder Sprachknopf benutzen</string>
     <string name="speech_prompt">Produkte auflisten und mit \"und\" trennen</string>
-    <string name="speech_not_supported">Sorry! Ihr Gerät unterstützt keine Spracheingabe</string>
+    <string name="speech_not_supported">Entschuldige! Ihr Gerät unterstützt keine Spracheingabe</string>
     <string name="tap_on_mic">Mikrofon drücken um zu sprechen</string>
     <string name="groceries">GespeicherteProdukte</string>
     <string name="checkmark_description">Häkchen</string>
@@ -22,10 +22,15 @@
     <string name="speech_string_part1">"Sie haben: "</string>
     <string name="speech_string_part2">" zur Kategorie"</string>
     <string name="speech_string_part3">" hinzugefügt!"</string>
-    <string name="BuilderTitleOn">Intro Bildschirm anschalten?</string>
-    <string name="BuilderTitleOff">Intro Bildschirm ausschalten?</string>
     <string name="DialogTitleNewCat">Neue Kategorie hinzufügen:</string>
-    <string name="hintEditTextNewCat">Besseres sortieren - Großbuchstabe am Anfang benutzen</string>
+    <string name="hintEditTextNewCat">Kategorie Namen eintippen</string>
     <string name="hintEditTextNewList">Name der neuen Liste</string>
     <string name="DialogTitleNewList">Neue Liste erstellen:</string>
+    <string name="categoriesSort">Alle Kategorien alphabetisch sortieren?</string>
+    <string name="exampleGrocery">Beispiel Lebensmittel</string>
+    <string name="removeAllItems">Alle Lebensmittel entfernen?</string>
+    <string name="removeItem">Wirklich entfernen?</string>
+    <string name="BuilderTitleOn">Startbildschirm EIN-schalten?</string>
+    <string name="BuilderTitleOff">Startbildschirm AUS-schalten?</string>
+    <string name="introOnOff">Startbildschirm EIN/AUS</string>
 </resources>

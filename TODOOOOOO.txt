@@ -1,3 +1,5 @@
+seprate words by comma
+
 addNewListButton
 save more lists, up to 5
     syntax could be: list + nameOfList

@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Shopping Plan</string>
     <string name="imageView_logo">Logo of the most awesome Shopping Plan App</string>
-    <string name="hint_editText_AddNewShopItemToCategory">type in new product or use voice</string>|
+    <string name="hint_editText_AddNewShopItemToCategory">Type in new grocery or use voice button</string>|
     <string name="speech_prompt">List your items and separate them with \"and\"</string>
     <string name="speech_not_supported">Sorry! Your device doesn\'t support speech input</string>
     <string name="tap_on_mic">Tap on mic to speak</string>
@@ -24,12 +24,17 @@
     <string name="BuilderTitleOn">Do you want to set intro screen ON?</string>
     <string name="BuilderTitleOff">Do you want to set intro screen OFF?</string>
     <string name="DialogTitleNewCat">Add a new category:</string>
-    <string name="hintEditTextNewCat">1. letter should be capital for better sorting.</string>
+    <string name="hintEditTextNewCat">Type in category name</string>
     <string name="DialogTitleNewList">Add a new list:</string>
     <string name="hintEditTextNewList">Name of new list</string>
 
     <string name="list0_key" translatable="false">1. List</string>
     <string name="list1_key" translatable="false">key_categories_arrayList1</string>
     <string name="list2_key" translatable="false">key_categories_arrayList2</string>
+    <string name="removeItem">Do you really want to remove it?</string>
+    <string name="removeAllItems">Remove all items from each category?</string>
+    <string name="categoriesSort">Sort all categories alphabetically?</string>
+    <string name="introOnOff">Intro Screen ON/OFF</string>
+    <string name="exampleGrocery">EXAMPLE GROCERY</string>
 
 </resources>
