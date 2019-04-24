@@ -28,7 +28,10 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class AddShopItemToCategory extends AppCompatActivity {
 
@@ -36,6 +39,7 @@ public class AddShopItemToCategory extends AppCompatActivity {
     private final int REQ_CODE_SPEECH_INPUT = 100;
 
     String temp_user_input;
+    ArrayList<String> temp_user_input_rest = new ArrayList<>();
     EditText editText;
     ImageButton imageButton;
     RecyclerView recyclerView;
@@ -50,6 +54,10 @@ public class AddShopItemToCategory extends AppCompatActivity {
     private final ArrayListUtils arrayListHelper = new ArrayListUtils();
 
     private String key;
+
+    //regex: matches only words or sentences without "," and spaces before first word
+    // and spaces behind last word as well
+    private final String REGEX = "[^\\s,]+[0-9a-zA-Z]?\\s?[^,]{2,}[^,\\s]";
 
 
     /**
@@ -131,34 +139,101 @@ public class AddShopItemToCategory extends AppCompatActivity {
 //                    @SuppressWarnings("SuspiciousListRemoveInLoop")
                     @Override
                     public void onItemClick(View view, int position) {
+                        mediaPlayer.start();
                         itemList_text.get(position).setChecked(!itemList_text.get(position).checked);
-                        Log.d(TAG, "onItemClick: findDuplicates = " + findDuplicates(itemList_text, itemList_text.get(position)));
-                        //add shopItem
-                        if (!findDuplicates(itemList_forMain, itemList_text.get(position)) && itemList_text.get(position).checked) {
-                            Toast.makeText(AddShopItemToCategoryActivity, itemList_text.get(position).name + " added", Toast.LENGTH_SHORT).show();
-                            Log.d(TAG, "onItemClick: NO DUPLICATES WERE FOUND....");
-                            itemList_text.get(position).getCheckmarkId();
-                            itemList_forMain.add(itemList_text.get(position));
+//                        Log.d(TAG, "onItemClick: findDuplicates = " + findDuplicates(itemList_text, itemList_text.get(position)));
 
-                            for (int i = 0; i < categories.size(); i++) {
-                                if (categories.get(i).getTitle().equals(categoryName)) {
-                                    categories.get(i).getItems().clear();
-                                    categories.get(i).getItems().addAll(itemList_forMain);
+                        //TODO GET ALL APPROPRIATE STRINGS FROM text
+                        if (temp_user_input.contains(",")) {
+
+                            Pattern pattern = Pattern.compile(REGEX);
+                            Matcher matcher = pattern.matcher(temp_user_input);
+
+//            String[] wordsSeparated = new String[5];
+
+
+                            Log.d(TAG, "afterTextChanged: TEMP USER INPUT ==== " + temp_user_input);
+
+                            int i = 0;
+                            while (matcher.find()) {
+                                Log.d(TAG, "afterTextChanged: INSIDE WHILE");
+
+                                Log.d(TAG, "afterTextChanged: MATCHER GROUP COUNT = " + matcher.groupCount());
+                                Log.d(TAG, "afterTextChanged: MATCHER IN WHILE FIND GROUP 0 = " + matcher.group(0));
+
+
+                                //get string until comma index
+//                            wordsSeparated[i] = matcher.group(0);
+//                i++;
+
+                                Log.d(TAG, "afterTextChanged: TEMP USER INPUT REST IN WHILE before replacement ==== " + temp_user_input_rest);
+                                Log.d(TAG, "afterTextChanged: TEMP USER INPUT IN WHILE before replacement ==== " + temp_user_input);
+                                Log.d(TAG, "afterTextChanged: TEMP USER INPUT 2 IN WHILE before replacement ==== " + temp_user_input);
+
+                                //saving all separated words in array temp_user_input_rest []
+                                itemList_text.clear();
+                                //TODO while no duplicates were found, add to itemList_text
+                                if (!temp_user_input_rest.contains(matcher.group(0))) {
+                                    temp_user_input_rest.add(matcher.group(0));
+
+//                                    item.setActivity();
+//                                    item.setChecked(true);
+//                                    item.getCheckmarkId();
+                                    //TODO save it into shopItem Array itemList_text
                                 }
+
+                                temp_user_input = temp_user_input.replaceFirst(REGEX, "");
+                                i++;
+
+                                Log.d(TAG, "afterTextChanged: TEMP USER INPUT REST IN WHILE after replacement ==== " + temp_user_input_rest);
+                                Log.d(TAG, "afterTextChanged: TEMP USER INPUT 2 IN WHILE before replacement ==== " + temp_user_input);
+                                Log.d(TAG, "onItemClick: ITEM LIST ============== " + itemList_text.size());
                             }
-                            arrayListHelper.saveArrayList(categories, key);
-                            mediaPlayer.start();
-                        } else {
-                            itemList_text.get(position).getCheckmarkId();
-                            Toast.makeText(AddShopItemToCategoryActivity, "deleted!", Toast.LENGTH_SHORT).show();
 
+                            for (String str : temp_user_input_rest) {
+                                Log.d(TAG, "onItemClick: ITEM LIST ============== " + itemList_text.size());
+                                ShopItem item = new ShopItem(str);
+                                item.setChecked(true);
+                                item.setActivity(AddShopItemToCategoryActivity);
+                                item.setIcon();
+                                itemList_text.add(item);
+                            }
+                            Log.d(TAG, "onItemClick: ITEM LIST LAST POST ============== " + itemList_text.size());
 
-                            for (ShopItem shopItem : itemList_forMain) {
-                                if (shopItem.name != null && shopItem.name.equals(itemList_text.get(position).name)) {
-                                    ViewHolderShopI.delete(shopItem);
-                                    itemList_forMain.remove(shopItem);
+                        }
+
+                        Log.d(TAG, "onItemClick: LIST FOR MAIN = " + itemList_forMain.size());
+
+                        while (position < itemList_text.size()) {
+                            //add shopItem
+                            if (!findDuplicates(itemList_forMain, itemList_text.get(position)) && itemList_text.get(position).checked) {
+                                Toast.makeText(AddShopItemToCategoryActivity, itemList_text.get(position).name + " added", Toast.LENGTH_SHORT).show();
+                                Log.d(TAG, "onItemClick: NO DUPLICATES WERE FOUND....");
+//                            itemList_text.get(position).getCheckmarkId();
+                                itemList_forMain.add(itemList_text.get(position));
+
+                                for (int i = 0; i < categories.size(); i++) {
+                                    if (categories.get(i).getTitle().equals(categoryName)) {
+                                        categories.get(i).getItems().clear();
+                                        categories.get(i).getItems().addAll(itemList_forMain);
+                                    }
                                 }
-                            }
+                                arrayListHelper.saveArrayList(categories, key);
+                            } else {
+//                                itemList_text.get(position).getCheckmarkId();
+                                Log.d(TAG, "onItemClick: FOUND DUPLICATES ---> " + itemList_text.get(position).name);
+
+                                //TODO maybe temp_user_input_rest do not work for one item => add one item also to temp_user_input_rest
+//                                for (ShopItem shopItemListMain : itemList_forMain) {
+                                    for (ShopItem shopItemListText : itemList_text) {
+                                        if (shopItemListText.name != null
+                                                && shopItemListText.name.equals(itemList_forMain.get(position).name)) {
+                                            Toast.makeText(AddShopItemToCategoryActivity, shopItemListText.name + " exists already!", Toast.LENGTH_SHORT).show();
+                                            ViewHolderShopI.delete(shopItemListText);
+                                            itemList_forMain.remove(shopItemListText);
+                                        }
+                                    }
+//                                }
 
 //                            for (int i = 0; i < itemList_forMain.size(); i++) {
 //                                if (itemList_forMain.get(i).name.equals(itemList_text.get(position).name)) {
@@ -166,13 +241,17 @@ public class AddShopItemToCategory extends AppCompatActivity {
 //                                    itemList_forMain.remove(i);
 //                                }
 //                            }
-                            for (int i = 0; i < categories.size(); i++) {
-                                if (categories.get(i).getTitle().equals(categoryName)) {
-                                    categories.get(i).getItems().clear();
-                                    categories.get(i).getItems().addAll(itemList_forMain);
+                                for (int i = 0; i < categories.size(); i++) {
+                                    if (categories.get(i).getTitle().equals(categoryName)) {
+                                        categories.get(i).getItems().clear();
+                                        categories.get(i).getItems().addAll(itemList_forMain);
+                                    }
                                 }
+                                arrayListHelper.saveArrayList(categories, key);
                             }
-                            arrayListHelper.saveArrayList(categories, key);
+
+                            //get next shopItem from itemList_text => position++
+                            position++;
                         }
                         adapter.notifyDataSetChanged();
                     }
@@ -206,7 +285,53 @@ public class AddShopItemToCategory extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
                 if (s.toString().length() > 1) {
                     temp_user_input = s.toString();
+
+                    Log.d(TAG, "afterTextChanged: AFTERT");
+
+                    //TODO SEPARATE WORDS BY COMMA
+//                    Log.d(TAG, "afterTextChanged: AFTERT INSIDE IF");
+
+//                    if (temp_user_input.contains(",")) {
+//
+//
+//                        int i = 0;
+//                        String[] wordsSeparated = new String[5];
+//                        Pattern pattern = Pattern.compile("[^,\\s]{2,}[^,]*");
+//                        Matcher matcher = pattern.matcher(temp_user_input);
+//
+//                        Log.d(TAG, "afterTextChanged: MATCHER FIND = " + matcher);
+//                        Log.d(TAG, "afterTextChanged: MATCHER FIND STRING = " + matcher.toString());
+//                        Log.d(TAG, "afterTextChanged: MATCHER FIND ? = " + matcher.find());
+//                        Log.d(TAG, "afterTextChanged: MATCHER GROUP COUNT = " + matcher.groupCount());
+////                        Log.d(TAG, "afterTextChanged: MATCHER GROUP  = " + matcher.group());
+////                        Log.d(TAG, "afterTextChanged: MATER FIND GROUP = " + matcher.group());
+//                        Log.d(TAG, "afterTextChanged: MATCHER FIND GROUP 0 = " + matcher.group(0));
+//
+//                        Log.d(TAG, "afterTextChanged: TEMP USER INPUT ==== " + temp_user_input);
+//
+////                        if (matcher.find()) {
+////                            Log.d(TAG, "afterTextChanged: INSIDE WHILE");
+////                            Log.d(TAG, "afterTextChanged: MATCHER IN WHILE FIND GROUP 0 = " + matcher.group(0));
+////
+//////                            TODO save it into shopItem Array itemList_text
+//////                            itemList_text[i] =
+////
+////                            //TODO while no duplicates were found, add to itemList_text
+////
+////                            //get string until comma index
+//////                            wordsSeparated[i] = matcher.group(0);
+//////                            i++;
+////                            Log.d(TAG, "afterTextChanged: TEMP USER INPUT IN WHILE before replacement ==== " + temp_user_input);
+////
+////                            addtoRecyclerViewandgiveIcon(matcher.group(0));
+////                            temp_user_input_rest = temp_user_input.replaceFirst(REGEX, "");
+////
+////                            Log.d(TAG, "afterTextChanged: TEMP USER INPUT REST IN WHILE after replacement ==== " + temp_user_input_rest);
+////                        }
+//                    } else {
                     addtoRecyclerViewandgiveIcon(temp_user_input);
+//                    }
+
 
                 } else {
                     if (!itemList_text.isEmpty()) {
@@ -383,35 +508,57 @@ public class AddShopItemToCategory extends AppCompatActivity {
      * @param text - user text input
      */
     public void addtoRecyclerViewandgiveIcon(String text) {
-        temp_user_input = text;
-        Log.d(TAG, "TEMP USER INPUT 2: " + temp_user_input);
+        String temp_user_input2 = text;
+        Log.d(TAG, "TEMP USER INPUT 2: " + temp_user_input2);
 
-        ShopItem item = new ShopItem(temp_user_input);
+        //only one word or sentence without comma separation
+//        else {
+        Log.d(TAG, "addtoRecyclerViewandgiveIcon: ONE WORD OR SENTENCE WORKS GREAT");
+        ShopItem item = new ShopItem(temp_user_input2);
         item.setActivity(this);
         item.setIcon();
-        item.getCheckmarkId();
 
         if (findDuplicates(itemList_forMain, item)) {
             item.setChecked(true);
-            item.getCheckmarkId();
             showItemList(item);
             adapter.notifyDataSetChanged();
             return;
         }
         showItemList(item);
 
+//        }
+
+
+//        ShopItem item = new ShopItem(temp_user_input2);
+//        item.setActivity(this);
+//        item.setIcon();
+//        item.getCheckmarkId();
+
+
     }
 
-    /**
-     * Adds items to itemList_text and Displays itemlist after text input.
-     *
-     * @param item ShopItem
-     */
     private void showItemList(ShopItem item) {
         if (itemList_text.isEmpty()) {
             itemList_text.add(item);
         } else {
             itemList_text.set(0, item);
+        }
+        adapter.notifyDataSetChanged();
+    }
+
+    /**
+     * Adds items to itemList_text and Displays itemlist after text input.
+     *
+     * @param items ShopItem
+     */
+    private void showItemList(ShopItem[] items) {
+        if (itemList_text.isEmpty()) {
+            itemList_text.addAll(Arrays.asList(items));
+        } else {
+            for (int i = 0; i < items.length; i++) {
+
+                itemList_text.set(i, items[i]);
+            }
         }
         adapter.notifyDataSetChanged();
     }

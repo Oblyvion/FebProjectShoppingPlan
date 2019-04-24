@@ -1,7 +1,8 @@
-seprate words by comma
+separate words by comma
 
 save more lists, up to 5
     syntax could be: list + nameOfList
+    function(): addNewList(){if (PREMIUM) ? listCount < 5 : listCount < 2}
 
 share lists via whatsapp/email
 

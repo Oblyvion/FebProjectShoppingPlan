@@ -24,6 +24,11 @@ public class ArrayListUtils {
     public ArrayListUtils() {
     }
 
+//    @Override
+//    public void run() {
+//
+//    }
+
 //    public void setName(String name) {
 //        this.nameCat = name;
 //    }
@@ -86,7 +91,6 @@ public class ArrayListUtils {
         }.getType();
         //add the Json string converted to an ArrayList<Category> to the list list
         list = gson.fromJson(json, type);
-        //Log.d(TAG, "DIE CATEGORY LIST IN LOAD: "+list);
 
         Log.d(TAG, "loadArrayList: LIIIIIIIIIIIIIIIIIIIIST = " + list);
 

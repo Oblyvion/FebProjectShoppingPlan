@@ -809,6 +809,8 @@ public class MainActivity extends AppCompatActivity {
      * Load shared preferences with name myPrefs.
      */
     @SuppressWarnings("unchecked")
+
+    //TODO HAVE TO BE IN A SEPARATED THREAD
     private void loadSharedPreferences() {
 
         Log.d(TAG, "loadSharedPreferences: KEY = " + key);
