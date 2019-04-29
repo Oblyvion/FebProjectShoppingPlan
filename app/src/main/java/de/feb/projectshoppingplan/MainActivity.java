@@ -378,7 +378,7 @@ public class MainActivity extends AppCompatActivity {
                     });
                     builder.show();
                 } else
-                    Toast.makeText(getApplicationContext(), "Maximal list count reached!" + listName1, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Maximal list count reached!", Toast.LENGTH_LONG).show();
 
             }
         });
