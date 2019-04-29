@@ -10,16 +10,37 @@
     <include
         android:id="@+id/toolbar"
         layout="@layout/toolbar">
+
     </include>
+
+    <FrameLayout
+        android:id="@+id/frameLayout_imgButtonAddNewList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbar"
+        android:layout_marginTop="5dp">
+
+        <ImageButton
+            android:id="@+id/imageBttnAddNewList"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:contentDescription="Add new list" />
+
+    </FrameLayout>
 
     <LinearLayout
         android:id="@+id/linLayoutHorizontalList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/toolbar"
+        android:layout_marginStart="0dp"
+        android:layout_toEndOf="@+id/frameLayout_imgButtonAddNewList"
         android:background="@color/colorPrimary"
         android:orientation="horizontal"
-        android:scrollbars="horizontal" />
+        android:scrollbars="horizontal">
+
+    </LinearLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/floatingBttn_add"

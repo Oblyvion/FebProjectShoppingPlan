@@ -16,6 +16,7 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -271,7 +272,7 @@ public class MainActivity extends AppCompatActivity {
 //        toolbar.setTitle("LIST 0");
         setTitle(listName0);
 
-        int idImgAddCategory = getResources().getIdentifier("de.feb.projectshoppingplan:drawable/add_category_black", null, null);
+        int idImgAddCategory = getResources().getIdentifier("de.feb.projectshoppingplan:drawable/ic_add_circle_outline_black_40dp", null, null);
         imgBttnCreateNewList.setBackgroundResource(idImgAddCategory);
 
         //ask for list name and adds the new list to linLayoutAllCreatedLists
@@ -383,37 +384,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-//        Button listBttn0 = new Button(this);
-//        //insert listBttn0 into horizontalList
-////        listBttn0.setText();
-//        linLayoutAllCreatedLists.addView(listBttn0);
-//
-//        listBttn0.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Log.d(TAG, "onClick: HORIZONTAL LISTVIEW BUTTON CLICKED");
-//
-//                Log.d(TAG, "onClick: LIST_0 INIT");
-//                key = LIST_0;
-//
-//
-//                //shared preferences for list names
-//                SharedPreferences prefsListName = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
-//
-//                Toast.makeText(getApplicationContext(), "This is LIST 1 of 2: " + key, Toast.LENGTH_SHORT).show();
-//                Log.d(TAG, "onClick: key = " + key);
-//
-//                // load standard list 0
-//                arrayListHelper.loadArrayList(key);
-//                loadSharedPreferences();
-//                datachanged();
-//                adapter.onSwitchLists(key);
-//                toolbar.setTitle(listName0);
-//            }
-//        });
-
-//        loadSharedPreferences();
-
         if (categories.isEmpty()) {
             addStandardCats();
         }
@@ -522,12 +492,6 @@ public class MainActivity extends AppCompatActivity {
                 builder.show();
             }
         };
-
-//creates controller and helper for swipe gesture implementation
-//        SwipeController swipeController = new SwipeController();
-//        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeController);
-//        //adds touchHelper to recyclerView
-//        itemTouchhelper.attachToRecyclerView(recyclerView);
 
         datachanged();
 
